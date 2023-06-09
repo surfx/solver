@@ -11,8 +11,8 @@ namespace clases.auxiliar
         {
             switch (simbolo)
             {
-                case ESimbolo.E: return "^";
-                case ESimbolo.OU: return "v";
+                case ESimbolo.E: return "˄";
+                case ESimbolo.OU: return "v"; // ˅
                 case ESimbolo.IMPLICA: return "→";
             }
             return string.Empty;

@@ -30,9 +30,28 @@ namespace clases.formulas
             AtomoConectorProp = conversor == null ? null : conversor.toAtomoConector();
         }
 
+        #region util
+
+        public int numeroConectores()
+        {
+            if (AtomoConectorProp == null || AtomoConectorProp.isAtomo) { return 0; }
+            return numeroConectoresAux(AtomoConectorProp);
+        }
+
+        private int numeroConectoresAux(AtomoConector ac)
+        {
+            if (ac == null || ac.isAtomo) { return 0; }
+            return 1 + numeroConectoresAux(ac.ConectorProp.Esquerda) + numeroConectoresAux(ac.ConectorProp.Direita);
+        }
+
+        #endregion
+
         public override bool Equals(object? obj)
         {
-            return base.Equals(obj);
+            if (obj == null || obj is not ConjuntoFormula) { return false; }
+            ConjuntoFormula o = (ConjuntoFormula)obj;
+            return Simbolo == o.Simbolo &&
+                    (AtomoConectorProp != null && AtomoConectorProp.Equals(o.AtomoConectorProp));
         }
 
         public override int GetHashCode()

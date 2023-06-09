@@ -27,7 +27,9 @@ namespace clases.formulas
 
         public override bool Equals(object? obj)
         {
-            return base.Equals(obj);
+            if (obj == null || obj is not AtomoConector) { return false; }
+            AtomoConector o = (AtomoConector)obj;
+            return isConector ? ConectorProp.Equals(o.ConectorProp) : AtomoProp.Equals(o.AtomoProp);
         }
 
         public override int GetHashCode()

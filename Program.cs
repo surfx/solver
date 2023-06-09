@@ -6,7 +6,9 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            new Testes().teste2();
+            //new Testes().teste2();
+            //new TestesRegras().testeRegraFalsoNegativo();
+            new TestesRegras().testeRegraTrueImplica2();
         }
     }
 }

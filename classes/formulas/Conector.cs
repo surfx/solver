@@ -4,9 +4,9 @@ namespace clases.formulas
 {
     public class Conector : IConversor
     {
-        private ESimbolo Simbolo { get; set; }
-        private AtomoConector? Esquerda { get; set; }
-        private AtomoConector? Direita { get; set; }
+        public ESimbolo Simbolo { get; set; }
+        public AtomoConector? Esquerda { get; set; }
+        public AtomoConector? Direita { get; set; }
         public bool Negado { get; set; }
 
         public Conector(ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, bool negado = false)
@@ -25,14 +25,28 @@ namespace clases.formulas
             Negado = negado;
         }
 
+        #region util
+
         public AtomoConector toAtomoConector()
         {
             return new AtomoConector(this);
         }
 
+        public Conector copy()
+        {
+            return new Conector(Simbolo, Esquerda, Direita, Negado);
+        }
+
+        #endregion
+
         public override bool Equals(object? obj)
         {
-            return base.Equals(obj);
+            if (obj == null || obj is not Conector) { return false; }
+            Conector o = (Conector)obj;
+            return Simbolo == o.Simbolo &&
+                    (Esquerda != null && Esquerda.Equals(o.Esquerda)) &&
+                    (Direita != null && Direita.Equals(o.Direita)) &&
+                    Negado == o.Negado;
         }
 
         public override int GetHashCode()
