@@ -1,0 +1,45 @@
+namespace clases.formulas
+{
+    public class AtomoConector
+    {
+
+        public Conector? ConectorProp { get; set; }
+        public Atomo? AtomoProp { get; set; }
+
+        public bool isConector { get => ConectorProp != null; }
+        public bool isAtomo { get => AtomoProp != null; }
+
+        public AtomoConector(Atomo? atomoProp = null)
+        {
+            AtomoProp = atomoProp;
+        }
+
+        public AtomoConector(Conector? conectorProp = null)
+        {
+            ConectorProp = conectorProp;
+        }
+
+        public AtomoConector(Conector? conectorProp = null, Atomo? atomoProp = null)
+        {
+            ConectorProp = conectorProp;
+            AtomoProp = atomoProp;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override string? ToString()
+        {
+            if (ConectorProp == null && AtomoProp == null) { return ""; }
+            return isConector ? ConectorProp?.ToString() : AtomoProp?.ToString();
+        }
+
+    }
+}
