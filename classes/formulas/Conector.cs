@@ -61,7 +61,7 @@ namespace clases.formulas
                 (Esquerda != null && Esquerda.isConector) ? "(" : "", 
                 Esquerda, 
                 (Esquerda != null && Esquerda.isConector) ? ")" : "",
-                Auxiliar.toStrSimbolo(Simbolo), 
+                Auxiliar.toSimbolo(Simbolo), 
                 (Direita != null && Direita.isConector) ? "(" : "", 
                 Direita, 
                 (Direita != null && Direita.isConector) ? ")" : "");

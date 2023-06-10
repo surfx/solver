@@ -11,7 +11,9 @@ namespace ConsoleApp1
 
             //new TestesRegras().testeRegraFalsoNegativo();
             //new TestesRegras().testeRegraTrueImplica1();
-            new TestesRegras().testeRegraTrueImplica2();
+            //new TestesRegras().testeRegraTrueImplica2();
+
+            new TestesParser().teste1();
         }
     }
 }
