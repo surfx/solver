@@ -5,12 +5,14 @@ namespace clases.formulas
     public class Atomo : IConversor
     {
         public string Simbolo { get; set; }
-        public bool Negado { get; set; }
+        //public bool Negado { get; set; }
 
-        public Atomo(string simbolo = "", bool negado = false)
+        public int NumeroNegados { get; set; }
+
+        public Atomo(string simbolo = "", int numeroNegados = 0)
         {
             this.Simbolo = simbolo;
-            this.Negado = negado;
+            this.NumeroNegados = numeroNegados;
         }
 
         #region util
@@ -22,16 +24,17 @@ namespace clases.formulas
 
         public Atomo copy()
         {
-            return new Atomo(Simbolo, Negado);
+            return new Atomo(Simbolo, NumeroNegados);
         }
 
+        public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
         #endregion
 
         public override bool Equals(object? obj)
         {
             return obj != null && obj is Atomo atomo &&
                    Simbolo == atomo.Simbolo &&
-                   Negado == atomo.Negado;
+                   NumeroNegados == atomo.NumeroNegados;
         }
 
         public override int GetHashCode()
@@ -41,7 +44,7 @@ namespace clases.formulas
 
         public override string? ToString()
         {
-            return (Negado ? Auxiliar.SimboloNegado : "") + Simbolo;
+            return string.Format("{0}{1}", NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(Auxiliar.SimboloNegado, NumeroNegados)) : "", Simbolo);
         }
 
     }

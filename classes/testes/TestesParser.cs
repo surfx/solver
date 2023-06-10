@@ -11,12 +11,17 @@ namespace clases.testes
         {
 
             string entrada = "A";
+            entrada = "A! & B"; // T A¬ ˄ B
+            entrada = "(!A & B) | C";
+            entrada = "!(A & B) | C";
+            entrada = "!!(A -> B) & C";
+
             entrada = "(B -> ( (G -> !(D ^ E)) ) -> ((!D | G) & C))"; // T
             entrada = sanitizar(entrada);
             entrada = sanitizar("(A -> H) | F");
             entrada = sanitizar("(A -> H) | () F | r");
-            //entrada = sanitizar("(A -> H) | ( F | r");
-            //entrada = sanitizar("(A -> H) | ) F | r");
+            entrada = sanitizar("(A -> H) | ( F | r"); // inválida
+            entrada = sanitizar("(A -> H) | ) F | r"); // inválida
             entrada = sanitizar("!(A -> !H) | ((!F) | !(r)) & (!!!g -> !!!!!!y)");
 
             p(entrada);
@@ -47,6 +52,45 @@ namespace clases.testes
 
         }
 
+        private bool isNegativosOk(string entrada){
+            if (entrada == null || string.IsNullOrEmpty(entrada)) { return false; }
+            if (!entrada.Contains(simboloNegado)){return true;}
+            if (string.IsNullOrEmpty(replaceAll(entrada, simboloNegado, ""))){return false;}
+
+            int max = entrada.Length - 1;
+            int pos = entrada.IndexOf(simboloNegado);
+            if (pos >= max) {return false;}
+            char[] array = entrada.ToCharArray();
+            while(pos <= max) {
+                string next = array[++pos].ToString();
+                if (next.Equals(simboloNegado)){pos++; continue;}
+                if (next.Equals("(")){return true;}
+                if (next.Equals(")")){return false;}
+                if (conectores.Contains(next)){
+                    return false;
+                }
+                return true;
+            }
+            return true;
+        }
+
+        public void teste2()
+        {
+            string entrada = sanitizar("!!!!!A");
+            Atomo atomo = toAtomo(entrada);
+            p(atomo.ToString() + ", " + atomo.isNegado);
+            atomo.NumeroNegados = 48;
+            p(atomo.ToString() + ", " + atomo.isNegado);
+
+            p();
+
+            entrada = sanitizar("(!A->!!!B)");
+            entrada = sanitizar("!!(A->B)");
+            AtomoConector ac = toAtomoConector(entrada);
+            p(ac.ToString() + ", " + ac.isNegado);
+
+        }
+
         // (B→((G→!(D˄E)))→(¬D˅G)˄C)
 
         private ConjuntoFormula? parserCF(string entrada)
@@ -73,7 +117,7 @@ namespace clases.testes
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
             entrada = sanitizar(entrada);
-            if (!isParentesisOk(entrada)) { return null; }
+            if (!isParentesisOk(entrada) || !isNegativosOk(entrada)) { return null; }
             entrada = replaceAll(entrada, "()");
             Random rnd = new Random();
 
@@ -98,9 +142,10 @@ namespace clases.testes
 
                 if (posI > 0)
                 {
-                    if (entrada.Substring(posI - 1, 1) == simboloNegado)
+                    while (entrada.Substring(posI - 1, 1) == simboloNegado)
                     {
                         posI--;
+                        if (posI <= 0) { break; }
                     }
                 }
 
@@ -284,21 +329,21 @@ namespace clases.testes
             entrada = removerParenteses(entrada);
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
 
-            entrada = replaceAll(entrada, simboloNegado + simboloNegado, "");
+            //entrada = replaceAll(entrada, simboloNegado + simboloNegado, "");
 
-            int sizeRem = simboloNegado.Length;
-            while (entrada.EndsWith(simboloNegado))
-            {
-                entrada = entrada.Substring(0, entrada.Length - sizeRem);
-            }
+            // int sizeRem = simboloNegado.Length;
+            // while (entrada.EndsWith(simboloNegado))
+            // {
+            //     entrada = entrada.Substring(0, entrada.Length - sizeRem);
+            // }
 
-            bool negado = false;
-            if (entrada.StartsWith(simboloNegado))
+            int numeroNegados = 0;
+            while (entrada.StartsWith(simboloNegado))
             {
-                negado = true;
-                entrada = replaceAll(entrada, simboloNegado);
+                numeroNegados++;
+                entrada = entrada.Substring(1);
             }
-            return new Atomo(entrada, negado);
+            return new Atomo(entrada, numeroNegados);
         }
 
         private AtomoConector? toAtomoConector(string entrada)
@@ -323,7 +368,13 @@ namespace clases.testes
                 conectorStr = entrada.Substring(num, 1);
                 ESimbolo? conector = Auxiliar.toSimbolo(conectorStr);
 
-                bool hasNegativa = left.StartsWith(simboloNegado);
+                int numeroNegados = 0;
+                while (left.StartsWith(simboloNegado))
+                {
+                    numeroNegados++;
+                    left = left.Substring(1);
+                }
+
                 while (left.Contains("("))
                 {
                     left = left.Substring(left.IndexOf("(") + 1);
@@ -338,7 +389,7 @@ namespace clases.testes
 
                 //p(string.Format("'{0}' '{1}' '{2}' : '{3}'", left, conectorStr, right, conector == null ? "" : Auxiliar.toSimbolo(conector)));
 
-                rt = new Conector((ESimbolo)conector, esquerda, direita, hasNegativa);
+                rt = new Conector((ESimbolo)conector, esquerda, direita, numeroNegados);
 
             }
 

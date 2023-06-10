@@ -14,6 +14,8 @@ namespace ConsoleApp1
             //new TestesRegras().testeRegraTrueImplica2();
 
             new TestesParser().teste1();
+            //new TestesParser().teste2();
+            
         }
     }
 }

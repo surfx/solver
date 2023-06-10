@@ -19,17 +19,17 @@ namespace clases.testes
 
             IRegraUnaria rfn = new RegraFalsoNegativo();
 
-            ConjuntoFormula cf1 = new ConjuntoFormula(false, new Atomo("A", true));
+            ConjuntoFormula cf1 = new ConjuntoFormula(false, new Atomo("A", 1));
 
             apply(rfn, cf1);
             p();
 
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("C", true));
+            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("C", 1));
 
             apply(rfn, cf2);
             p();
 
-            ConjuntoFormula cf5 = new ConjuntoFormula(false, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), true));
+            ConjuntoFormula cf5 = new ConjuntoFormula(false, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), 1));
             apply(rfn, cf5);
             p();
 
@@ -46,18 +46,18 @@ namespace clases.testes
             IRegraBinaria rti = new RegraTrueImplica();
 
             // ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, bool negado = false
-            Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("A", false), new Atomo("B", false));
+            Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), new Atomo("B", 0));
 
             // bool simbolo, IConversor conversor
             ConjuntoFormula cf1 = new ConjuntoFormula(true, c1);
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("A", false));
+            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("A", 0));
 
             apply(rti, cf1, cf2);
             p();
 
             
-            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G", false));
-            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("A", false), c2);
+            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G", 0));
+            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), c2);
             ConjuntoFormula cf5 = new ConjuntoFormula(true, c3);                                    // T A → (¬D v G)
             
             apply(rti, cf5, cf2);
@@ -65,7 +65,7 @@ namespace clases.testes
 
             // T G → D
             Conector G_impl_D = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));     //  G → D
-            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G"));     // ¬D v G
+            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));     // ¬D v G
             Conector G_impl_D_impl_nD_ou_G = new Conector(ESimbolo.IMPLICA, G_impl_D, nD_ou_G);     // (G → D) → (¬D v G)
             ConjuntoFormula cf7 = new ConjuntoFormula(true, G_impl_D_impl_nD_ou_G);                 // T (G → D) → (¬D v G)
             ConjuntoFormula cf8 = new ConjuntoFormula(true, G_impl_D);                              // T G → D
@@ -94,9 +94,9 @@ namespace clases.testes
 
             //Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
 
-            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
+            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", 1));
             ConjuntoFormula cf1 = new ConjuntoFormula(true, c3.copy());
-            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G"));
+            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));
             ConjuntoFormula cf2 = new ConjuntoFormula(true, new Conector(ESimbolo.IMPLICA, c3.copy(), c2.copy()));
 
             apply(rti, cf1, cf2);

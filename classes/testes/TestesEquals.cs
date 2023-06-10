@@ -9,20 +9,20 @@ namespace clases.testes
         public void teste1()
         {
 
-            Atomo a1 = new Atomo("a1", false);      //  a1
-            Atomo a1neg = new Atomo("a1", true);    // ¬a1
+            Atomo a1 = new Atomo("a1", 0);      //  a1
+            Atomo a1neg = new Atomo("a1", 1);    // ¬a1
 
             comparar("a1", "a1", a1, a1);
             comparar("a1neg", "a1neg", a1neg, a1neg);
             comparar("a1neg", "a1", a1neg, a1);
             p();
 
-            Conector c1 = new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), true);          // ¬(a1 ˄ ¬a1)
-            Conector c2 = new Conector(ESimbolo.OU, a1.copy(), a1neg.copy(), true);         // ¬(a1 v ¬a1)
-            Conector c3 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), true);    // ¬(¬a1 → a1)
-            Conector c4 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), true);    // ¬(¬a1 → a1)
-            Conector c5 = new Conector(ESimbolo.OU, c1.copy(), c2.copy(), true);            // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
-            Conector c6 = new Conector(ESimbolo.OU, c1.copy(), new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), true), true);  // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
+            Conector c1 = new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), 1);          // ¬(a1 ˄ ¬a1)
+            Conector c2 = new Conector(ESimbolo.OU, a1.copy(), a1neg.copy(), 1);         // ¬(a1 v ¬a1)
+            Conector c3 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
+            Conector c4 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
+            Conector c5 = new Conector(ESimbolo.OU, c1.copy(), c2.copy(), 1);            // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
+            Conector c6 = new Conector(ESimbolo.OU, c1.copy(), new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), 1), 1);  // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
             comparar("c1", "c2", c1, c2);
             comparar("c3", "c1", c3, c1);
             comparar("c3", "c4", c3, c4);

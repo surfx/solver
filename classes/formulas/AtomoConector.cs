@@ -32,6 +32,7 @@ namespace clases.formulas
             return new AtomoConector(ConectorProp, AtomoProp);
         }
 
+        public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado ; }
         #endregion
 
         public override bool Equals(object? obj)
