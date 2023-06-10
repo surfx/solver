@@ -25,6 +25,15 @@ namespace clases.formulas
             AtomoProp = atomoProp;
         }
 
+        #region util
+
+        public AtomoConector copy()
+        {
+            return new AtomoConector(ConectorProp, AtomoProp);
+        }
+
+        #endregion
+
         public override bool Equals(object? obj)
         {
             if (obj == null || obj is not AtomoConector) { return false; }

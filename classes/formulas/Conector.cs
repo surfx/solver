@@ -56,8 +56,15 @@ namespace clases.formulas
 
         public override string? ToString()
         {
-            string rt = string.Format("{0}{1}{2} {3} {4}{5}{6}", (Esquerda != null && Esquerda.isConector) ? "(" : "", Esquerda, (Esquerda != null && Esquerda.isConector) ? ")" : "",
-            Auxiliar.toStrSimbolo(Simbolo), (Direita != null && Direita.isConector) ? "(" : "", Direita, (Direita != null && Direita.isConector) ? ")" : "");
+            string rt = string.Format(
+                "{0}{1}{2} {3} {4}{5}{6}", 
+                (Esquerda != null && Esquerda.isConector) ? "(" : "", 
+                Esquerda, 
+                (Esquerda != null && Esquerda.isConector) ? ")" : "",
+                Auxiliar.toStrSimbolo(Simbolo), 
+                (Direita != null && Direita.isConector) ? "(" : "", 
+                Direita, 
+                (Direita != null && Direita.isConector) ? ")" : "");
 
             return Negado ? string.Format("{0}({1})", Auxiliar.SimboloNegado, rt) : rt;
         }

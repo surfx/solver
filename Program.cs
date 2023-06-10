@@ -7,7 +7,10 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             //new Testes().teste2();
+            //new TestesEquals().teste1();
+
             //new TestesRegras().testeRegraFalsoNegativo();
+            //new TestesRegras().testeRegraTrueImplica1();
             new TestesRegras().testeRegraTrueImplica2();
         }
     }

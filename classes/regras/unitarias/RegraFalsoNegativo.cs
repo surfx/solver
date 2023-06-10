@@ -7,11 +7,13 @@ namespace clases.regras.unitarias
         -----   (F ¬)
         T  A
     */
-    public class RegraFalsoNegativo
+    public class RegraFalsoNegativo : IRegraUnaria
     {
 
+        public string RULE { get => "F ¬"; }
+
         // se a regra se aplica a este objeto cf
-        public static bool isValid(ConjuntoFormula cf)
+        public bool isValid(ConjuntoFormula cf)
         {
             if (cf == null || cf.Simbolo || cf.AtomoConectorProp == null || (cf.AtomoConectorProp.ConectorProp == null && cf.AtomoConectorProp.AtomoProp == null)) { return false; }
 
@@ -21,7 +23,7 @@ namespace clases.regras.unitarias
             return true;
         }
 
-        public static ConjuntoFormula? apply(ConjuntoFormula cf)
+        public ConjuntoFormula? apply(ConjuntoFormula cf)
         {
             if (!isValid(cf)) { return cf; }
 

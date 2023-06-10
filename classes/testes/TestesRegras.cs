@@ -1,4 +1,5 @@
 using clases.formulas;
+using clases.regras;
 using clases.regras.binarias;
 using clases.regras.unitarias;
 
@@ -16,25 +17,21 @@ namespace clases.testes
         public void testeRegraFalsoNegativo()
         {
 
+            IRegraUnaria rfn = new RegraFalsoNegativo();
+
             ConjuntoFormula cf1 = new ConjuntoFormula(false, new Atomo("A", true));
-            ConjuntoFormula? cf2 = RegraFalsoNegativo.apply(cf1);
 
-            Console.WriteLine(cf1);
-            Console.WriteLine(cf2);
-            Console.WriteLine("----------------------------------");
+            apply(rfn, cf1);
+            p();
 
-            ConjuntoFormula cf3 = new ConjuntoFormula(true, new Atomo("C", true));
-            ConjuntoFormula? cf4 = RegraFalsoNegativo.apply(cf3);
+            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("C", true));
 
-            Console.WriteLine(cf3);
-            Console.WriteLine(cf4);
-
-            Console.WriteLine("----------------------------------");
+            apply(rfn, cf2);
+            p();
 
             ConjuntoFormula cf5 = new ConjuntoFormula(false, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), true));
-            Console.WriteLine(cf5);
-            Console.WriteLine(RegraFalsoNegativo.apply(cf5));
-            Console.WriteLine("----------------------------------");
+            apply(rfn, cf5);
+            p();
 
         }
 
@@ -44,7 +41,9 @@ namespace clases.testes
             ------- (T →1)
             T B
         */
-        public void testeRegraTrueImplica(){
+        public void testeRegraTrueImplica1(){
+
+            IRegraBinaria rti = new RegraTrueImplica();
 
             // ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, bool negado = false
             Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("A", false), new Atomo("B", false));
@@ -52,33 +51,27 @@ namespace clases.testes
             // bool simbolo, IConversor conversor
             ConjuntoFormula cf1 = new ConjuntoFormula(true, c1);
             ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("A", false));
-            ConjuntoFormula? cf3 = RegraTrueImplica.apply(cf1, cf2);
 
-            Console.WriteLine(cf1);
-            Console.WriteLine(cf2);
-            Console.WriteLine(cf3);
-            Console.WriteLine("----------------------------------");
+            apply(rti, cf1, cf2);
+            p();
 
             
             Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G", false));
             Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("A", false), c2);
-            ConjuntoFormula cf5 = new ConjuntoFormula(true, c3);
-            ConjuntoFormula? cf6 = RegraTrueImplica.apply(cf5, cf2);
+            ConjuntoFormula cf5 = new ConjuntoFormula(true, c3);                                    // T A → (¬D v G)
             
-            Console.WriteLine(cf2);
-            Console.WriteLine(cf5);
-            Console.WriteLine(cf6);
-            Console.WriteLine("----------------------------------");
+            apply(rti, cf5, cf2);
+            p();
 
-            Conector c4 = new Conector(ESimbolo.E, new Atomo("D", true), new Atomo("G", false));
-            Conector c5 = new Conector(ESimbolo.IMPLICA, new Atomo("A", false), c2);
-            ConjuntoFormula cf7 = new ConjuntoFormula(true, c3);
-            ConjuntoFormula? cf8 = RegraTrueImplica.apply(cf5, cf2);
-            
-            Console.WriteLine(cf2);
-            Console.WriteLine(cf5);
-            Console.WriteLine(cf6);
-            Console.WriteLine("----------------------------------");
+            // T G → D
+            Conector G_impl_D = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));     //  G → D
+            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G"));     // ¬D v G
+            Conector G_impl_D_impl_nD_ou_G = new Conector(ESimbolo.IMPLICA, G_impl_D, nD_ou_G);     // (G → D) → (¬D v G)
+            ConjuntoFormula cf7 = new ConjuntoFormula(true, G_impl_D_impl_nD_ou_G);                 // T (G → D) → (¬D v G)
+            ConjuntoFormula cf8 = new ConjuntoFormula(true, G_impl_D);                              // T G → D
+
+            apply(rti, cf7, cf8);
+            p();
 
             /*
             T G → D
@@ -96,29 +89,39 @@ namespace clases.testes
             ------------------
             T ¬D v G
             */
+            
+            IRegraBinaria rti = new RegraTrueImplica();
 
+            //Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
 
-            Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));
-            ConjuntoFormula cf1 = new ConjuntoFormula(true, c1.copy());
+            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
+            ConjuntoFormula cf1 = new ConjuntoFormula(true, c3.copy());
             Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", true), new Atomo("G"));
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Conector(ESimbolo.IMPLICA, c1.copy(), c2.copy()));
-            Console.WriteLine(cf1);
-            Console.WriteLine(cf2);
-            Console.WriteLine("----------------------------------");
-            Console.WriteLine(RegraTrueImplica.apply(cf1, cf2));
+            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Conector(ESimbolo.IMPLICA, c3.copy(), c2.copy()));
 
-            Console.WriteLine("\n----------------------------------\n");
-
-            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));
-            Console.WriteLine(c3);
-            Console.WriteLine(string.Format("{0} == {1}: {2}", c3, c1, c3.Equals(c1)));
-            Console.WriteLine(string.Format("{0} == {1}: {2}", c3, c2, c3.Equals(c2)));
-
-            Console.WriteLine(string.Format("{0} nc: {1}", cf1, cf1.numeroConectores()));
-            Console.WriteLine(string.Format("{0} nc: {1}", cf2, cf2.numeroConectores()));
+            apply(rti, cf1, cf2);
+            p();
 
         }
 
+        #region apply rules
+
+        private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1){
+            Console.WriteLine(cf1);
+            Console.WriteLine(string.Format("------ {0}", rUnaria.RULE));
+            Console.WriteLine(rUnaria.apply(cf1));
+        }
+
+        private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2){
+            Console.WriteLine(cf1);
+            Console.WriteLine(cf2);
+            Console.WriteLine(string.Format("------ {0}", rBinaria.RULE));
+            Console.WriteLine(rBinaria.apply(cf1, cf2));
+        }
+
+        #endregion
+
+        private void p(){Console.WriteLine("-----------------");}
 
     }
 
