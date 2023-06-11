@@ -1,6 +1,6 @@
-using clases.formulas;
+using classes.formulas;
 
-namespace clases.testes
+namespace classes.testes
 {
 
     public class Testes

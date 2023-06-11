@@ -1,6 +1,6 @@
-using clases.formulas;
+using classes.formulas;
 
-namespace clases.regras {
+namespace classes.regras {
 
     public interface IRegraBinaria {
 

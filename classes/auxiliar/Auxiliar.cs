@@ -1,6 +1,6 @@
-using clases.formulas;
+using classes.formulas;
 
-namespace clases.auxiliar
+namespace classes.auxiliar
 {
     public static class Auxiliar
     {

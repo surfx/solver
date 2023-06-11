@@ -1,6 +1,6 @@
-using clases.auxiliar;
+using classes.auxiliar;
 
-namespace clases.formulas
+namespace classes.formulas
 {
     public class Conector : IConversor
     {

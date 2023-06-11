@@ -1,9 +1,9 @@
-using clases.formulas;
-using clases.regras;
-using clases.regras.binarias;
-using clases.regras.unitarias;
+using classes.formulas;
+using classes.regras;
+using classes.regras.binarias;
+using classes.regras.unitarias;
 
-namespace clases.testes
+namespace classes.testes
 {
 
     public class TestesRegras

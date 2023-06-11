@@ -1,9 +1,9 @@
-using clases.auxiliar;
-using clases.formulas;
+using classes.auxiliar;
+using classes.formulas;
 
-namespace clases.testes
+namespace classes.testes
 {
-
+    [Obsolete("use classes.parser.Parser instead")]
     public class TestesParser
     {
 

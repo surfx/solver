@@ -1,4 +1,4 @@
-﻿using clases.testes;
+﻿using classes.testes;
 
 namespace ConsoleApp1
 {
@@ -16,7 +16,8 @@ namespace ConsoleApp1
             //new TestesParser().teste1();
             //new TestesParser().teste2();
 
-            new TestesParser2().teste1();
+            //new TestesParser2().teste1();
+            new TestesParser2().teste2();
             
         }
     }

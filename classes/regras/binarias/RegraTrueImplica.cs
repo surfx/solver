@@ -1,6 +1,6 @@
-using clases.formulas;
+using classes.formulas;
 
-namespace clases.regras.binarias
+namespace classes.regras.binarias
 {
 
     /*

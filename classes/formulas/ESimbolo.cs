@@ -1,4 +1,4 @@
-namespace clases.formulas
+namespace classes.formulas
 {
 
     public enum ESimbolo : ushort
