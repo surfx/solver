@@ -7,6 +7,10 @@ namespace clases.testes
     public class TestesParser
     {
 
+        // Console.WriteLine(string.Join(" ", conectores)); ˄ ˅ →
+        private string[] conectores = Auxiliar.getSimbolos(false);
+        private const string simboloNegado = Auxiliar.SimboloNegado;
+
         public void teste1()
         {
 
@@ -17,12 +21,12 @@ namespace clases.testes
             entrada = "!!(A -> B) & C";
 
             entrada = "(B -> ( (G -> !(D ^ E)) ) -> ((!D | G) & C))"; // T
-            entrada = sanitizar(entrada);
-            entrada = sanitizar("(A -> H) | F");
-            entrada = sanitizar("(A -> H) | () F | r");
-            entrada = sanitizar("(A -> H) | ( F | r"); // inválida
-            entrada = sanitizar("(A -> H) | ) F | r"); // inválida
-            entrada = sanitizar("!(A -> !H) | ((!F) | !(r)) & (!!!g -> !!!!!!y)");
+            entrada = UtilFormulas.sanitizar(entrada);
+            entrada = UtilFormulas.sanitizar("(A -> H) | F");
+            entrada = UtilFormulas.sanitizar("(A -> H) | () F | r");
+            entrada = UtilFormulas.sanitizar("(A -> H) | ( F | r"); // inválida
+            entrada = UtilFormulas.sanitizar("(A -> H) | ) F | r"); // inválida
+            entrada = UtilFormulas.sanitizar("!(A -> !H) | ((!F) | !(r)) & (!!!g -> !!!!!!y)");
 
             p(entrada);
 
@@ -52,31 +56,11 @@ namespace clases.testes
 
         }
 
-        private bool isNegativosOk(string entrada){
-            if (entrada == null || string.IsNullOrEmpty(entrada)) { return false; }
-            if (!entrada.Contains(simboloNegado)){return true;}
-            if (string.IsNullOrEmpty(replaceAll(entrada, simboloNegado, ""))){return false;}
 
-            int max = entrada.Length - 1;
-            int pos = entrada.IndexOf(simboloNegado);
-            if (pos >= max) {return false;}
-            char[] array = entrada.ToCharArray();
-            while(pos <= max) {
-                string next = array[++pos].ToString();
-                if (next.Equals(simboloNegado)){pos++; continue;}
-                if (next.Equals("(")){return true;}
-                if (next.Equals(")")){return false;}
-                if (conectores.Contains(next)){
-                    return false;
-                }
-                return true;
-            }
-            return true;
-        }
 
         public void teste2()
         {
-            string entrada = sanitizar("!!!!!A");
+            string entrada = UtilFormulas.sanitizar("!!!!!A");
             Atomo atomo = toAtomo(entrada);
             p(atomo.ToString() + ", " + atomo.isNegado);
             atomo.NumeroNegados = 48;
@@ -84,8 +68,8 @@ namespace clases.testes
 
             p();
 
-            entrada = sanitizar("(!A->!!!B)");
-            entrada = sanitizar("!!(A->B)");
+            entrada = UtilFormulas.sanitizar("(!A->!!!B)");
+            entrada = UtilFormulas.sanitizar("!!(A->B)");
             AtomoConector ac = toAtomoConector(entrada);
             p(ac.ToString() + ", " + ac.isNegado);
 
@@ -96,7 +80,7 @@ namespace clases.testes
         private ConjuntoFormula? parserCF(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
-            entrada = sanitizar(entrada);
+            entrada = UtilFormulas.sanitizar(entrada);
 
             // OBS: se a entrada começa com T ou F, será o símbolo. Se não, considero T
             bool simbolo = !entrada.Substring(0, 1).ToUpper().Equals("F");
@@ -116,9 +100,9 @@ namespace clases.testes
         private AtomoConector? parser(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
-            entrada = sanitizar(entrada);
-            if (!isParentesisOk(entrada) || !isNegativosOk(entrada)) { return null; }
-            entrada = replaceAll(entrada, "()");
+            entrada = UtilFormulas.sanitizar(entrada);
+            if (!UtilFormulas.isParentesisOk(entrada) || !UtilFormulas.isNegativosOk(entrada)) { return null; }
+            entrada = UtilFormulas.replaceAll(entrada, "()");
             Random rnd = new Random();
 
             if (entrada.Contains("("))
@@ -152,7 +136,7 @@ namespace clases.testes
                 string toParser = entrada.Substring(posI, posF - posI + 1);
                 string key = "IDD" + rnd.Next(1, 100);
                 while (mapFormulas.ContainsKey(key)) { key = "IDD" + rnd.Next(1, 100); }
-                string novaEntrada = replaceAll(entrada, toParser, key); //entrada.Substring(0, posI) + "IDD" + entrada.Substring(posF);
+                string novaEntrada = UtilFormulas.replaceAll(entrada, toParser, key); //entrada.Substring(0, posI) + "IDD" + entrada.Substring(posF);
                 AtomoConector? ac = toAtomoConector(toParser);
 
                 ac = tratarAC(ac);
@@ -228,57 +212,14 @@ namespace clases.testes
             return ac;
         }
 
-        private bool isParentesisOk(string entrada)
-        {
-            if (entrada == null || string.IsNullOrEmpty(entrada)) { return true; }
-            if (!entrada.Contains("(") && !entrada.Contains(")")) { return true; }
-
-            // remover tudo que não seja parêntesis '(' e ')'
-            string aux = "";
-            foreach (char ch in entrada.ToCharArray())
-            {
-                if (!ch.Equals('(') && !ch.Equals(')')) { continue; }
-                aux += ch;
-            }
-            aux = replaceAll(aux, "()");
-            return string.IsNullOrEmpty(aux == null ? "" : aux.Trim());
-        }
-
-        // Console.WriteLine(string.Join(" ", conectores)); ˄ ˅ →
-        private string[] conectores = Auxiliar.getSimbolos(false);
-        private const string simboloNegado = Auxiliar.SimboloNegado;
 
 
-        public string sanitizar(string entrada)
-        {
-            if (entrada == null || string.IsNullOrEmpty(entrada)) { return ""; }
 
-            entrada = replaceAll(entrada, " ", "");
-            entrada = replaceSimbols(entrada);
 
-            return entrada;
-        }
 
-        private string replaceSimbols(string entrada)
-        {
-            if (entrada == null || string.IsNullOrEmpty(entrada)) { return ""; }
-            entrada = replaceAll(entrada, "!", Auxiliar.SimboloNegado);
-            entrada = replaceAll(entrada, "^", Auxiliar.SimboloE);
-            entrada = replaceAll(entrada, "&", Auxiliar.SimboloE);
-            entrada = replaceAll(entrada, "|", Auxiliar.SimboloOu);
-            entrada = replaceAll(entrada, "->", Auxiliar.SimboloImplica);
-            entrada = replaceAll(entrada, ">", Auxiliar.SimboloImplica);
-            return entrada;
-        }
 
-        private string replaceAll(string entrada, string simbolo1, string simbolo2 = "")
-        {
-            if (entrada == null || string.IsNullOrEmpty(entrada)) { return ""; }
-            while (entrada.Contains(simbolo1)) { entrada = entrada.Replace(simbolo1, simbolo2); }
-            return entrada;
-        }
 
-        private string removerParenteses(string entrada) { return replaceAll(replaceAll(entrada, "(", ""), ")", ""); }
+        private string removerParenteses(string entrada) { return UtilFormulas.replaceAll(UtilFormulas.replaceAll(entrada, "(", ""), ")", ""); }
 
         private int[] allIndexes(string entrada, string[] conectores)
         {
@@ -324,7 +265,7 @@ namespace clases.testes
         private Atomo? toAtomo(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
-            entrada = sanitizar(entrada);
+            entrada = UtilFormulas.sanitizar(entrada);
             if (!isAtomo(entrada)) { return null; }
             entrada = removerParenteses(entrada);
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
@@ -349,8 +290,8 @@ namespace clases.testes
         private AtomoConector? toAtomoConector(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
-            entrada = sanitizar(entrada);
-            if (!isParentesisOk(entrada) || entrada.Equals("()")) { return null; }
+            entrada = UtilFormulas.sanitizar(entrada);
+            if (!UtilFormulas.isParentesisOk(entrada) || entrada.Equals("()")) { return null; }
             if (isAtomo(entrada)) { return toAtomo(entrada).toAtomoConector(); }
             if (!isConector(entrada)) { return null; }
 
@@ -396,9 +337,9 @@ namespace clases.testes
             return rt == null ? null : new AtomoConector(rt);
         }
 
-        private void p() { p("-----------------"); }
-        private void p(string str) { Console.WriteLine(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return values == null ? "" : string.Join(separator, values); }
+        private void p() { UtilFormulas.p(); }
+        private void p(string str) { UtilFormulas.p(str); }
+        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
 
     }
 

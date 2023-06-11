@@ -13,8 +13,10 @@ namespace ConsoleApp1
             //new TestesRegras().testeRegraTrueImplica1();
             //new TestesRegras().testeRegraTrueImplica2();
 
-            new TestesParser().teste1();
+            //new TestesParser().teste1();
             //new TestesParser().teste2();
+
+            new TestesParser2().teste1();
             
         }
     }
