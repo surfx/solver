@@ -65,7 +65,7 @@ namespace classes.auxiliar
             while (pos <= max)
             {
                 string next = array[++pos].ToString();
-                if (next.Equals(simboloNegado)) { pos++; continue; }
+                if (next.Equals(simboloNegado)) { continue; }
                 if (next.Equals("(")) { return true; }
                 if (next.Equals(")")) { return false; }
                 if (conectores.Contains(next))

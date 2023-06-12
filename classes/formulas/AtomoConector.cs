@@ -33,6 +33,11 @@ namespace classes.formulas
         }
 
         public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado ; }
+
+        public double sizeStr()
+        {
+            return isAtomo ? AtomoProp.sizeStr() : ConectorProp.sizeStr();
+        }
         #endregion
 
         public override bool Equals(object? obj)

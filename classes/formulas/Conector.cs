@@ -39,6 +39,16 @@ namespace classes.formulas
         }
 
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
+
+        public double sizeStr()
+        {
+            // +1 - do Símbolo
+            return 1 + (Esquerda == null ? 0 : sizeStr(Esquerda)) + (Direita == null ? 0 : sizeStr(Direita)) + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
+        }
+        private double sizeStr(AtomoConector? ac)
+        {
+            return ac == null ? 0.0 : ac.sizeStr();
+        }
         #endregion
 
         public override bool Equals(object? obj)
@@ -68,7 +78,7 @@ namespace classes.formulas
                 Direita,
                 (Direita != null && Direita.isConector) ? ")" : "");
 
-            string pattern = NumeroNegados > 0 ? "{0}({1})": "{0}{1}";
+            string pattern = NumeroNegados > 0 ? "{0}({1})" : "{0}{1}";
             return string.Format(pattern, NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(Auxiliar.SimboloNegado, NumeroNegados)) : "", rt);
         }
 

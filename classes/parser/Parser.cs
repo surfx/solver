@@ -88,7 +88,7 @@ namespace classes.parser
 
         private List<ItemList> removerParentesisDuplos(List<ItemList> list)
         {
-            if (list == null || list.Count <= 0) { return list; }
+            if (list == null || list.Count <= 1) { return list; }
 
             List<int> remover = new List<int>();
             int size = list.Count;
@@ -119,7 +119,7 @@ namespace classes.parser
 
         private List<ItemList> tratarNegacoes(List<ItemList> list)
         {
-            if (list == null || list.Count <= 0) { return list; }
+            if (list == null || list.Count <= 1) { return list; }
             list = removerParentesisDuplos(list);
 
             List<int> remover = new List<int>();
@@ -175,7 +175,7 @@ namespace classes.parser
 
         private List<ItemList> unirAtomoConector(List<ItemList> list)
         {
-            if (list == null || list.Count <= 0) { return list; }
+            if (list == null || list.Count <= 1) { return list; }
             list = removerParentesisDuplos(list);
             list = tratarNegacoes(list);
 

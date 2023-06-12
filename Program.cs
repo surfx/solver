@@ -17,7 +17,10 @@ namespace ConsoleApp1
             //new TestesParser().teste2();
 
             //new TestesParser2().teste1();
-            new TestesParser2().teste2();
+            //new TestesParser2().teste2();
+
+            new TestesPrint().teste1();
+            
             
         }
     }

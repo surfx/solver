@@ -28,6 +28,11 @@ namespace classes.formulas
         }
 
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
+
+        public double sizeStr()
+        {
+            return this.Simbolo.Length + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
+        }
         #endregion
 
         public override bool Equals(object? obj)
