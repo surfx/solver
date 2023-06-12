@@ -40,15 +40,30 @@ namespace classes.formulas
 
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
 
-        public double sizeStr()
+        #region sizeStr
+        public int sizeStr()
         {
             // +1 - do Símbolo
-            return 1 + (Esquerda == null ? 0 : sizeStr(Esquerda)) + (Direita == null ? 0 : sizeStr(Direita)) + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
+            return 1 + (Esquerda == null ? 0 : sizeStr(Esquerda)) + (Direita == null ? 0 : sizeStr(Direita));
         }
-        private double sizeStr(AtomoConector? ac)
+        private int sizeStr(AtomoConector? ac)
         {
-            return ac == null ? 0.0 : ac.sizeStr();
+            return ac == null ? 0 : ac.sizeStr();
         }
+        #endregion
+
+        #region height
+        public int heightTree()
+        {
+            // +1 - do Símbolo
+            return 1 + Math.Max((Esquerda == null ? 0 : heightTree(Esquerda)), (Direita == null ? 0 : heightTree(Direita)));
+        }
+        private int heightTree(AtomoConector? ac)
+        {
+            return ac == null ? 0 : ac.heightTree();
+        }
+        #endregion
+
         #endregion
 
         public override bool Equals(object? obj)

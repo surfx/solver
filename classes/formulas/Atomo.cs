@@ -29,9 +29,14 @@ namespace classes.formulas
 
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
 
-        public double sizeStr()
+        public int sizeStr()
         {
-            return this.Simbolo.Length + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
+            //return this.Simbolo.Length + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
+            return 1;
+        }
+
+        public int heightTree(){
+            return 1;
         }
         #endregion
 

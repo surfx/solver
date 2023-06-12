@@ -34,9 +34,13 @@ namespace classes.formulas
 
         public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado ; }
 
-        public double sizeStr()
+        public int sizeStr()
         {
             return isAtomo ? AtomoProp.sizeStr() : ConectorProp.sizeStr();
+        }
+
+        public int heightTree(){
+            return isAtomo ? AtomoProp.heightTree() : ConectorProp.heightTree();
         }
         #endregion
 
