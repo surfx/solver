@@ -38,7 +38,7 @@ namespace classes.testes
             //p(string.Format("{0}, {1}", ac.ConectorProp.Esquerda.AtomoProp, ac.ConectorProp.Esquerda.AtomoProp.sizeStr()));
             //p(string.Format("{0}, {1}", ac.ConectorProp.Direita.AtomoProp, ac.ConectorProp.Direita.AtomoProp.sizeStr()));
 
-            //print(ac);
+            print(ac);
 
             p();
             teste(ac);
@@ -58,8 +58,8 @@ namespace classes.testes
             //p(testeAux(ac.ConectorProp.Esquerda, ac.ConectorProp.Direita, 1, ac.sizeStr(), ac.heightTree()));
 
             p(toEspacosTree(ac, 0 + 1, ac.sizeStr(), ac.heightTree()).ToString());
-            List<ItemEspacosTree> itens = testeEspacosTree(ac.ConectorProp.Esquerda, ac.ConectorProp.Direita, 1, ac.sizeStr(), ac.heightTree());
-            //List<ItemEspacosTree> itens = testeEspacosTree2(ac, 1, ac.sizeStr(), ac.heightTree());
+            //List<ItemEspacosTree> itens = testeEspacosTree(ac.ConectorProp.Esquerda, ac.ConectorProp.Direita, 1, ac.sizeStr(), ac.heightTree());
+            List<ItemEspacosTree> itens = testeEspacosTree2(ac, 1, ac.sizeStr(), ac.heightTree());
             //p(et.ToString());
             itens.ForEach(x =>
             {
