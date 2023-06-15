@@ -23,8 +23,8 @@ namespace ConsoleApp1
 
             //new TestesTree().teste1();
             //new TestesTree().teste2();
-            //new TestesTree().teste3();
-            new TestesTree().teste4();
+
+            new TestesTreeList().teste1();
 
         }
     }

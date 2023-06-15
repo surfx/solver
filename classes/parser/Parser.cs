@@ -7,7 +7,7 @@ namespace classes.parser
     public class Parser
     {
         
-        private static string[] conectores = Auxiliar.getSimbolos(false);
+        private string[] conectores = Auxiliar.getSimbolos(false);
         private const string simboloNegado = Auxiliar.SimboloNegado;
 
         public ConjuntoFormula? parserCF(string entrada)
