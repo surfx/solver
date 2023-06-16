@@ -45,6 +45,10 @@ namespace classes.testes
             f.Direita.Negativas.ForEach(x => p(x.ToString()));
             f.Direita.Positivas.ForEach(x => p(x.ToString()));
             p(string.Format("{0}", Math.Max(sizeMax(f.Direita.Negativas), sizeMax(f.Direita.Positivas))));
+
+            // TESTES
+            f.Esquerda.addDireita(parser.parserCF("G"));
+
             p();
 
             p(string.Format("sizeMax: {0}", sizeMax(f)));
@@ -53,10 +57,11 @@ namespace classes.testes
             //pTree(f);
 
             // #--------------------- ANÁLISE --------------------
-            int maxElements = (int)Math.Pow(2, heightTree(f) - 1);
-            p(string.Format("heightTree: {0}, maxElements: {1}", heightTree(f), maxElements));
+            int heighttree = heightTree(f);
+            int maxElements = (int)Math.Pow(2, heighttree - 1);
+            p(string.Format("heightTree: {0}, maxElements: {1}", heighttree, maxElements));
 
-            Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic = toDict(f, 0, 0, maxElements);
+            Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic = toDict(f, 0, 0, maxElements, 0);
             // análise da estrutura de dicionário
             foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp in dic)
             {
@@ -68,24 +73,26 @@ namespace classes.testes
                 Console.WriteLine();
             }
 
-            // int size = dic.Keys.Max();
-            // p(string.Format("size: {0}, maxElements: {1}", size, Math.Pow(2, size)));
+            // // int size = dic.Keys.Max();
+            // // p(string.Format("size: {0}, maxElements: {1}", size, Math.Pow(2, size)));
             p();
 
             int minLStr = maxSizeString(f) + 1;
-            int maxLStr = 4;
+            int maxLStr = minLStr;
 
-            // string fullPath = @"C:\Users\zero_\OneDrive\Área de Trabalho\tree.txt";
-            // using (StreamWriter writer = new StreamWriter(fullPath)) {
-            foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp in dic)
-            {
-                string linha = toStrLineDic(kvp.Value, ((int)Math.Pow(2, dic.Keys.Max()) * 2), minLStr, maxLStr);
-                p(linha);
-                //writer.WriteLine(linha);
-            }
-            //}
+            p(toStrLineDic(dic, heightTreeFormulas(f), ((int)Math.Pow(2, dic.Keys.Max()) * 2), minLStr, maxLStr));
 
-            p();
+            // // string fullPath = @"C:\Users\zero_\OneDrive\Área de Trabalho\tree.txt";
+            // // using (StreamWriter writer = new StreamWriter(fullPath)) {
+            // foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp in dic)
+            // {
+            //     string linha = toStrLineDic(kvp.Value, ((int)Math.Pow(2, dic.Keys.Max()) * 2), minLStr, maxLStr);
+            //     p(linha);
+            //     //writer.WriteLine(linha);
+            // }
+            // //}
+
+            // p();
 
         }
 
@@ -146,23 +153,31 @@ namespace classes.testes
         }
 
         #region analise
-        // private string formatarStr(string str, int sizeMin, int sizeMax = 0)
-        // {
-        //     if (str == null || string.IsNullOrEmpty(str)) { return str; }
-        //     if (sizeMax <= 0 && str.Length >= sizeMin) { return str; }
-        //     bool left = true;
-        //     while (str.Length < sizeMin)
-        //     {
-        //         str = left ? " " + str : str + " ";
-        //         left = false;
-        //     }
-        //     if (sizeMax > 0 && str.Length > sizeMax) { str = str.Substring(0, sizeMax - 2) + ".."; }
-        //     return str;
-        // }
+        private string formatarStr(string str, int sizeMin, int sizeMax = 0)
+        {
+            if (str == null || string.IsNullOrEmpty(str)) { return str; }
+            if (sizeMax <= 0 && str.Length >= sizeMin) { return str; }
+            bool left = true;
+            while (str.Length < sizeMin)
+            {
+                str = left ? " " + str : str + " ";
+                left = false;
+            }
+            if (sizeMax > 0 && str.Length > sizeMax) { str = str.Substring(0, sizeMax - 2) + ".."; }
+            return str;
+        }
 
         private int heightTree(Formulas? t)
         {
             return t == null ? 0 : 1 + Math.Max(heightTree(t.Esquerda), heightTree(t.Direita));
+        }
+
+        private int heightTreeFormulas(Formulas? t)
+        {
+            if (t == null) { return 0; }
+            int aux = t.Negativas == null ? 0 : t.Negativas.Count;
+            aux += t.Positivas == null ? 0 : t.Positivas.Count;
+            return aux + Math.Max(heightTreeFormulas(t.Esquerda), heightTreeFormulas(t.Direita));
         }
 
         private int maxSizeString(Formulas? t)
@@ -177,56 +192,110 @@ namespace classes.testes
             return Math.Max(maxNegativas, maxPositivas);
         }
 
-        private string toStrFormulas_firstlevel(Formulas? t, string espaco = "", int iPos = 0)
-        {
-            if (t == null || (t.Negativas == null && t.Positivas == null)) { return string.Empty; }
-            if (!string.IsNullOrEmpty(espaco) && iPos > 0)
-            {
-                espaco = string.Concat(Enumerable.Repeat(espaco, iPos));
-            }
-            // TODO: revisar
-            StringBuilder rt = new StringBuilder();
-            if (t.Negativas != null)
-            {
-                t.Negativas.ForEach(x => rt.Append(string.Format("{0}{1}", espaco, x.ToString())));
-            }
-            if (t.Positivas != null)
-            {
-                t.Positivas.ForEach(x => rt.Append(string.Format("{0}{1}", espaco, x.ToString())));
-            }
-            return rt.ToString();
-        }
+        // private string toStrFormulas_firstlevel(Formulas? t, string espaco = "", int iPos = 0)
+        // {
+        //     if (t == null || (t.Negativas == null && t.Positivas == null)) { return string.Empty; }
+        //     if (!string.IsNullOrEmpty(espaco) && iPos > 0)
+        //     {
+        //         espaco = string.Concat(Enumerable.Repeat(espaco, iPos));
+        //     }
+        //     // TODO: revisar
+        //     StringBuilder rt = new StringBuilder();
+        //     if (t.Negativas != null)
+        //     {
+        //         t.Negativas.ForEach(x => rt.AppendLine(string.Format("{0}{1}", espaco, x.ToString())));
+        //     }
+        //     if (t.Positivas != null)
+        //     {
+        //         t.Positivas.ForEach(x => rt.AppendLine(string.Format("{0}{1}", espaco, x.ToString())));
+        //     }
+        //     return rt.ToString();
+        // }
 
-        private string toStrLineDic(Dictionary<int, PosElement<Formulas>> dic, int numeroMaximo, int minLStr, int sizeMax = 0)
+        private string toStrLineDic(Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic, int heighttreeFormulas, int numeroMaximo, int minLStr, int sizeMax = 0)
         {
-            if (dic == null || numeroMaximo <= 0) { return ""; }
-            //if (minEspacos <= 0) { minEspacos = 3; }
+            if (dic == null || heighttreeFormulas <= 0 || numeroMaximo <= 0) { return ""; }
+
+            // onde para cada item de heighttree existe uma lista de fórmulas positivas e negativas
+            p(string.Format("heighttreeFormulas: {0}, numeroMaximo: {1}", heighttreeFormulas, numeroMaximo));
+
             minLStr = minLStr <= sizeMax ? minLStr : sizeMax;
             int minEspacos = minLStr;
-
             string espaco = getEspaco(minEspacos);
-            int numelementos = dic.Keys.Count();
-            string chaves = string.Join(",", dic.Keys);
 
-            string[] itens = new string[numeroMaximo];
-            for (int i = 0; i < numeroMaximo; i++) { itens[i] = espaco; }
+            string[,] linhas = new string[heighttreeFormulas, numeroMaximo];
+            for (int i = 0; i < heighttreeFormulas; i++) { for (int j = 0; j < numeroMaximo; j++) { linhas[i, j] = espaco; } }
 
-            for (int i = 0; i < numeroMaximo; i++)
+
+            Dictionary<int, PosElement<Formulas>>? dicFormulas = null;
+            for (int i = 0; i < heighttreeFormulas; i++)
             {
-                if (!dic.ContainsKey(i)) { continue; }
-                // TODO: revisar
-                //itens[dic[i].Posicao] = formatarStr(dic[i].Elemento.ToString(), minLStr, sizeMax);
-                itens[dic[i].Posicao] = toStrFormulas_firstlevel(dic[i].Elemento, espaco, i);
+                dicFormulas = dic.ContainsKey(i) ? dic[i] : null;
+                for (int j = 0; j < numeroMaximo; j++)
+                {
+                    if (dicFormulas == null || !dicFormulas.ContainsKey(j)) { continue; }
+                    PosElement<Formulas> posElement = dicFormulas[j];
+
+                    Formulas f = posElement.Elemento;
+                    int pos = 0;
+                    if (f.Negativas != null)
+                    {
+                        for (int k = 0; k < f.Negativas.Count(); k++)
+                        {
+                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = formatarStr(f.Negativas[k].ToString(), minLStr, sizeMax);
+                        }
+                    }
+                    if (f.Positivas != null)
+                    {
+                        for (int k = 0; k < f.Positivas.Count(); k++)
+                        {
+                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = formatarStr(f.Positivas[k].ToString(), minLStr, sizeMax);
+                        }
+                    }
+                }
             }
 
-            StringBuilder rt = new StringBuilder();
-            for (int i = 0; i < numeroMaximo; i++)
+            for (int i2 = 0; i2 < heighttreeFormulas; i2++)
             {
-                rt.Append(itens[i]);
+                string aux = "";
+                for (int j = 0; j < numeroMaximo; j++)
+                {
+                    aux += linhas[i2, j];
+                }
+                p(aux);
             }
 
-            //return string.Format("{0}\t\t{1} {2} [{3}]", rt.ToString(), numeroMaximo, numelementos, chaves);
-            return rt.ToString();
+            // foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp in dic)
+            // {
+
+            // }
+
+
+
+            // string espaco = getEspaco(minEspacos);
+            // int numelementos = dic.Keys.Count();
+            // string chaves = string.Join(",", dic.Keys);
+
+            // string[] itens = new string[numeroMaximo];
+            // for (int i = 0; i < numeroMaximo; i++) { itens[i] = espaco; }
+
+            // for (int i = 0; i < numeroMaximo; i++)
+            // {
+            //     if (!dic.ContainsKey(i)) { continue; }
+            //     // TODO: revisar
+            //     itens[dic[i].Posicao] = formatarStr(dic[i].Elemento.ToString(), minLStr, sizeMax);
+            // }
+
+            // StringBuilder rt = new StringBuilder();
+            // for (int i = 0; i < numeroMaximo; i++)
+            // {
+            //     rt.Append(itens[i]);
+            // }
+
+            // //return string.Format("{0}\t\t{1} {2} [{3}]", rt.ToString(), numeroMaximo, numelementos, chaves);
+            // return rt.ToString();
+
+            return "";
         }
 
 
@@ -243,7 +312,7 @@ namespace classes.testes
             if (f.Direita != null) { pTree(f.Direita, level + 1, (pos << 1) + 1); }
         }
 
-        private Dictionary<int, Dictionary<int, PosElement<Formulas>>> toDict(Formulas t, int level, int pos, int maxElements)
+        private Dictionary<int, Dictionary<int, PosElement<Formulas>>> toDict(Formulas t, int level, int pos, int maxElements, int height)
         {
 
             int nAux = level <= 1 ? maxElements : maxElements / level;
@@ -251,17 +320,20 @@ namespace classes.testes
 
             Dictionary<int, Dictionary<int, PosElement<Formulas>>> rt = new Dictionary<int, Dictionary<int, PosElement<Formulas>>>();
             Dictionary<int, PosElement<Formulas>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<Formulas>>();
-            aux.Add(pos, new PosElement<Formulas>(t, posMap));
+            aux.Add(pos, new PosElement<Formulas>(t, posMap, height));
             rt.Add(level, aux);
+
+            height = (t.Negativas == null ? 0 : t.Negativas.Count()) + (t.Positivas == null ? 0 : t.Positivas.Count());
+            if (height > 0) { height--; }
 
             //p(string.Format("{0}{1} ({2} {3} posMap: {4})", level <= 0 ? "" : getEspaco(level), t.Item, level, pos, posMap));
             if (t.Esquerda != null)
             {
-                unirDicts(rt, toDict(t.Esquerda, level + 1, pos << 1, maxElements));
+                unirDicts(rt, toDict(t.Esquerda, level + 1, pos << 1, maxElements, height));
             }
             if (t.Direita != null)
             {
-                unirDicts(rt, toDict(t.Direita, level + 1, (pos << 1) + 1, maxElements));
+                unirDicts(rt, toDict(t.Direita, level + 1, (pos << 1) + 1, maxElements, height));
             }
             return rt;
         }
@@ -288,15 +360,17 @@ namespace classes.testes
         {
             public T Elemento { get; set; }
             public int Posicao { get; set; }
+            public int Height { get; set; }
 
-            public PosElement(T treeProp, int posicao)
+            public PosElement(T treeProp, int posicao, int height)
             {
                 Elemento = treeProp;
                 Posicao = posicao;
+                Height = height;
             }
             public override string? ToString()
             {
-                return string.Format("{0} {1}", Elemento, Posicao);
+                return string.Format("{0} {1} {2}", Elemento, Posicao, Height);
             }
         }
         #endregion
