@@ -85,17 +85,20 @@ namespace classes.testes
             // p(string.Format("size: {0}, maxElements: {1}", size, Math.Pow(2, size)));
             p();
 
-            int minLStr = maxSizeString(treeR) + 1;
-            int maxLStr = 4;
+            // int minLStr = maxSizeString(treeR) + 1;
+            // int maxLStr = 4;
 
             // string fullPath = @"C:\Users\zero_\OneDrive\Área de Trabalho\tree.txt";
             // using (StreamWriter writer = new StreamWriter(fullPath)) {
-            foreach (KeyValuePair<int, Dictionary<int, PosElement<Tree>>> kvp in dic)
-            {
-                string linha = toStrLineDic(kvp.Value, ((int)Math.Pow(2, dic.Keys.Max()) * 2), minLStr, maxLStr);
-                p(linha);
-                //writer.WriteLine(linha);
-            }
+
+            p(toStrLineDic(dic));
+
+            // foreach (KeyValuePair<int, Dictionary<int, PosElement<Tree>>> kvp in dic)
+            // {
+            //     string linha = toStrLineDic(kvp.Value, ((int)Math.Pow(2, dic.Keys.Max()) * 2));
+            //     p(linha);
+            //     //writer.WriteLine(linha);
+            // }
             //}
 
             p();
@@ -132,33 +135,74 @@ namespace classes.testes
             return t == null ? 0 : Math.Max(t.Item.Length, Math.Max(maxSizeString(t.Esquerda), maxSizeString(t.Direita)));
         }
 
-        private string toStrLineDic(Dictionary<int, PosElement<Tree>> dic, int numeroMaximo, int minLStr, int sizeMax = 0)
+        private string toStrLineDic(Dictionary<int, Dictionary<int, PosElement<Tree>>>? dic)
         {
-            if (dic == null || numeroMaximo <= 0) { return ""; }
-            //if (minEspacos <= 0) { minEspacos = 3; }
-            minLStr = minLStr <= sizeMax ? minLStr : sizeMax;
-            int minEspacos = minLStr;
+            if (dic == null) { return ""; }
 
-            string espaco = getEspaco(minEspacos);
-            int numelementos = dic.Keys.Count();
-            string chaves = string.Join(",", dic.Keys);
+            int numLevels = dic.Keys.Count();
+            int numeroMaximo = ((int)Math.Pow(2, dic.Keys.Max()) * 2);
 
-            string[] itens = new string[numeroMaximo];
-            for (int i = 0; i < numeroMaximo; i++) { itens[i] = espaco; }
+            p(string.Format("numeroMaximo: {0}, numelementos: {1}", numeroMaximo, numLevels)); //16, 4
 
-            for (int i = 0; i < numeroMaximo; i++)
+            string[,] linhas = new string[numLevels, numeroMaximo];
+            for (int i = 0; i < numLevels; i++) { for (int j = 0; j < numeroMaximo; j++) { linhas[i, j] = " "; } }
+
+            Dictionary<int, PosElement<Tree>>? dicFormulas = null;
+            for (int i = 0; i < numLevels; i++)
             {
-                if (!dic.ContainsKey(i)) { continue; }
-                itens[dic[i].Posicao] = formatarStr(dic[i].Elemento.ToString(), minLStr, sizeMax);
+                dicFormulas = dic.ContainsKey(i) ? dic[i] : null;
+                for (int j = 0; j < numeroMaximo; j++)
+                {
+                    if (dicFormulas == null || !dicFormulas.ContainsKey(j)) { continue; }
+                    PosElement<Tree> posElement = dicFormulas[j];
+                    Tree t = posElement.Elemento;
+
+                    linhas[i, posElement.Posicao] = t.ToString();
+                }
             }
+
+            Dictionary<int, int> dicMaxSizeColumn = new Dictionary<int, int>();
+            List<int> skipJ = new List<int>();
+            #region eliminar colunas vazias
+            for (int j = 0; j < numeroMaximo; j++)
+            {
+                bool bSkipJ = true;
+                for (int i = 0; i < numLevels; i++)
+                {
+                    string valor = linhas[i, j].Trim();
+                    if (!string.IsNullOrEmpty(valor))
+                    {
+                        bSkipJ = false;
+                        if (!dicMaxSizeColumn.ContainsKey(j))
+                        {
+                            dicMaxSizeColumn.Add(j, valor.Length + 1);
+                            continue;
+                        }
+                        else if (dicMaxSizeColumn[j] < valor.Length)
+                        {
+                            dicMaxSizeColumn.Remove(j);
+                            dicMaxSizeColumn.Add(j, valor.Length + 1);
+                        }
+                        continue;
+                    }
+                }
+                if (bSkipJ)
+                {
+                    skipJ.Add(j);
+                }
+            }
+            #endregion
 
             StringBuilder rt = new StringBuilder();
-            for (int i = 0; i < numeroMaximo; i++)
+            for (int i = 0; i < numLevels; i++)
             {
-                rt.Append(itens[i]);
+                for (int j = 0; j < numeroMaximo; j++)
+                {
+                    if (skipJ.Contains(j) || !dicMaxSizeColumn.ContainsKey(j)) { continue; }
+                    rt.Append(formatarStr(linhas[i, j], dicMaxSizeColumn[j])); //, !string.IsNullOrEmpty(linhas[i, j].Trim())
+                }
+                rt.AppendLine();
             }
-
-            //return string.Format("{0}\t\t{1} {2} [{3}]", rt.ToString(), numeroMaximo, numelementos, chaves);
             return rt.ToString();
         }
 
