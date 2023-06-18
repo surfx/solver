@@ -3,10 +3,10 @@ using classes.regras;
 using classes.regras.binarias;
 using classes.regras.unitarias;
 
-namespace classes.testes
+namespace classes.testes.regras
 {
 
-    public class TestesRegras
+    public class TestesRegras1
     {
 
         /* 

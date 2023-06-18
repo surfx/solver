@@ -147,19 +147,6 @@ namespace classes.testes
             return Math.Max(f.Negativas == null ? 0 : f.Negativas.Max(x => x == null ? 0 : x.ToString().Length), f.Positivas == null ? 0 : f.Positivas.Max(x => x == null ? 0 : x.ToString().Length));
         }
 
-
-        
-
-
-
-
-        
-
-
-        
-
-
-        
         #endregion
 
         // private List<string>? toArrayStr(List<ConjuntoFormula> formulas)

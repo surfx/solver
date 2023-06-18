@@ -1,4 +1,5 @@
 ﻿using classes.testes;
+using classes.testes.regras;
 
 namespace ConsoleApp1
 {
@@ -24,7 +25,10 @@ namespace ConsoleApp1
             //new TestesTree().teste1();
             //new TestesTree().teste2();
 
-            new TestesTreeList().teste1();
+            //new TestesTreeList().teste1();
+
+            TestesRegras2 testesRegras2 = new TestesRegras2();
+            testesRegras2.testeRegraRemoverFalsos();
 
         }
     }
