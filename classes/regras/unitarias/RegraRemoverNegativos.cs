@@ -3,6 +3,8 @@ using classes.formulas;
 namespace classes.regras.unitarias
 {
     /* 
+        Obs: Não aplicar, mas sim as regras RegraFalsoNegativo e RegraTrueNegativo
+
         T (¬¬¬(A → ¬¬¬B)) ˄ (¬(C ˅ ¬¬F))
         T (¬(A → ¬B)) ˄ (¬(C ˅ F))
     */
@@ -17,14 +19,6 @@ namespace classes.regras.unitarias
                 (cf.AtomoConectorProp.isConector && cf.AtomoConectorProp.ConectorProp == null)
             ) { return false; }
             return isValid(cf.AtomoConectorProp);
-        }
-
-        private bool isValid(AtomoConector? ac)
-        {
-            if (ac == null) { return false; }
-            if (ac.isAtomo && ac.AtomoProp != null && ac.AtomoProp.NumeroNegados >= 2) { return true; }
-            if (!ac.isConector || ac.ConectorProp == null) { return false; }
-            return ac.ConectorProp.NumeroNegados >= 2 || isValid(ac.ConectorProp.Esquerda) || isValid(ac.ConectorProp.Direita);
         }
 
         public ConjuntoFormula? apply(ConjuntoFormula cf)
@@ -47,6 +41,16 @@ namespace classes.regras.unitarias
             return new ConjuntoFormula(cf.Simbolo, ac);
         }
 
+        #region auxiliar
+
+        private bool isValid(AtomoConector? ac)
+        {
+            if (ac == null) { return false; }
+            if (ac.isAtomo && ac.AtomoProp != null && ac.AtomoProp.NumeroNegados >= 2) { return true; }
+            if (!ac.isConector || ac.ConectorProp == null) { return false; }
+            return ac.ConectorProp.NumeroNegados >= 2 || isValid(ac.ConectorProp.Esquerda) || isValid(ac.ConectorProp.Direita);
+        }
+
         private AtomoConector? apply(AtomoConector ac)
         {
             // 
@@ -67,6 +71,8 @@ namespace classes.regras.unitarias
             }
             return acAux;
         }
+
+        #endregion
 
     }
 }

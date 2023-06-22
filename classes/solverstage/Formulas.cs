@@ -1,4 +1,5 @@
 using classes.formulas;
+using classes.solverstage.print;
 
 namespace classes.solverstage
 {
@@ -41,6 +42,11 @@ namespace classes.solverstage
         {
             if (_direita == null) { _direita = new Formulas(); }
             _direita.addConjuntoFormula(cf);
+        }
+
+        public override string ToString()
+        {
+            return new PrintFormulas().toString(this);
         }
 
     }

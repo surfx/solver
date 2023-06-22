@@ -1,8 +1,8 @@
-using System.Text;
 using classes.auxiliar;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
+using classes.solverstage.print;
 
 namespace classes.testes
 {
@@ -12,44 +12,7 @@ namespace classes.testes
 
         public void teste1()
         {
-            Formulas f = new Formulas();
-
-            Parser parser = new Parser();
-            f.addConjuntoFormula(parser.parserCF("A->B"));
-            f.addConjuntoFormula(parser.parserCF("F C->E"));
-            f.addConjuntoFormula(parser.parserCF("C"));
-            f.addConjuntoFormula(parser.parserCF("F A"));
-            //f.addConjuntoFormula(parser.parserCF("T (A | D) -> (C & D)"));
-            f.addConjuntoFormula(parser.parserCF("T (A | D)"));
-
-            p("-- Root");
-            f.Negativas.ForEach(x => p(x.ToString()));
-            f.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Negativas), sizeMax(f.Positivas))));
-            p();
-
-            f.addEsquerda(parser.parserCF("E"));
-            f.addEsquerda(parser.parserCF("F Y -> (A | B)"));
-            //f.addEsquerda(parser.parserCF("T A->B"));
-
-            p("-- Esquerda");
-            f.Esquerda.Negativas.ForEach(x => p(x.ToString()));
-            f.Esquerda.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Esquerda.Negativas), sizeMax(f.Esquerda.Positivas))));
-            p();
-
-            f.addDireita(parser.parserCF("T H->G"));
-            //f.addDireita(parser.parserCF("F (A|Z) & (C | D) -> J"));
-            f.addDireita(parser.parserCF("F (A|Z)"));
-            f.addDireita(parser.parserCF("T G|T&U"));
-
-            p("-- Direita");
-            f.Direita.Negativas.ForEach(x => p(x.ToString()));
-            f.Direita.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Direita.Negativas), sizeMax(f.Direita.Positivas))));
-
-            // TESTES
-            f.Esquerda.addDireita(parser.parserCF("G & (Y -> B)"));
+            Formulas f = getFormula();
 
             p();
 
@@ -92,7 +55,7 @@ namespace classes.testes
 
             p();
 
-            
+
 
             string fullPath = @"C:\Users\zero_\OneDrive\Área de Trabalho\tree.txt";
             using (StreamWriter writer = new StreamWriter(fullPath))
@@ -104,6 +67,55 @@ namespace classes.testes
 
             // p();
 
+        }
+
+        public void teste2()
+        {
+            p(getFormula().ToString());
+        }
+
+        private Formulas getFormula()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("A->B"));
+            f.addConjuntoFormula(parser.parserCF("F C->E"));
+            f.addConjuntoFormula(parser.parserCF("C"));
+            f.addConjuntoFormula(parser.parserCF("F A"));
+            //f.addConjuntoFormula(parser.parserCF("T (A | D) -> (C & D)"));
+            f.addConjuntoFormula(parser.parserCF("T (A | D)"));
+
+            p("-- Root");
+            f.Negativas.ForEach(x => p(x.ToString()));
+            f.Positivas.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", Math.Max(sizeMax(f.Negativas), sizeMax(f.Positivas))));
+            p();
+
+            f.addEsquerda(parser.parserCF("E"));
+            f.addEsquerda(parser.parserCF("F Y -> (A | B)"));
+            //f.addEsquerda(parser.parserCF("T A->B"));
+
+            p("-- Esquerda");
+            f.Esquerda.Negativas.ForEach(x => p(x.ToString()));
+            f.Esquerda.Positivas.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", Math.Max(sizeMax(f.Esquerda.Negativas), sizeMax(f.Esquerda.Positivas))));
+            p();
+
+            f.addDireita(parser.parserCF("T H->G"));
+            //f.addDireita(parser.parserCF("F (A|Z) & (C | D) -> J"));
+            f.addDireita(parser.parserCF("F (A|Z)"));
+            f.addDireita(parser.parserCF("T G|T&U"));
+
+            p("-- Direita");
+            f.Direita.Negativas.ForEach(x => p(x.ToString()));
+            f.Direita.Positivas.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", Math.Max(sizeMax(f.Direita.Negativas), sizeMax(f.Direita.Positivas))));
+
+            // TESTES
+            f.Esquerda.addDireita(parser.parserCF("G & (Y -> B)"));
+
+            return f;
         }
 
 

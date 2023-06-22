@@ -17,6 +17,7 @@ namespace classes.testes.regras
 
 
             apply(new RegraRemoverNegativos(), cf1);
+            p("");
             apply(new RegraRemoverNegativos(), cf2);
         }
 

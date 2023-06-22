@@ -1,4 +1,6 @@
+using classes.auxiliar;
 using classes.formulas;
+using classes.parser;
 using classes.regras;
 using classes.regras.binarias;
 using classes.regras.unitarias;
@@ -32,7 +34,53 @@ namespace classes.testes.regras
             ConjuntoFormula cf5 = new ConjuntoFormula(false, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), 1));
             apply(rfn, cf5);
             p();
+            p("");
 
+
+            Parser parser = new Parser();
+            ConjuntoFormula cf6 = parser.parserCF("F !!!!!A");
+            apply(rfn, cf6);
+            p("");
+
+            apply(rfn, parser.parserCF("T !(A | B) -> G"));
+            p("");
+
+            apply(rfn, parser.parserCF("F !(A | B) -> G"));
+            p("");
+
+
+        }
+
+        public void testeRegraTrueNegativo()
+        {
+            IRegraUnaria rtn = new RegraTrueNegativo();
+            IRegraUnaria rfn = new RegraFalsoNegativo();
+
+            Parser parser = new Parser();
+            ConjuntoFormula cf1 = parser.parserCF("F !!!!!A");
+
+            apply(rfn, cf1);
+            p("");
+            apply(rtn, rfn.apply(cf1));
+            p("");
+
+            apply(rtn, parser.parserCF("T A"));
+            p("");
+
+            apply(rtn, parser.parserCF("T !!A"));
+            p("");
+
+            apply(rtn, parser.parserCF("F !A"));
+            p("");
+
+            apply(rtn, parser.parserCF("T !(A | B)"));
+            p("");
+
+            apply(rtn, parser.parserCF("F !(A | B)"));
+            p("");
+
+            apply(rtn, parser.parserCF("T !(A | B) -> G"));
+            p("");
         }
 
         /*
@@ -41,7 +89,8 @@ namespace classes.testes.regras
             ------- (T →1)
             T B
         */
-        public void testeRegraTrueImplica1(){
+        public void testeRegraTrueImplica1()
+        {
 
             IRegraBinaria rti = new RegraTrueImplica();
 
@@ -55,11 +104,11 @@ namespace classes.testes.regras
             apply(rti, cf1, cf2);
             p();
 
-            
+
             Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G", 0));
             Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), c2);
             ConjuntoFormula cf5 = new ConjuntoFormula(true, c3);                                    // T A → (¬D v G)
-            
+
             apply(rti, cf5, cf2);
             p();
 
@@ -82,14 +131,15 @@ namespace classes.testes.regras
 
         }
 
-        public void testeRegraTrueImplica2(){
+        public void testeRegraTrueImplica2()
+        {
             /*
             T G → D
             T ( G → D ) → (¬D v G)
             ------------------
             T ¬D v G
             */
-            
+
             IRegraBinaria rti = new RegraTrueImplica();
 
             //Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
@@ -106,13 +156,15 @@ namespace classes.testes.regras
 
         #region apply rules
 
-        private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1){
+        private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1)
+        {
             Console.WriteLine(cf1);
             Console.WriteLine(string.Format("------ {0}", rUnaria.RULE));
             Console.WriteLine(rUnaria.apply(cf1));
         }
 
-        private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2){
+        private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2)
+        {
             Console.WriteLine(cf1);
             Console.WriteLine(cf2);
             Console.WriteLine(string.Format("------ {0}", rBinaria.RULE));
@@ -121,7 +173,11 @@ namespace classes.testes.regras
 
         #endregion
 
-        private void p(){Console.WriteLine("-----------------");}
+        #region auxiliar
+        private void p() { UtilFormulas.p(); }
+        private void p(string str) { UtilFormulas.p(str); }
+        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
+        #endregion
 
     }
 

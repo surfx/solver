@@ -38,6 +38,7 @@ namespace classes.formulas
             return new Conector(Simbolo, Esquerda, Direita, NumeroNegados);
         }
 
+        // não considero negado número par de negativas...
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
 
         #region sizeStr
