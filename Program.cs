@@ -1,4 +1,5 @@
 ﻿using classes.testes;
+using classes.testes.imagens;
 using classes.testes.regras;
 using classes.testes.solverstage;
 
@@ -21,8 +22,6 @@ namespace ConsoleApp1
             //new TestesParser2().teste1();
             //new TestesParser2().teste2();
 
-            //new TestesPrint().teste1();
-
             //new TestesTree().teste1();
             //new TestesTree().teste2();
 
@@ -34,9 +33,12 @@ namespace ConsoleApp1
             //new TestesRegras1().testeRegraFalsoNegativo();
             //new TestesRegras1().testeRegraTrueNegativo();
             //new TestesRegras1().testeRegraTrueImplica1();
-            new TestesRegras1().testeRegraTrueImplica2();
+            //new TestesRegras1().testeRegraTrueImplica2();
 
             //new TestesSolverStage().teste1();
+
+            //new TestesImagens().teste1();
+            new TestesImagens().teste2();
 
         }
     }

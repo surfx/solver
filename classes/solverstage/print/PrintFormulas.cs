@@ -174,7 +174,7 @@ namespace classes.solverstage.print
 
         private string formatarStr(string str, int sizeString = 0)
         {
-            if (str == null || string.IsNullOrEmpty(str) || sizeString <= 0) { return str; }
+            if (str == null || string.IsNullOrEmpty(str) || sizeString <= 0) { return str ?? ""; }
             str = str.Trim();
             if (sizeString <= 0 && str.Length >= sizeString) { return str; }
             bool left = true;

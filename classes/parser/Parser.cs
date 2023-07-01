@@ -6,7 +6,7 @@ namespace classes.parser
     // Parser para estrutura de dados ConjuntoFormula
     public class Parser
     {
-        
+
         private string[] conectores = Auxiliar.getSimbolos(false);
         private const string simboloNegado = Auxiliar.SimboloNegado;
 
@@ -16,16 +16,27 @@ namespace classes.parser
             entrada = UtilFormulas.sanitizar(entrada);
 
             // OBS: se a entrada começa com T ou F, será o símbolo. Se não, considero T
-            bool simbolo = !entrada.Substring(0, 1).ToUpper().Equals("F");
-            if (entrada.Substring(0, 1).ToUpper().Equals("T") || entrada.Substring(0, 1).ToUpper().Equals("F"))
+
+            bool simbolo = true;
+            // Length: 1 e o átomo é 'F' ou 'T'
+            if (entrada.Length == 1 && entrada.ToUpper().Equals("F") || entrada.ToUpper().Equals("T"))
             {
-                entrada = entrada.Substring(1);
+                simbolo = true; // como não sei o simbolo, seta True
+            }
+            else
+            {
+                simbolo = !entrada.Substring(0, 1).ToUpper().Equals("F");
+                if (entrada.Substring(0, 1).ToUpper().Equals("T") || entrada.Substring(0, 1).ToUpper().Equals("F"))
+                {
+                    entrada = entrada.Substring(1);
+                }
             }
 
             List<ItemList>? list = unirAtomoConector(entrada);
-            if (list == null || list.Count <= 0 || list.Count > 1 || !isAtomoConectorProp(list[0])) { 
+            if (list == null || list.Count <= 0 || list.Count > 1 || !isAtomoConectorProp(list[0]))
+            {
                 Console.WriteLine(string.Format("-- erro ao converter a entrada: {0}", entrada));
-                return null; 
+                return null;
             }
 
             AtomoConector? ac = list[0].AtomoConectorProp;

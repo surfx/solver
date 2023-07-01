@@ -12,8 +12,10 @@ namespace classes.testes.solverstage
         public void teste1()
         {
 
-            p(getFormulas1().ToString());
+            //p(getFormulas1().ToString());
+            //p();p("");
 
+            p(getFormulaT().ToString());
 
         }
 
@@ -44,24 +46,24 @@ namespace classes.testes.solverstage
             f.addConjuntoFormula(parser.parserCF("T (A | D)"));
 
 
-            f.Negativas.ForEach(x => p(x.ToString()));
-            f.Positivas.ForEach(x => p(x.ToString()));
+            //f.Negativas.ForEach(x => p(x.ToString()));
+            //f.Positivas.ForEach(x => p(x.ToString()));
 
             f.addEsquerda(parser.parserCF("E"));
             f.addEsquerda(parser.parserCF("F Y -> (A | B)"));
             //f.addEsquerda(parser.parserCF("T A->B"));
 
 
-            f.Esquerda.Negativas.ForEach(x => p(x.ToString()));
-            f.Esquerda.Positivas.ForEach(x => p(x.ToString()));
+            //f.Esquerda.Negativas.ForEach(x => p(x.ToString()));
+            //f.Esquerda.Positivas.ForEach(x => p(x.ToString()));
 
             f.addDireita(parser.parserCF("T H->G"));
             //f.addDireita(parser.parserCF("F (A|Z) & (C | D) -> J"));
             f.addDireita(parser.parserCF("F (A|Z)"));
             f.addDireita(parser.parserCF("T G|T&U"));
 
-            f.Direita.Negativas.ForEach(x => p(x.ToString()));
-            f.Direita.Positivas.ForEach(x => p(x.ToString()));
+            //f.Direita.Negativas.ForEach(x => p(x.ToString()));
+            //f.Direita.Positivas.ForEach(x => p(x.ToString()));
 
             // TESTES
             f.Esquerda.addDireita(parser.parserCF("G & (Y -> B)"));

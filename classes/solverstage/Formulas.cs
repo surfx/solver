@@ -3,7 +3,7 @@ using classes.solverstage.print;
 
 namespace classes.solverstage
 {
-    public class Formulas
+    public class Formulas : IDisposable
     {
         private List<ConjuntoFormula>? _positivas, _negativas;
         public List<ConjuntoFormula>? Positivas { get => _positivas; }
@@ -47,6 +47,14 @@ namespace classes.solverstage
         public override string ToString()
         {
             return new PrintFormulas().toString(this);
+        }
+
+        public void Dispose()
+        {
+            _positivas = null;
+            _negativas = null;
+            _esquerda = null;
+            _direita = null;
         }
 
     }
