@@ -11,7 +11,7 @@ namespace classes.regras.binarias
 
         obs: A ou B podem ser conectores (!)
     */
-    public class RegraTrueImplica : IRegraBinaria
+    public class RegraTrueImplica1 : IRegraBinaria
     {
         public string RULE { get => "T →1"; }
 

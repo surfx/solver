@@ -79,6 +79,12 @@ namespace classes.testes.regras
             apply(rtn, parser.parserCF("F !(A | B)"));
             p("");
 
+            // TODO: verificar essa regra no KEMS
+            // T (¬(A ˅ B)) → G
+            // ------ T ¬
+            // F (A ˅ B) → G
+
+
             apply(rtn, parser.parserCF("T !(A | B) -> G"));
             p("");
         }
@@ -92,7 +98,7 @@ namespace classes.testes.regras
         public void testeRegraTrueImplica1()
         {
 
-            IRegraBinaria rti = new RegraTrueImplica();
+            IRegraBinaria rti = new RegraTrueImplica1();
 
             // ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, bool negado = false
             Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), new Atomo("B", 0));
@@ -102,7 +108,7 @@ namespace classes.testes.regras
             ConjuntoFormula cf2 = new ConjuntoFormula(true, new Atomo("A", 0));
 
             apply(rti, cf1, cf2);
-            p();
+            p(); p("");
 
 
             Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G", 0));
@@ -110,17 +116,17 @@ namespace classes.testes.regras
             ConjuntoFormula cf5 = new ConjuntoFormula(true, c3);                                    // T A → (¬D v G)
 
             apply(rti, cf5, cf2);
-            p();
+            p(); p("");
 
             // T G → D
             Conector G_impl_D = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));     //  G → D
-            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));     // ¬D v G
+            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));        // ¬D v G
             Conector G_impl_D_impl_nD_ou_G = new Conector(ESimbolo.IMPLICA, G_impl_D, nD_ou_G);     // (G → D) → (¬D v G)
             ConjuntoFormula cf7 = new ConjuntoFormula(true, G_impl_D_impl_nD_ou_G);                 // T (G → D) → (¬D v G)
             ConjuntoFormula cf8 = new ConjuntoFormula(true, G_impl_D);                              // T G → D
 
             apply(rti, cf7, cf8);
-            p();
+            p(); p("");
 
             /*
             T G → D
@@ -128,29 +134,55 @@ namespace classes.testes.regras
             ------------------
             T ¬D v G
             */
+
+            //---------------------------------------------
+            Parser parser = new Parser();
+            ConjuntoFormula cf9 = parser.parserCF("(G → D) → (¬D v G)");
+            ConjuntoFormula cf10 = parser.parserCF("A");
+
+            apply(rti, cf9, cf10);
+            p(); p("");
+            /*
+            T G → D
+            T ( G → D ) → (¬D v G)
+            ------------------
+            T ¬D v G
+            */
+
+
+            //Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
+
+            Conector c3n = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", 1));
+            ConjuntoFormula cf1n = new ConjuntoFormula(true, c3.copy());
+            Conector c2n = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));
+            ConjuntoFormula cf2n = new ConjuntoFormula(true, new Conector(ESimbolo.IMPLICA, c3.copy(), c2.copy()));
+
+            apply(rti, cf1, cf2);
+            p();
 
         }
 
         public void testeRegraTrueImplica2()
         {
+            IRegraBinaria rti = new RegraTrueImplica2();
+            Parser parser = new Parser();
+
             /*
-            T G → D
-            T ( G → D ) → (¬D v G)
-            ------------------
-            T ¬D v G
+                T A → B
+                F B
+                ------- (T →2)
+                F A
             */
+            ConjuntoFormula cf1 = parser.parserCF("A → B");
+            ConjuntoFormula cf2 = parser.parserCF("B"); cf2.Simbolo = false;
+            apply(rti, cf1, cf2); p(); p("");
 
-            IRegraBinaria rti = new RegraTrueImplica();
+            apply(rti, cf2, cf1); p(); p("");
 
-            //Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", true));
 
-            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D", 1));
-            ConjuntoFormula cf1 = new ConjuntoFormula(true, c3.copy());
-            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, new Conector(ESimbolo.IMPLICA, c3.copy(), c2.copy()));
-
-            apply(rti, cf1, cf2);
-            p();
+            ConjuntoFormula cf3 = parser.parserCF("(G → D) → (¬D v G)");
+            ConjuntoFormula cf4 = parser.parserCF("¬D v G"); cf4.Simbolo = false;
+            apply(rti, cf3, cf4); p(); p("");
 
         }
 

@@ -32,7 +32,9 @@ namespace ConsoleApp1
             //new TestesRegras2().testeRegraRemoverFalsos();
 
             //new TestesRegras1().testeRegraFalsoNegativo();
-            new TestesRegras1().testeRegraTrueNegativo();
+            //new TestesRegras1().testeRegraTrueNegativo();
+            //new TestesRegras1().testeRegraTrueImplica1();
+            new TestesRegras1().testeRegraTrueImplica2();
 
             //new TestesSolverStage().teste1();
 
