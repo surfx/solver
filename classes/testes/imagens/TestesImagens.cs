@@ -11,6 +11,8 @@ namespace classes.testes.imagens
     public class TestesImagens
     {
 
+        Parser parser = new();
+
         public void teste1()
         {
             string firstText = "Hello";
@@ -59,179 +61,397 @@ namespace classes.testes.imagens
 
         public void teste2()
         {
-            Formulas f = getFormulaT();
-            //f = getFormulaABCDEFG();
-            int maxElements = (int)Math.Pow(2, heightTree(f) - 1);
-            p(f.ToString());
-
-            PrintFormulas pf = new PrintFormulas();
-            Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic = pf.toDict(f, 0, 0, maxElements, 0);
-
-            foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp1 in dic)
+            drawImg(g =>
             {
-                int linha = kvp1.Key; // level ou linha
-                foreach (KeyValuePair<int, PosElement<Formulas>> kvp2 in kvp1.Value)
-                {
-                    int coluna = kvp2.Key;
-                    PosElement<Formulas> pel = kvp2.Value;
-                    Formulas faux = pel.Elemento;
-                    Console.WriteLine(string.Format("[{0},{1}] [{2},{3}]", linha, coluna, pel.Posicao, pel.Height));
-                    faux?.Negativas?.ForEach(x => Console.WriteLine(x));
-                    faux?.Positivas?.ForEach(x => Console.WriteLine(x));
-
-                    Console.WriteLine();
-                }
-            }
-
-            p("maxElements: " + maxElements + ", heightTree: " + heightTree(f));
-            p(); p(""); p("");
-
-            List<XYH> lxy = toXYH(f, 0, 0, maxElements, 0);
-            lxy.ForEach(x => Console.WriteLine(x));
-
-            int maxML = lxy.Max(xyh => xyh.ML);
-            int maxX = lxy.Max(xyh => xyh.X);
-            int maxY = lxy.Max(xyh => xyh.Y);
-            int maxH = lxy.Max(xyh => xyh.H);
-            p("maxX: " + maxX + ", maxML: " + maxML + ", maxY: " + maxY + ", maxH: " + maxH);
-
-
-
-            //int widthImg = maxX * (maxML + 55);
-            int widthImg = Convert.ToInt32(Math.Pow(heightTree(f), 2) * (maxML + 55));
-            int heigthImg = maxY + (++maxH * 20);
-
-            // max width image
-            p(string.Format("max width image: {0}", widthImg));
-
-            // max heigth image
-            p(string.Format("max heigth image: {0}", heigthImg));
-
-
-            //-----------------------------
-
-            using Bitmap bitmap = new(widthImg, heigthImg);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
-            {
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                graphics.Clear(Color.White);
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                Pen blackPen = new Pen(Color.Black, 1);
+                PointF point1 = new PointF(100.0F, 100.0F);
+                PointF point2 = new PointF(500.0F, 100.0F);
+                g.DrawLine(blackPen, point1, point2);
 
                 using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
                 {
-                    //for (int i = 0; i < linhas.Length; i++) { graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0,i+(i*20))); }
+                    g.DrawString("0,0", fonte, Brushes.Black, new PointF(0, 0));
+                    g.DrawString("0,10", fonte, Brushes.Black, new PointF(0, 10));
+                    g.DrawString("0,100", fonte, Brushes.Black, new PointF(0, 100));
+                    g.DrawString("0,500", fonte, Brushes.Black, new PointF(0, 500));
+                    g.DrawString("0,900", fonte, Brushes.Black, new PointF(0, 900));
+                    g.DrawString("0,990", fonte, Brushes.Black, new PointF(0, 990));
 
-                    // foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp1 in dic)
-                    // {
-                    //     int linha = kvp1.Key; // level ou linha
-                    //     foreach (KeyValuePair<int, PosElement<Formulas>> kvp2 in kvp1.Value)
-                    //     {
-                    //         int coluna = kvp2.Key;
-                    //         PosElement<Formulas> pel = kvp2.Value;
-                    //         Formulas faux = pel.Elemento;
-                    //         Console.WriteLine(string.Format("[{0},{1}] [{2},{3}]", linha, coluna, pel.Posicao, pel.Height));
-                    //         faux?.Negativas?.ForEach(x => Console.WriteLine(x));
-                    //         faux?.Positivas?.ForEach(x => Console.WriteLine(x));
+                    g.DrawString("500,500", fonte, Brushes.Black, new PointF(500, 500));
 
-                    //         Console.WriteLine();
-                    //     }
+                    g.DrawString("990,990", fonte, Brushes.Black, new PointF(990, 990));
+                    g.DrawString("1000,1000", fonte, Brushes.Black, new PointF(1000, 1000));
+
+                    g.DrawString("990,0", fonte, Brushes.Black, new PointF(990, 0));
+                    g.DrawString("1000,0", fonte, Brushes.Black, new PointF(1000, 0));
+
+                    // estudo tamanho caracteres
+                    g.DrawString("0123456789", fonte, Brushes.Black, new PointF(300, 300));
+                    g.DrawString("abcdefghijklmnopqrstuvxyz".ToUpper(), fonte, Brushes.Black, new PointF(300, 310));
+                    g.DrawString("abcdefghijklmnopqrstuvxyz", fonte, Brushes.Black, new PointF(300, 320));
+
+                    // int h = 320;
+                    // for(float f = 0.0f; f <= 10.0f; f++){
+                    //     h+=10;
+                    //     g.DrawString(""+f, fonte, Brushes.Black, new PointF(300.0f + f, h));
                     // }
-
-
-
-                    //graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0, i + (i * 20)));
-
-                    lxy.ForEach(xyh =>
+                    float w = 7.55f;
+                    //g.DrawString("a", fonte, Brushes.Black, new PointF(300f, 330));
+                    //g.DrawString("c", fonte, Brushes.Black, new PointF(300.0f + w*10, 330));
+                    for (float f = 0.0f; f <= 400.0f; f += w)
                     {
-                        // esquerda, altura
-                        graphics.DrawString(xyh.CF?.ToString(), fonte, Brushes.Black, new PointF(xyh.X * (xyh.ML + 50), xyh.Y + xyh.H * 20));
-                    });
+                        g.DrawString("c", fonte, Brushes.Black, new PointF(300.0f + f, 330));
+                    }
 
                 }
 
-            }
-
-            bitmap.Save(@"imgformulas\bmp_formula.png");//save the image file
-
+            });
         }
 
         public void teste3()
         {
             Formulas f = getFormulaT();
-            //PrintFormulas pf = new PrintFormulas();
+            //f = getFormulaABCDEFG();
+            //f.Direita.Esquerda.addDireita(parser.parserCF("H"));
 
-            //int maxElements = (int)Math.Pow(2, pf.heightTree(f) - 1);
-            //Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic = pf.toDict(f, 0, 0, maxElements, 0);
+            p(f.ToString()); p(); p("");
 
-            // 1º int: level ou linha
-            // 2º int: coluna
+            // Consolas 10
+            const float hchar = 10.0f; // height de 1 char
+            const float wchar = 7.55f; // width de 1 char
+            int lineMaxL = lineMaxLength(f, 2) + 2; // 2 espaços: direita/esquerda
+            float widthImg = lineMaxL * wchar;
+            int numL = numLines(f); // número de linhas
+            float heigthImg = (numL + 1.5f) * hchar;
+            p(string.Format("lineMaxL: {0}, widthImg: {1}", lineMaxL, widthImg));
+            p(string.Format("numL: {0}, heigthImg: {1}", numL, heigthImg));
 
-            //string[] linhas = f.ToString().Split("\n");
+            //float widthMiddle = widthImg / 2.0f;
 
-
-            //Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
-            //using Bitmap bitmap = drawFilledRectangle(500, 600);
-            using Bitmap bitmap = new(500, 600);
-
-            using (Graphics graphics = Graphics.FromImage(bitmap))
+            drawImg(g =>
             {
-                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
-                graphics.Clear(Color.White);
-                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-
-                using (Font arialFont = new Font("Arial", 10, FontStyle.Regular))
+                using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
                 {
-                    //for (int i = 0; i < linhas.Length; i++) { graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0,i+(i*20))); }
-
-                    // foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp1 in dic)
-                    // {
-                    //     int linha = kvp1.Key; // level ou linha
-                    //     foreach (KeyValuePair<int, PosElement<Formulas>> kvp2 in kvp1.Value)
-                    //     {
-                    //         int coluna = kvp2.Key;
-                    //         PosElement<Formulas> pel = kvp2.Value;
-                    //         Formulas faux = pel.Elemento;
-                    //         Console.WriteLine(string.Format("[{0},{1}] [{2},{3}]", linha, coluna, pel.Posicao, pel.Height));
-                    //         faux?.Negativas?.ForEach(x => Console.WriteLine(x));
-                    //         faux?.Positivas?.ForEach(x => Console.WriteLine(x));
-
-                    //         Console.WriteLine();
-                    //     }
-                    // }
-
-
-
-                    //graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0, i + (i * 20)));
+                    drawFormula(f, g, fonte, widthImg, widthImg, 0, hchar, wchar);
                 }
+            }, Convert.ToInt32(widthImg), Convert.ToInt32(heigthImg));
 
-                //StringFormat sf = new StringFormat();
-                //sf.Alignment = StringAlignment.Center;
-                //sf.LineAlignment = StringAlignment.Center;
+        }
 
-                //graphics.DrawString("My\nText", new System.Drawing.Font("Consola", 15, FontStyle.Regular), Brushes.Black, new PointF(100f, 100f), sf);
+        public void teste4()
+        {
+            Formulas f = getFormulaT();
+            //f = getFormulaABCDEFG();
 
+            // Consolas 10
+            const float hchar = 10.0f; // height de 1 char
+            const float wchar = 7.55f; // width de 1 char
 
-                // for (int i = 0; i <= 500; i += 15)
+            string[] linhas = f.ToString().Split(Environment.NewLine);
+
+            int maxChars = linhas.Max(l => l.Length) + 2; // 2: espaçamento
+            float widthImg = maxChars * wchar;
+            int numL = numLines(f); // número de linhas
+            float heigthImg = (numL + 2.5f) * hchar;
+            p(string.Format("maxChars: {0}, widthImg: {1}", maxChars, widthImg));
+            p(string.Format("numL: {0}, heigthImg: {1}", numL, heigthImg));
+
+            foreach (string linha in linhas)
+            {
+                if (linha == null || linha.Length <= 0) { continue; }
+                p(string.Format("{0}, l: {1}", linha, linha.Length));
+            }
+
+            drawImg(g =>
+            {
+                using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+                {
+                    int height = 0;
+                    foreach (string linha in linhas)
+                    {
+                        if (linha == null || linha.Length <= 0) { continue; }
+                        g.DrawString(linha, fonte, Brushes.Black, new PointF(0, height++ * (hchar + .75f)));
+                    }
+                }
+            }, Convert.ToInt32(widthImg), Convert.ToInt32(heigthImg));
+
+        }
+
+        public void teste5()
+        {
+            Formulas f = getFormulaT();
+            f = getFormulaABCDEFG();
+            p(f.ToString()); p(); p("");
+
+            // Consolas 10
+            const float hchar = 10.0f; // height de 1 char
+            const float wchar = 7.55f; // width de 1 char
+
+            Quadro q = new Quadro(f);
+
+            drawImg(g =>
+            {
+
+                int lineMaxL = lineMaxLength(q);
+                int numL = numLines(q);
+
+                p(string.Format("lineMaxL * wchar: {0}", lineMaxL * wchar));
+
+                float incremento = 50.0f;
+                //drawSquare(g, incremento, incremento, lineMaxL, numL, hchar, wchar);
+
+                drawQuadro(g, q, incremento, incremento, lineMaxL * wchar, hchar, wchar);
+
+                //drawQuadro(g, q.Esquerda, 50, 50.0f + (q.Height * 1.25f), hchar, wchar);
+                //drawQuadro(g, q.Direita, 50.0f + (q.Esquerda.Width * 1.25f), 50.0f + (q.Height * 1.25f), hchar, wchar);
+                //drawQuadro(g, q.Esquerda, incremento - (q.Width * 1.25f), incremento + (q.Height * 1.25f), lineMaxL * wchar, hchar, wchar);
+
+                // float pIX = 50;
+                // float pFX = 150;
+                // drawLine(g, pIX, pIX + q.Width, true, true);
+                // drawLine(g, pIX, pIX + q.Height, true, false);
+
+                // //drawLine(g, pIX, pIX + q.Width, false, true);
+                // drawLine(g, pIX + q.Height, pIX + q.Width, false, false);
+
+                // using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
                 // {
-                //     for (int j = 0; j <= 600; j += 21)
-                //     {
-                //         graphics.DrawString("0", new System.Drawing.Font("Consola", 15, FontStyle.Regular), i == 0 || i % 2 == 0 ? Brushes.Blue : Brushes.Green, new PointF(i, j), sf);
-                //     }
+                //     g.DrawString("0", fonte, Brushes.Black, new PointF(150, 150));
+                //     g.DrawString("0", fonte, Brushes.Black, new PointF(150, 50));
                 // }
+
+                // linha vertical
+                // Pen blackPen = new Pen(Color.Black, 1);
+                // PointF point1 = new PointF(pinicial, pinicial);
+                // PointF point2 = new PointF(pfinal, pinicial);
+                // g.DrawLine(blackPen, point1, point2);
+
+                // using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+                // {
+                //     g.DrawString("0", fonte, Brushes.Black, new PointF(50, 50));
+                //     g.DrawString("0", fonte, Brushes.Black, new PointF(150, 50));
+                // }
+            }, 500, 500);
+
+        }
+
+        // private void drawLine(Graphics g, float pinicial, float pfinal, bool inicio = true, bool horizontal = true)
+        // {
+
+        //     // linha horizontal
+        //     // g.DrawString("0", fonte, Brushes.Black, new PointF(50 , 50));
+        //     // g.DrawString("0", fonte, Brushes.Black, new PointF(150 , 50));
+
+        //     // vertical
+        //     // g.DrawString("0", fonte, Brushes.Black, new PointF(50, 50));
+        //     // g.DrawString("0", fonte, Brushes.Black, new PointF(50, 150));
+
+        //     // linha horizontal
+        //     Pen blackPen = new Pen(Color.Black, 1);
+        //     PointF point1 = new PointF(inicio ? pinicial : pfinal, inicio ? pinicial : pfinal);
+        //     PointF point2 = new PointF(horizontal ? pfinal : pinicial, horizontal ? pinicial : pfinal);
+        //     g.DrawLine(blackPen, point1, point2);
+        // }
+
+        private void drawSquare(Graphics g, float incrementoW, float incrementH, float widthMax, float heightMax, float hchar = 10.0f, float wchar = 7.55f)
+        {
+            float w = widthMax * wchar;
+            float h = heightMax * hchar;
+            using (Pen blackPen = new Pen(Color.Black, 1))
+            {
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(w + incrementoW, 0 + incrementH)); // linha de cima
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(0 + incrementoW, h + incrementH)); // lateral esquerda
+                g.DrawLine(blackPen, new PointF(w + incrementoW, 0 + incrementH), new PointF(w + incrementoW, h + incrementH)); // lateral direita
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, h + incrementH), new PointF(w + incrementoW, h + incrementH)); // linha baixo
+            }
+        }
+
+        private void drawQuadro(Graphics g, Quadro q, float incrementoW, float incrementH, float widthMax, float hchar = 10.0f, float wchar = 7.55f)
+        {
+            if (g == null || q == null) { return; }
+            float w = q.Width;
+            float h = q.Height;
+
+            float middleText = (q.formulas.Max(x => x.Length) * wchar) / 2.0f;
+            incrementoW += widthMax / 2.0f - middleText;
+
+            using (Pen blackPen = new Pen(Color.Black, 1))
+            {
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(w + incrementoW, 0 + incrementH)); // linha de cima
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(0 + incrementoW, h + incrementH)); // lateral esquerda
+                g.DrawLine(blackPen, new PointF(w + incrementoW, 0 + incrementH), new PointF(w + incrementoW, h + incrementH)); // lateral direita
+                g.DrawLine(blackPen, new PointF(0 + incrementoW, h + incrementH), new PointF(w + incrementoW, h + incrementH)); // linha baixo
+            }
+
+            using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+            {
+
+                //drawSquare(g, incrementoW, incrementH, w, h, hchar = 10.0f, wchar = 7.55f);
+
+                // // linha de cima
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(0 + incrementoW, 0 + incrementH));
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(w + incrementoW, 0 + incrementH));
+
+                // // lateral esquerda
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(0 + incrementoW, 0 + incrementH));
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(0 + incrementoW, h + incrementH));
+
+                // // lateral direita
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(w + incrementoW, 0 + incrementH));
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(w + incrementoW, h + incrementH));
+
+                // // linha baixo
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(0 + incrementoW, h + incrementH));
+                // g.DrawString("0", fonte, Brushes.Black, new PointF(w + incrementoW, h + incrementH));
+
+                float hPlus = incrementH - (hchar);
+                // Texto
+                q.formulas.ForEach(f =>
+                {
+                    if (f == null || string.IsNullOrEmpty(f)) { return; }
+
+                    string texto = f;
+                    int lTexto = texto.Length;
+
+                    PointF pm = q.MeanMiddle.Value;
+                    pm.X += incrementoW - middleText; //((lTexto * wchar) / 2.0f); - centraliza
+                    pm.Y += hPlus;
+                    g.DrawString(texto, fonte, Brushes.Black, pm);
+
+                    hPlus += hchar;
+                });
 
             }
 
-            bitmap.Save(@"imgformulas\bmp_formula.png");//save the image file
+            // Graphics g, Quadro q, float incrementoW, float incrementH, float widthMax, float hchar = 10.0f, float wchar = 7.55f
+            drawQuadro(g, q.Esquerda, incrementoW - w/2.0f - widthMax * .5f, incrementH + h, widthMax, hchar, wchar);
+            drawQuadro(g, q.Direita, incrementoW + w/2.0f - widthMax * 0.25f, incrementH + h, widthMax, hchar, wchar);
         }
+
+
+        class Quadro
+        {
+            public float Width { get; set; }
+            public float Height { get; set; }
+            public PointF? TopMiddle { get { return Width <= 0f ? null : new PointF(Width / 2.0f, 0.0f); } }
+            public PointF? MeanMiddle { get { return Width <= 0f || Height <= 0f ? null : new PointF(Width / 2.0f, Height / 2.0f); } }
+            public PointF? BottomMiddle { get { return Height <= 0f ? null : new PointF(0.0f, Height / 2.0f); } }
+
+            public List<String> formulas { get; set; }
+            public Quadro Esquerda { get; set; }
+            public Quadro Direita { get; set; }
+
+            public Quadro(Formulas f, float hchar = 10.0f, float wchar = 7.55f)
+            {
+                if (f == null) { return; }
+                formulas = new();
+                if (f.Negativas != null)
+                {
+                    f.Negativas.ForEach(x =>
+                    {
+                        if (x != null) { formulas.Add(x.ToString()); }
+                    });
+                }
+                if (f.Positivas != null)
+                {
+                    f.Positivas.ForEach(x =>
+                    {
+                        if (x != null) { formulas.Add(x.ToString()); }
+                    });
+                }
+
+                int lineMaxL = formulas.Max(x => x.Length) + 2; // 2 espaços: direita/esquerda
+                Width = lineMaxL * wchar;
+                int numL = formulas.Count(); // número de linhas
+                Height = (numL + 1.5f) * hchar;
+
+                if (f.Esquerda != null) { this.Esquerda = new Quadro(f.Esquerda); }
+                if (f.Direita != null) { this.Direita = new Quadro(f.Direita); }
+            }
+
+            public override string ToString()
+            {
+                string fStr = string.Join(",", formulas);
+                return string.Format("[{0:0.00}x{1:0.00}] {2}", Width, Height, fStr);
+            }
+
+        }
+
+        private List<int> bifurcaoes(Formulas f)
+        {
+            if (f == null) { return null; }
+            List<int> rt = new List<int>();
+
+
+
+            return rt;
+        }
+
+        private void drawFormula(Formulas f, Graphics g, Font fonte, float widthImg, float widthImgOriginal, float height = 0, float hchar = 10.0f, float wchar = 7.55f)
+        {
+            if (f == null || g == null) { return; }
+
+            float widthMiddle = widthImg / 2.0f;
+            float maxL = (Math.Max(f.Positivas == null ? 0 : f.Positivas.Max(x => x.ToString().Length), f.Negativas == null ? 0 : f.Negativas.Max(x => x.ToString().Length)) * wchar) / 2.0f;
+
+            if (f.Positivas != null)
+            {
+                f.Positivas.ForEach(x => g.DrawString(x.ToString(), fonte, Brushes.Black, new PointF(widthMiddle - maxL, (height++) * hchar)));
+            }
+            if (f.Negativas != null)
+            {
+                f.Negativas.ForEach(x => g.DrawString(x.ToString(), fonte, Brushes.Black, new PointF(widthMiddle - maxL, (height++) * hchar)));
+            }
+
+            if (f.Esquerda != null)
+            {
+                drawFormula(f.Esquerda, g, fonte, widthMiddle, widthImgOriginal, height, hchar, wchar);
+            }
+            if (f.Direita != null)
+            {
+                drawFormula(f.Direita, g, fonte, widthImgOriginal + widthMiddle, widthImgOriginal, height, hchar, wchar);
+            }
+        }
+
+        #region lines
+
+        // se todas as fórmulas estivessem todas na mesma linha
+        private int lineMaxLength(Formulas f, int espaco = 0)
+        {
+            if (f == null) { return 0; }
+            int aux = Math.Max(f.Positivas == null ? 0 : f.Positivas.Max(x => x.ToString().Length), f.Negativas == null ? 0 : f.Negativas.Max(x => x.ToString().Length)) + espaco;
+            return (aux + (f.Esquerda == null ? 0 : lineMaxLength(f.Esquerda) + espaco) + (f.Direita == null ? 0 : lineMaxLength(f.Direita)) + espaco);
+        }
+
+        // se todos os quadros estivessem todas na mesma linha
+        private int lineMaxLength(Quadro q, int espaco = 0)
+        {
+            if (q == null) { return 0; }
+            int aux = (q.formulas == null ? 0 : q.formulas.Max(x => x.Length)) + espaco;
+            return (aux + (q.Esquerda == null ? 0 : lineMaxLength(q.Esquerda) + espaco) + (q.Direita == null ? 0 : lineMaxLength(q.Direita)) + espaco);
+        }
+
+        private int numLines(Formulas f)
+        {
+            if (f == null) { return 0; }
+            int aux = (f.Positivas == null ? 0 : f.Positivas.Count()) + (f.Negativas == null ? 0 : f.Negativas.Count());
+            return aux + Math.Max(f.Esquerda == null ? 0 : numLines(f.Esquerda), f.Direita == null ? 0 : numLines(f.Direita));
+        }
+
+        private int numLines(Quadro q)
+        {
+            if (q == null) { return 0; }
+            int aux = q.formulas == null ? 0 : q.formulas.Count();
+            return aux + Math.Max(q.Esquerda == null ? 0 : numLines(q.Esquerda), q.Direita == null ? 0 : numLines(q.Direita));
+        }
+
+        #endregion
 
         #region x,y,h
         public class XYH
         {
-            public int X { get; set; }
-            public int Y { get; set; }
+            public float X { get; set; }
+            public float Y { get; set; }
             public int H { get; set; }
             public int ML { get; set; }
             public ConjuntoFormula? CF { get; set; }
@@ -250,15 +470,15 @@ namespace classes.testes.imagens
 
             public override string ToString()
             {
-                return string.Format("{0}, {1}, {2}, {3}, {4}", X, Y, H, ML, CF?.ToString());
+                return string.Format("X: {0}, Y: {1}, H: {2}, ML: {3}, CF: {4}", X, Y, H, ML, CF?.ToString());
             }
         }
 
-        public List<XYH> toXYH(Formulas f, int level, int pos, int maxElements, int height = 0)
+        public List<XYH> toXYH(Formulas f, float level, int pos, int maxElements, int height = 0)
         {
 
-            int nAux = level <= 1 ? maxElements : maxElements / level;
-            int posMap = (level == 0 ? nAux : nAux / 2 + pos * nAux) - 1;
+            float nAux = level <= 1 ? maxElements : maxElements / level;
+            float posMap = (level == 0 ? nAux : nAux / 2 + pos * nAux) - 1;
 
             XYH xyh = new()
             {
@@ -301,6 +521,55 @@ namespace classes.testes.imagens
         }
 
         #endregion
+
+        private void drawImg(Action<Graphics> act, int widthImg = 1000, int heigthImg = 1000, string imgNameSaida = "bmp_formula.png")
+        {
+            if (act == null) { return; }
+            using Bitmap bitmap = new(widthImg, heigthImg);
+
+            using (Graphics graphics = Graphics.FromImage(bitmap))
+            {
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+                graphics.Clear(Color.White);
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+
+                act.Invoke(graphics);
+
+
+                // using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+                // {
+                //     //for (int i = 0; i < linhas.Length; i++) { graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0,i+(i*20))); }
+
+                //     // foreach (KeyValuePair<int, Dictionary<int, PosElement<Formulas>>> kvp1 in dic)
+                //     // {
+                //     //     int linha = kvp1.Key; // level ou linha
+                //     //     foreach (KeyValuePair<int, PosElement<Formulas>> kvp2 in kvp1.Value)
+                //     //     {
+                //     //         int coluna = kvp2.Key;
+                //     //         PosElement<Formulas> pel = kvp2.Value;
+                //     //         Formulas faux = pel.Elemento;
+                //     //         Console.WriteLine(string.Format("[{0},{1}] [{2},{3}]", linha, coluna, pel.Posicao, pel.Height));
+                //     //         faux?.Negativas?.ForEach(x => Console.WriteLine(x));
+                //     //         faux?.Positivas?.ForEach(x => Console.WriteLine(x));
+
+                //     //         Console.WriteLine();
+                //     //     }
+                //     // }
+
+
+
+                //     //graphics.DrawString(linhas[i], arialFont, Brushes.Black, new PointF(0, i + (i * 20)));
+
+
+                // }
+
+            }
+
+            bitmap.Save(string.Format(@"{0}\{1}", "imgformulas", imgNameSaida));//save the image file
+        }
+
 
         private Formulas getFormulaT()
         {
@@ -346,6 +615,7 @@ namespace classes.testes.imagens
 
             Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("A"));
+            //f.addConjuntoFormula(parser.parserCF("J->G"));
             f.addEsquerda(parser.parserCF("B"));
             f.addDireita(parser.parserCF("E"));
 
@@ -361,6 +631,14 @@ namespace classes.testes.imagens
         private int heightTree(Formulas? f)
         {
             return f == null ? 0 : 1 + Math.Max(heightTree(f.Esquerda), heightTree(f.Direita));
+        }
+
+        private int heightTreeFormulas(Formulas? f)
+        {
+            if (f == null) { return 0; }
+            int aux = f.Negativas == null ? 0 : f.Negativas.Count;
+            aux += f.Positivas == null ? 0 : f.Positivas.Count;
+            return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
         }
 
         #region auxiliar

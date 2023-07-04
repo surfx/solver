@@ -15,7 +15,7 @@ namespace classes.solverstage
 
         public Formulas()
         {
-            
+
         }
 
         public void addConjuntoFormula(ConjuntoFormula cf)

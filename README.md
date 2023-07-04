@@ -7,7 +7,7 @@ dotnet add package System.Drawing.Common --version 7.0.0
 
 # Obs
 
-Para executar: `F5`
+Para executar: `CTRL + F5`
 
 # Urls
 

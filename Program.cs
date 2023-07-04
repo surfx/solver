@@ -1,4 +1,5 @@
 ﻿using classes.testes;
+using classes.testes.formulas;
 using classes.testes.imagens;
 using classes.testes.regras;
 using classes.testes.solverstage;
@@ -37,8 +38,15 @@ namespace ConsoleApp1
 
             //new TestesSolverStage().teste1();
 
+            //new TestesFormulas().teste1();
+
             //new TestesImagens().teste1();
-            new TestesImagens().teste2();
+            //new TestesImagens().teste2();
+            // new TestesImagens().teste3();
+            //new TestesImagens().teste4();
+            new TestesImagens().teste5();
+
+            
 
         }
     }
