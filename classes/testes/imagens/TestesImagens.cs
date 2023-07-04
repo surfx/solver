@@ -190,46 +190,33 @@ namespace classes.testes.imagens
             // Consolas 10
             const float hchar = 10.0f; // height de 1 char
             const float wchar = 7.55f; // width de 1 char
-            float incrementoW = 50.0f;
-            float incrementoH = 0f;
+            float incrementoW = 10.0f;
+            float incrementoH = 10.0f;
             //List<Quadro> lquadros, float incrementoW, float incrementH, float hchar = 10.0f, float wchar = 7.55f
 
-            q = tratarYQuadros(q, incrementoH, incrementoH, hchar, wchar);
+            q = tratarYQuadros(q, incrementoH, 0, hchar, wchar);
             List<Quadro>? lquadros = plainQuadros(q);
-            lquadros!.ForEach(x => p(x.ToString()));
-            p(); p("");
+            //lquadros!.ForEach(x => p(x.ToString())); p(); p("");
 
             lquadros = plainQuadrosXY(lquadros, incrementoW, incrementoH, hchar, wchar);
+            //lquadros!.ForEach(x => p(x.ToString()));
 
-            lquadros!.ForEach(x => p(x.ToString()));
-
-
+            float widthMax = lquadros.Sum(x => x.Width) + lquadros.Count * incrementoW;
+            float heightMax = lquadros.Sum(x => x.Height) + incrementoH;
 
             drawImg(g =>
             {
 
-                //int lineMaxL = lineMaxLength(q);
-                //int numL = numLines(q);
-
-                //p(string.Format("lineMaxL * wchar: {0}", lineMaxL * wchar));
-
-
-                //drawSquare(g, incremento, incremento, lineMaxL, numL, hchar, wchar);
-
-                //float widthMax = lquadros.Sum(x => x.Width);
-                //p(string.Format("widthMax: {0}", widthMax));
-
                 float widthIncrement = 0.0f;
 
-                for (int i = 0; i < lquadros.Count; i++)
+                lquadros.ForEach(q =>
                 {
-                    Quadro q1 = lquadros[i];
                     //drawQuadro(g, q1, incrementoW + widthIncrement, q1.XY.Y, hchar, wchar);
-                    drawQuadro(g, q1, incrementoW + widthIncrement, hchar, wchar);
-                    widthIncrement += q1.Width;
-                }
+                    drawQuadro(g, q, incrementoW + widthIncrement, hchar, wchar);
+                    widthIncrement += q.Width;
+                });
 
-            });
+            }, Convert.ToInt32(widthMax), Convert.ToInt32(heightMax));
         }
 
         public void teste6()
@@ -589,14 +576,16 @@ namespace classes.testes.imagens
             return aux + Math.Max(q.Esquerda == null ? 0 : numLines(q.Esquerda), q.Direita == null ? 0 : numLines(q.Direita));
         }
 
-        private Quadro? tratarYQuadros(Quadro q, float incrementH, float incrementHOriginal, float hchar = 10.0f, float wchar = 7.55f)
+        private Quadro? tratarYQuadros(Quadro q, float incrementH, float incrementHDivisao, float hchar = 10.0f, float wchar = 7.55f)
         {
             if (q == null) { return null; }
 
-            q.XY = new PointF(0.0f, q.Height + incrementH);
+            q.XY = new PointF(0.0f, incrementH);
 
-            if (q.Esquerda != null) { q.Esquerda = tratarYQuadros(q.Esquerda, q.XY.Y, incrementHOriginal, hchar, wchar); }
-            if (q.Direita != null) { q.Direita = tratarYQuadros(q.Direita,q.XY.Y, incrementHOriginal, hchar, wchar); }
+            //p(string.Format("q.Height: {0}, CF: {1}, incrementH: {2}", q.Height, q.ToString(), incrementH));
+
+            if (q.Esquerda != null) { q.Esquerda = tratarYQuadros(q.Esquerda, incrementH + q.Height + incrementHDivisao, incrementHDivisao, hchar, wchar); }
+            if (q.Direita != null) { q.Direita = tratarYQuadros(q.Direita, incrementH + q.Height + incrementHDivisao, incrementHDivisao, hchar, wchar); }
 
             return q;
         }
@@ -630,33 +619,32 @@ namespace classes.testes.imagens
         {
             if (lquadros == null) { return null; }
 
-
-            for (int i = 0; i < lquadros.Count; i++)
+            lquadros.ForEach(q =>
             {
-                Quadro q1 = lquadros[i];
-
-                float middleText = (q1.formulas.Max(x => x.Length) * wchar) / 2.0f;
+                float middleText = (q.formulas.Max(x => x.Length) * wchar) / 2.0f;
                 float hPlus = incrementH + hchar * .25f;
 
                 // Texto
-                q1.formulas.ForEach(f =>
+                q.formulas.ForEach(f =>
                 {
                     if (f == null || string.IsNullOrEmpty(f)) { return; }
 
                     string texto = f;
                     int lTexto = texto.Length;
 
-                    PointF pm = q1.MeanMiddle.Value;
-                    pm.X += incrementoW - middleText; //((lTexto * wchar) / 2.0f); - centraliza
-                    pm.Y += hPlus + q1.XY.Y;
-                    q1.XY = pm;
+                    //PointF pm = q1.MeanMiddle.Value;
+                    PointF pm = q.XY;
+                    pm.X = incrementoW;
+                    //pm.X += incrementoW - middleText; //((lTexto * wchar) / 2.0f); - centraliza
+                    //pm.Y += hPlus + q1.XY.Y;
+                    q.XY = pm;
 
                     //hPlus += hchar;
                     // o incremento deve ser feito no momento de realizar o draw nas fórmulas
                 });
 
-                incrementoW += q1.Width;
-            }
+                incrementoW += q.Width;
+            });
 
             return lquadros;
         }
@@ -831,12 +819,12 @@ namespace classes.testes.imagens
 
             Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("A"));
-            f.addConjuntoFormula(parser.parserCF("J->G"));
-            f.addConjuntoFormula(parser.parserCF("J->G"));
-            f.addConjuntoFormula(parser.parserCF("J->G"));
+            // f.addConjuntoFormula(parser.parserCF("J->G"));
+            // f.addConjuntoFormula(parser.parserCF("J->G"));
+            // f.addConjuntoFormula(parser.parserCF("J->G"));
             // f.addConjuntoFormula(parser.parserCF("J->G"));
             f.addEsquerda(parser.parserCF("B"));
-            //f.Esquerda.addConjuntoFormula(parser.parserCF("J->G"));
+            f.Esquerda.addConjuntoFormula(parser.parserCF("J->G"));
 
             f.addDireita(parser.parserCF("E"));
 
@@ -845,6 +833,7 @@ namespace classes.testes.imagens
 
             f.Direita.addEsquerda(parser.parserCF("F"));
             f.Direita.addDireita(parser.parserCF("G"));
+            //f.Direita.Direita.addEsquerda(parser.parserCF("GT"));
 
             return f;
         }
