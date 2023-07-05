@@ -44,7 +44,9 @@ namespace ConsoleApp1
             //new TestesImagens().teste2();
             // new TestesImagens().teste3();
             //new TestesImagens().teste4();
-            new TestesImagens().teste5();
+            //new TestesImagens().teste5();
+
+            new TestesImagens2().teste1();
 
             
 
