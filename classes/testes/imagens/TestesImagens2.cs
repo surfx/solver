@@ -18,21 +18,22 @@ namespace classes.testes.imagens
         public void teste1()
         {
             Formulas formulas = getFormulaT();
-            formulas = getFormulaABCDEFG();
-            formulas = getFormulaAB();
-            formulas = getFormulaAC();
+            //formulas = getFormulaABCDEFG();
+            //formulas = getFormulaAB();
+            //formulas = getFormulaAC();
             p(formulas.ToString()); p(); p("");
 
 
             Quadro qTree = new(formulas);
 
-            float incrementoX = 50.0f, incrementY = 20.0f;
+            float incrementoX = 20.0f, incrementY = 20.0f;
+            //incrementoX = 0; incrementY = 0;
 
             float widthAjuste = incrementoX * .75f;
             float heightAjuste = 0.0f;
 
             Dictionary<int, List<Quadro>>? dicQ = dicQuadrosLevel(qTree, 0);
-            heightAjuste = analiseHeight(dicQ, 15.0f) + incrementY - 15.0f;
+            heightAjuste = analiseHeight(dicQ, 15.0f) - 15.0f;
             //foreach (KeyValuePair<int, List<Quadro>> par in dicQ) { string fStr = string.Join(",", par.Value); p(string.Format("level: {0} {1}", par.Key, fStr)); } p(); p("");
 
             //posOrder(q); p(); p("");
@@ -43,15 +44,18 @@ namespace classes.testes.imagens
 
             //lquadros.ForEach(q => p(string.Format("{0} / {1}", q.ToString(), q.Rnd))); p(); p("");
 
+            WH wh = getImageWidthHeight(lquadros, incrementoX, incrementY);
+
             drawImg(g =>
             {
                 //lquadros.ForEach(q => { drawQuadros(g, q, false); });
                 drawQuadros(g, qTree, false);
                 drawDivisorias(g, qTree);
-            }, Convert.ToInt32(getSumWH(qTree, true) + widthAjuste), Convert.ToInt32(getSumWH(qTree, false)));
-            // Convert.ToInt32(lquadros.Sum(q => q.Width) + widthAjuste), Convert.ToInt32(lquadros.Sum(q => q.Height) + heightAjuste)
+                //drawQuadroArroundFormulas(g, qTree, lquadros, incrementoX, incrementY);
 
-            p(string.Format("{0} {1}", Convert.ToInt32(getSumWH(qTree, false) + heightAjuste), Convert.ToInt32(lquadros.Sum(q => q.Height) + heightAjuste)));
+            }, wh.WidthInt, wh.HeightInt);
+
+            //p(string.Format("widthImg: {0}, heightImg: {1}", widthImg, heightImg));
 
         }
 
@@ -65,6 +69,46 @@ namespace classes.testes.imagens
             return rt;
         }
 
+        class WH
+        {
+            public float Width { get; set; }
+            public float Height { get; set; }
+            public int WidthInt { get { return Convert.ToInt32(Width); } }
+            public int HeightInt { get { return Convert.ToInt32(Height); } }
+            public WH(float width = 0.0f, float height = 0.0f) { this.Width = width; this.Height = height; }
+        }
+
+        private WH getImageWidthHeight(List<Quadro> lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
+        {
+            Quadro? lastQuadroLeft = lquadros[0];
+
+            float x1 = incrementoX;
+            //float y1 = qTree.XY != null && qTree.XY.HasValue ? qTree.XY.Value.Y : 0.0f;
+            float x2 = ((lastQuadroLeft != null && lastQuadroLeft.XY.HasValue ? lastQuadroLeft?.XY.Value.X : 0.0f) ?? 0.0f) + (lquadros.Sum(q => q.Width)) + x1;
+            float y2 = lquadros.Max(q => q.XY != null && q.XY.HasValue ? q.XY.Value.Y : 0.0f) + ((lastQuadroLeft == null ? 0.0f : lastQuadroLeft?.Height) ?? 0.0f) + incrementY;
+
+            return new(x2 + incrementoX, y2 + incrementY);
+        }
+
+
+        private void drawQuadroArroundFormulas(Graphics g, Quadro? qTree, List<Quadro> lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
+        {
+            if (g == null || qTree == null || lquadros == null || lquadros.Count <= 0) { return; }
+            Quadro? lastQuadroLeft = lquadros[0];
+
+            float x1 = incrementoX;
+            float y1 = qTree.XY != null && qTree.XY.HasValue ? qTree.XY.Value.Y : 0.0f;
+            float x2 = ((lastQuadroLeft != null && lastQuadroLeft.XY.HasValue ? lastQuadroLeft?.XY.Value.X : 0.0f) ?? 0.0f) + (lquadros.Sum(q => q.Width)) + x1;
+            float y2 = lquadros.Max(q => q.XY != null && q.XY.HasValue ? q.XY.Value.Y : 0.0f) + ((lastQuadroLeft == null ? 0.0f : lastQuadroLeft?.Height) ?? 0.0f) + incrementY;
+
+            using (Pen blackPen = new Pen(Color.Black, 1))
+            {
+                g.DrawLine(blackPen, new PointF(x1, y1), new PointF(x2, y1)); // linha de cima
+                g.DrawLine(blackPen, new PointF(x1, y1), new PointF(x1, y2)); // lateral esquerda
+                g.DrawLine(blackPen, new PointF(x2, y1), new PointF(x2, y2)); // lateral direita
+                g.DrawLine(blackPen, new PointF(x1, y2), new PointF(x2, y2)); // linha baixo
+            }
+        }
 
         private void drawDivisorias(Graphics g, Quadro q)
         {
@@ -114,7 +158,7 @@ namespace classes.testes.imagens
             Quadro? qaux = listaPlana.Where(q => q.Rnd.Equals(qTree.Rnd)).FirstOrDefault();
             if (qaux != null && qaux.XY.HasValue)
             {
-                qTree.XY = new PointF(qaux.XY.Value.X + incrementY, qaux.XY.Value.Y + incrementY);
+                qTree.XY = new PointF(qaux.XY.Value.X + incrementoX, qaux.XY.Value.Y + incrementY);
                 qTree.Height = qaux.Height;
                 qTree.Width = qaux.Width;
                 // if (incrementoX >= 0.0)
@@ -142,8 +186,8 @@ namespace classes.testes.imagens
         {
             if (g == null || q == null) { return; }
             drawFormula(g, q, 0.0f, 0.0f, drawSquare);
-            if (q.Esquerda != null) { drawQuadros(g, q.Esquerda); }
-            if (q.Direita != null) { drawQuadros(g, q.Direita); }
+            if (q.Esquerda != null) { drawQuadros(g, q.Esquerda, drawSquare); }
+            if (q.Direita != null) { drawQuadros(g, q.Direita, drawSquare); }
         }
 
         // PreOrdem (RED): F,B,A,D,C,E,G,I,H
