@@ -13,6 +13,8 @@ namespace classes.solverstage
         public Formulas? Esquerda { get => _esquerda; }
         public Formulas? Direita { get => _direita; }
 
+        public bool isClosed { get; set; }
+
         public Formulas()
         {
 
