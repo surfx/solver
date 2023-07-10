@@ -81,6 +81,16 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 
 <img src="imagens\rules_KE_1.png" alt="Regras Tableaux KE">
 
+
+# Exemplos de provas
+
+Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de material do professor doutor Adolfo Gustavo Serra Seca Neto.
+
+| Prova 1 | Prova 2 |
+| ------- | ------ |
+|<a href="imagens\2-Figure1-1.png" target="_blank"><img src="imagens\2-Figure1-1.png" alt="Prova 1" width="100" height="100"></a>|<a href="imagens\2-Figure2-1.png" target="_blank"><img src="imagens\2-Figure2-1.png" alt="Prova 2" width="100" height="100"></a>|
+
+
 # TODO
 
 - [x] Estrutura de fórmulas - código C#, classes, etc
