@@ -21,11 +21,18 @@ namespace classes.solverstage.print
         public string toString(Formulas f)
         {
             int maxElements = (int)Math.Pow(2, heightTree(f) - 1);
-            Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic = toDict(f, 0, 0, maxElements, 0);
-            return toString(dic, heightTreeFormulas(f), ((int)Math.Pow(2, dic.Keys.Max()) * 2));
+            Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic = toDict(f, 0, 0, maxElements, 0);
+            string rt = string.Empty;
+            string[] aux = toString(dic, heightTreeFormulas(dic), ((int)Math.Pow(2, dic.Keys.Max()) * 2)).Split(Environment.NewLine);
+            foreach (string st in aux)
+            {
+                if (string.IsNullOrEmpty(st.Trim())) { continue; }
+                rt += st + Environment.NewLine;
+            }
+            return rt;
         }
 
-        public string toString(Dictionary<int, Dictionary<int, PosElement<Formulas>>> dic, int heighttreeFormulas, int numeroMaximo)
+        public string toString(Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic, int heighttreeFormulas, int numeroMaximo)
         {
             if (dic == null || heighttreeFormulas <= 0 || numeroMaximo <= 0) { return ""; }
 
@@ -36,29 +43,22 @@ namespace classes.solverstage.print
             for (int i = 0; i < heighttreeFormulas; i++) { for (int j = 0; j < numeroMaximo; j++) { linhas[i, j] = " "; } }
 
 
-            Dictionary<int, PosElement<Formulas>>? dicFormulas = null;
+            Dictionary<int, PosElement<List<string>>>? dicFormulas = null;
             for (int i = 0; i < heighttreeFormulas; i++)
             {
                 dicFormulas = dic.ContainsKey(i) ? dic[i] : null;
                 for (int j = 0; j < numeroMaximo; j++)
                 {
                     if (dicFormulas == null || !dicFormulas.ContainsKey(j)) { continue; }
-                    PosElement<Formulas> posElement = dicFormulas[j];
-                    Formulas f = posElement.Elemento;
+                    PosElement<List<string>> posElement = dicFormulas[j];
+                    List<string> lformulas = posElement.Elemento;
 
                     int pos = 0;
-                    if (f.Negativas != null)
+                    if (lformulas != null)
                     {
-                        for (int k = 0; k < f.Negativas.Count(); k++)
+                        for (int k = 0; k < lformulas.Count(); k++)
                         {
-                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = f.Negativas[k] == null ? "" : f.Negativas[k].ToString();
-                        }
-                    }
-                    if (f.Positivas != null)
-                    {
-                        for (int k = 0; k < f.Positivas.Count(); k++)
-                        {
-                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = f.Positivas[k] == null ? "" : f.Positivas[k].ToString();
+                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = lformulas[k] == null ? "" : lformulas[k];
                         }
                     }
                 }
@@ -110,18 +110,28 @@ namespace classes.solverstage.print
         }
 
         #region Dictionary
-        public Dictionary<int, Dictionary<int, PosElement<Formulas>>> toDict(Formulas f, int level, int pos, int maxElements, int height)
+        public Dictionary<int, Dictionary<int, PosElement<List<string>>>> toDict(Formulas f, int level, int pos, int maxElements, int height)
         {
 
             int nAux = level <= 1 ? maxElements : maxElements / level;
             int posMap = (level == 0 ? nAux : nAux / 2 + pos * nAux) - 1;
 
-            Dictionary<int, Dictionary<int, PosElement<Formulas>>> rt = new Dictionary<int, Dictionary<int, PosElement<Formulas>>>();
-            Dictionary<int, PosElement<Formulas>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<Formulas>>();
-            aux.Add(pos, new PosElement<Formulas>(f, posMap, height));
+            Dictionary<int, Dictionary<int, PosElement<List<string>>>> rt = new Dictionary<int, Dictionary<int, PosElement<List<string>>>>();
+            Dictionary<int, PosElement<List<string>>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<List<string>>>();
+
+            List<string> lformulas = new();
+            if (f.Negativas != null) { f.Negativas.ForEach(fn => { if (fn == null) { return; } lformulas.Add(fn.ToString()); }); }
+            if (f.Positivas != null) { f.Positivas.ForEach(fp => { if (fp == null) { return; } lformulas.Add(fp.ToString()); }); }
+
+            if (f.Esquerda == null && f.Direita == null)
+            {
+                lformulas.Add(f.isClosed ? "CLOSED" : "OPEN");
+            }
+
+            aux.Add(pos, new PosElement<List<string>>(lformulas, posMap, height));
             rt.Add(level, aux);
 
-            height += (f.Negativas == null ? 0 : f.Negativas.Count()) + (f.Positivas == null ? 0 : f.Positivas.Count());
+            height += lformulas.Count();
             if (height > 0) { height--; }
 
             //p(string.Format("{0}{1} ({2} {3} posMap: {4})", level <= 0 ? "" : getEspaco(level), t.Item, level, pos, posMap));
@@ -159,13 +169,26 @@ namespace classes.solverstage.print
             return f == null ? 0 : 1 + Math.Max(heightTree(f.Esquerda), heightTree(f.Direita));
         }
 
-        private int heightTreeFormulas(Formulas? f)
+        private int heightTreeFormulas(Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic)
         {
-            if (f == null) { return 0; }
-            int aux = f.Negativas == null ? 0 : f.Negativas.Count;
-            aux += f.Positivas == null ? 0 : f.Positivas.Count;
-            return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
+            int rt = 0;
+            foreach (KeyValuePair<int, Dictionary<int, PosElement<List<string>>>> kvp in dic)
+            {
+                foreach (KeyValuePair<int, PosElement<List<string>>> kvp2 in kvp.Value)
+                {
+                    rt += kvp2.Value.Elemento.Count(); // .Where(x => !string.IsNullOrEmpty(x))
+                }
+            }
+
+            return rt;
         }
+        // private int heightTreeFormulas(Formulas? f)
+        // {
+        //     if (f == null) { return 0; }
+        //     int aux = f.Negativas == null ? 0 : f.Negativas.Count;
+        //     aux += f.Positivas == null ? 0 : f.Positivas.Count;
+        //     return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
+        // }
 
         private string getEspaco(int size)
         {
