@@ -1,8 +1,8 @@
 using classes.auxiliar;
+using classes.auxiliar.saidas.print;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
-using classes.solverstage.print;
 
 namespace classes.testes
 {
@@ -170,8 +170,6 @@ namespace classes.testes
         private void p() { UtilFormulas.p(); }
         private void p(string str) { UtilFormulas.p(str); }
         private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
-
-
 
     }
 

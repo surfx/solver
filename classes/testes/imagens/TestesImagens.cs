@@ -4,7 +4,6 @@ using classes.auxiliar;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
-using classes.solverstage.print;
 
 namespace classes.testes.imagens
 {

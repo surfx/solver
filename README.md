@@ -1,3 +1,97 @@
+# Solver C#
+
+Solver LCP (lógica clássica proposicional) de Tableaux KE
+
+No momento foram implementados o parser, o print da árvore em string e em imagem png.
+
+# Exemplo Parser
+
+```
+    Formulas f = new();
+
+    Parser parser = new();
+    f.addConjuntoFormula(parser.parserCF("A->B"));
+    f.addConjuntoFormula(parser.parserCF("F C->E"));
+    f.addConjuntoFormula(parser.parserCF("C"));
+    f.addConjuntoFormula(parser.parserCF("F A"));
+    f.addConjuntoFormula(parser.parserCF("T (A | D)"));
+
+    f.addEsquerda(parser.parserCF("E"));
+    f.addEsquerda(parser.parserCF("F Y -> (A | B)"));
+
+    f.addDireita(parser.parserCF("T H->G"));
+    f.addDireita(parser.parserCF("F (A|Z)"));
+    f.addDireita(parser.parserCF("T G|T&U"));
+    f.addDireita(parser.parserCF("T G|T&X"));
+    f.Direita.addEsquerda(parser.parserCF("T G|T&U"));
+
+    f.Esquerda.addDireita(parser.parserCF("G & (Y -> B)"));
+    f.Esquerda.addDireita(parser.parserCF("F G"));
+
+    f.Esquerda.addEsquerda(parser.parserCF("G & (Y -> B)"));
+
+    f.Esquerda.Direita.isClosed = true;
+```
+
+## Saídas
+
+### Formato string
+
+obs: tags OPEN/CLOSED apenas ilustrativas
+
+```
+                                           F C → E                            
+                                           F A                                
+                                           T A → B                            
+                                           T C                                
+                                           T A ˅ D                            
+               F Y → (A ˅ B)                                     F A ˅ Z      
+               T E                                               T H → G      
+ T G ˄ (Y → B)               F G                                 T (G ˅ T) ˄ U
+ OPEN                        T G ˄ (Y → B)                       T (G ˅ T) ˄ X
+                             CLOSED                T (G ˅ T) ˄ U              
+                                                   OPEN                       
+```
+
+
+### Imagem png
+
+obs: tags OPEN/CLOSED apenas ilustrativas
+
+```
+    PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
+            .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
+            .withDivisoriaArvore()
+            .Build();
+    new ImageFormulas().formulasToImage(pf2img);
+```
+
+![Exemplo de árvore](https://github.com/surfx/solver/blob/main/imgformulas/bmp_formula.png?raw=true)
+
+# Análises iniciais
+
+
+| Árvores |        |         |        | Parser  |
+| ------- | ------ | ------- | ------ | ------- |
+|<a href="imagens\estudos\arv_001.jpg" target="_blank"><img src="imagens\estudos\arv_001.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_002.jpg" target="_blank"><img src="imagens\estudos\arv_002.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_003.jpg" target="_blank"><img src="imagens\estudos\arv_003.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_004.jpg" target="_blank"><img src="imagens\estudos\arv_004.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\parser_001.jpg" target="_blank"><img src="imagens\estudos\parser_001.jpg" alt="Parser Inicial" width="100" height="100"></a>|
+
+# Regras Tableaux KE
+
+![Regras Tableaux KE](https://github.com/surfx/solver/blob/main/imagens/rules1.png?raw=true)
+
+# TODO
+
+- [x] Estrutura de fórmulas - código C#, classes, etc
+- [x] Parser
+- [x] Print árvore string
+- [x] Print árvore png
+- [x] Stage, versão inicial \(stage: conjunto de fórmulas)
+- [x] Separar a abstração do 'print árvore png' em uma classe parametrizada
+- [ ] Regras binárias e unárias
+- [ ] Aplicar conjunto de regras às fórmulas do stage
+- [ ] Verificar se os ramos estão abertos ou fechados
+- [ ] Verificar se a árvore possui solução ou não
+- [ ] Interface externa do console, para entradas e saídas
 
 # Libs
 

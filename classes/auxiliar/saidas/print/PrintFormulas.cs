@@ -1,6 +1,7 @@
 using System.Text;
+using classes.solverstage;
 
-namespace classes.solverstage.print
+namespace classes.auxiliar.saidas.print
 {
     public class PrintFormulas
     {

@@ -1,4 +1,4 @@
-namespace classes.solverstage.print
+namespace classes.auxiliar.saidas.print
 {
     public class PosElement<T>
     {
