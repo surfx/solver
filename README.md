@@ -68,7 +68,7 @@ obs: tags OPEN/CLOSED apenas ilustrativas
     new ImageFormulas().formulasToImage(pf2img);
 ```
 
-![Exemplo de árvore](imgformulas\bmp_formula.png)
+<img src="imgformulas\bmp_formula.png" alt="Exemplo de árvore">
 
 # Análises iniciais
 
@@ -79,7 +79,7 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 
 # Regras Tableaux KE
 
-![Regras Tableaux KE](imagens\rules_KE_1.png)
+<img src="imagens\rules_KE_1.png" alt="Regras Tableaux KE">
 
 # TODO
 
