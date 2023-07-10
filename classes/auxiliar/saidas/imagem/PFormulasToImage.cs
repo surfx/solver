@@ -11,7 +11,7 @@ namespace classes.auxiliar.saidas.print
         public string PathImgSaida { get; set; }
         public bool DivisoriaArvore { get; set; }
         public bool DrawSquare { get; set; }
-        public float IncrementoX { get; set; }
+        public float IncrementX { get; set; }
         public float IncrementY { get; set; }
         public float EspacamentoDivisorY { get; set; }
 
@@ -24,8 +24,15 @@ namespace classes.auxiliar.saidas.print
 
             private PFormulasToImageBuilder(Formulas formulas)
             {
+
+                _pFormulasToImage.IncrementX = 20.0f;
+                _pFormulasToImage.IncrementY = 20.0f;
+                _pFormulasToImage.EspacamentoDivisorY = 25.0f;
+
                 _pFormulasToImage.DivisoriaArvore = true;
                 _pFormulasToImage.Formulas = formulas;
+
+
             }
             public static PFormulasToImageBuilder Init(Formulas formulas)
             {
@@ -37,7 +44,7 @@ namespace classes.auxiliar.saidas.print
             public PFormulasToImageBuilder SetPathImgSaida(string pathImgSaida) { _pFormulasToImage.PathImgSaida = pathImgSaida; return this; }
             public PFormulasToImageBuilder withDivisoriaArvore() { _pFormulasToImage.DivisoriaArvore = true; return this; }
             public PFormulasToImageBuilder withDrawSquare() { _pFormulasToImage.DrawSquare = true; return this; }
-            public PFormulasToImageBuilder SetIncrementoX(float incrementoX) { _pFormulasToImage.IncrementoX = incrementoX; return this; }
+            public PFormulasToImageBuilder SetIncrementoX(float incrementoX) { _pFormulasToImage.IncrementX = incrementoX; return this; }
             public PFormulasToImageBuilder SetIncrementoY(float incrementY) { _pFormulasToImage.IncrementY = incrementY; return this; }
             public PFormulasToImageBuilder SetEspacamentoDivisorY(float espacamentoDivisorY) { _pFormulasToImage.EspacamentoDivisorY = espacamentoDivisorY; return this; }
         }

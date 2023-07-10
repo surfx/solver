@@ -37,6 +37,8 @@ No momento foram implementados o parser, o print da árvore em string e em image
 
 ### Formato string
 
+`Console.WriteLine(f.ToString());`
+
 obs: tags OPEN/CLOSED apenas ilustrativas
 
 ```
@@ -59,14 +61,14 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 obs: tags OPEN/CLOSED apenas ilustrativas
 
 ```
-    PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
+    PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(f)
             .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
             .withDivisoriaArvore()
             .Build();
     new ImageFormulas().formulasToImage(pf2img);
 ```
 
-![Exemplo de árvore](https://github.com/surfx/solver/blob/main/imgformulas/bmp_formula.png?raw=true)
+![Exemplo de árvore](imgformulas\bmp_formula.png)
 
 # Análises iniciais
 
@@ -77,7 +79,7 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 
 # Regras Tableaux KE
 
-![Regras Tableaux KE](https://github.com/surfx/solver/blob/main/imagens/rules1.png?raw=true)
+![Regras Tableaux KE](imagens\rules_KE_1.png)
 
 # TODO
 

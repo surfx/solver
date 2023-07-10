@@ -29,18 +29,18 @@ namespace classes.auxiliar.saidas.print
 
             List<Quadro> lquadros = plainQuadros(qTree);
             tratarXQuadros(lquadros, 0.0f);
-            ajustarQuadradosXY(qTree, lquadros, pformulas2Img.IncrementoX, pformulas2Img.IncrementY); // ajusta o X e Y para a tree Quadros
+            ajustarQuadradosXY(qTree, lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY); // ajusta o X e Y para a tree Quadros
 
             //lquadros.ForEach(q => p(string.Format("{0} / {1}", q.ToString(), q.Rnd))); p(); p("");
 
-            Size wh = getImageWidthHeight(lquadros, pformulas2Img.IncrementoX, pformulas2Img.IncrementY);
+            Size wh = getImageWidthHeight(lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY);
 
             drawImg(g =>
             {
                 //lquadros.ForEach(q => { drawQuadros(g, q, false); });
                 drawQuadros(g, qTree, pformulas2Img.DrawSquare);
                 if (pformulas2Img.DivisoriaArvore) { drawDivisoriasArvore(g, qTree); } else { drawDivisorias(g, qTree); }
-                if (pformulas2Img.DrawSquare) { drawQuadroArroundFormulas(g, qTree, lquadros, pformulas2Img.IncrementoX, pformulas2Img.IncrementY); }
+                if (pformulas2Img.DrawSquare) { drawQuadroArroundFormulas(g, qTree, lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY); }
 
             }, wh.Width, wh.Height, pformulas2Img.PathImgSaida);
         }
