@@ -4,6 +4,7 @@ using classes.parser;
 using classes.regras;
 using classes.regras.binarias;
 using classes.regras.unitarias;
+using classes.regras.unitarias.unidouble;
 
 namespace classes.testes.regras
 {
@@ -86,6 +87,10 @@ namespace classes.testes.regras
 
 
             apply(rtn, parser.parserCF("T !(A | B) -> G"));
+            p("");
+
+
+            apply(rfn, parser.parserCF("F (A | B) -> !G"));
             p("");
         }
 
@@ -186,6 +191,18 @@ namespace classes.testes.regras
 
         }
 
+        public void testeRegraFalseImplica()
+        {
+            IRegraUnariaDouble rfi = new RegraFalseImplica();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("F (G → D) → (¬D v G)");
+            apply(rfi, cf1); p(); p("");
+
+            ConjuntoFormula cf2 = parser.parserCF("F A → B");
+            apply(rfi, cf2); p(); p("");
+        }
+
         #region apply rules
 
         private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1)
@@ -193,6 +210,14 @@ namespace classes.testes.regras
             Console.WriteLine(cf1);
             Console.WriteLine(string.Format("------ {0}", rUnaria.RULE));
             Console.WriteLine(rUnaria.apply(cf1));
+        }
+
+        private void apply(IRegraUnariaDouble rUnariaDouble, ConjuntoFormula cf1)
+        {
+            Console.WriteLine(cf1);
+            Console.WriteLine(string.Format("------ {0}", rUnariaDouble.RULE));
+            ConjuntoFormula[]? cfs = rUnariaDouble.apply(cf1);
+            Console.WriteLine(cfs != null ? string.Join(", ", cfs.Select(x => x.ToString())) : "null");
         }
 
         private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2)

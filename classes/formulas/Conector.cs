@@ -41,30 +41,6 @@ namespace classes.formulas
         // não considero negado número par de negativas...
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
 
-        #region sizeStr
-        public int sizeStr()
-        {
-            // +1 - do Símbolo
-            return 1 + (Esquerda == null ? 0 : sizeStr(Esquerda)) + (Direita == null ? 0 : sizeStr(Direita));
-        }
-        private int sizeStr(AtomoConector? ac)
-        {
-            return ac == null ? 0 : ac.sizeStr();
-        }
-        #endregion
-
-        #region height
-        public int heightTree()
-        {
-            // +1 - do Símbolo
-            return 1 + Math.Max((Esquerda == null ? 0 : heightTree(Esquerda)), (Direita == null ? 0 : heightTree(Direita)));
-        }
-        private int heightTree(AtomoConector? ac)
-        {
-            return ac == null ? 0 : ac.heightTree();
-        }
-        #endregion
-
         #endregion
 
         public override bool Equals(object? obj)

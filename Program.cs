@@ -35,6 +35,7 @@ namespace ConsoleApp1
             //new TestesRegras1().testeRegraTrueNegativo();
             //new TestesRegras1().testeRegraTrueImplica1();
             //new TestesRegras1().testeRegraTrueImplica2();
+            new TestesRegras1().testeRegraFalseImplica();
 
             //new TestesSolverStage().teste1();
 
@@ -46,7 +47,7 @@ namespace ConsoleApp1
             //new TestesImagens().teste4();
             //new TestesImagens().teste5();
 
-            new TestesImagens2().teste1();
+            //new TestesImagens2().teste1();
 
             
 

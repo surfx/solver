@@ -23,7 +23,7 @@ namespace classes.regras.unitarias
 
         public ConjuntoFormula? apply(ConjuntoFormula cf)
         {
-            if (!isValid(cf)) { return cf; }
+            if (!isValid(cf)) { return null; }
 
             AtomoConector ac = null;
             if (cf.AtomoConectorProp.isAtomo)

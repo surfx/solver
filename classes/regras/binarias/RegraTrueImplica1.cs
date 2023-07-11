@@ -19,7 +19,7 @@ namespace classes.regras.binarias
         public bool isValid(ConjuntoFormula cf1, ConjuntoFormula cf2)
         {
             if (cf1 == null || cf2 == null || cf1.AtomoConectorProp == null || cf2.AtomoConectorProp == null) { return false; }
-            if (!cf1.Simbolo || !cf2.Simbolo) { return false; }
+            if (!cf1.Simbolo || !cf2.Simbolo) { return false; } // ambos F
 
             // conector ou atomo
             AtomoConector ac1 = cf1.AtomoConectorProp;
