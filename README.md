@@ -99,7 +99,8 @@ Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de mat
 - [x] Print árvore png
 - [x] Stage, versão inicial \(stage: conjunto de fórmulas)
 - [x] Separar a abstração do 'print árvore png' em uma classe parametrizada
-- [ ] Regras binárias e unárias
+- [x] Regras binárias e unárias. Implementar Regras: F ˄1, F ˄2, T →1, T →2, T ˅1, T ˅2, F →, F ˅, T ˄, F ¬ e T ¬
+- [ ] Regra PB (Princípio da bivalência)
 - [ ] Aplicar conjunto de regras às fórmulas do stage
 - [ ] Verificar se os ramos estão abertos ou fechados
 - [ ] Verificar se a árvore possui solução ou não

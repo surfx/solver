@@ -201,6 +201,101 @@ namespace classes.testes.regras
 
             ConjuntoFormula cf2 = parser.parserCF("F A → B");
             apply(rfi, cf2); p(); p("");
+
+            ConjuntoFormula cf3 = parser.parserCF("A → B");
+            apply(rfi, cf3); p(); p("");
+        }
+
+        public void testeRegraFalseE1()
+        {
+            IRegraBinaria rfe = new RegraFalseE1();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("F A & B");
+            ConjuntoFormula cf2 = parser.parserCF("T A");
+            apply(rfe, cf1, cf2); p(); p("");
+            apply(rfe, cf2, cf1); p(); p("");
+
+            ConjuntoFormula cf4 = parser.parserCF("F A → B & (G | Z)");
+            ConjuntoFormula cf3 = parser.parserCF("A → B");
+            apply(rfe, cf4, cf3); p(); p("");
+
+        }
+
+        public void testeRegraFalseE2()
+        {
+            IRegraBinaria rfe = new RegraFalseE2();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("F A & B");
+            ConjuntoFormula cf2 = parser.parserCF("T B");
+            apply(rfe, cf1, cf2); p(); p("");
+            apply(rfe, cf2, cf1); p(); p("");
+
+            ConjuntoFormula cf4 = parser.parserCF("F A → B & (G | Z)");
+            ConjuntoFormula cf3 = parser.parserCF("T G | Z");
+            apply(rfe, cf4, cf3); p(); p("");
+
+        }
+
+        public void testeRegraTrueOu1()
+        {
+            IRegraBinaria rto1 = new RegraTrueOu1();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("T A | B");
+            ConjuntoFormula cf2 = parser.parserCF("F A");
+            apply(rto1, cf1, cf2); p(); p("");
+            apply(rto1, cf2, cf1); p(); p("");
+
+            ConjuntoFormula cf4 = parser.parserCF("T A → B | (G | Z)");
+            ConjuntoFormula cf3 = parser.parserCF("F A → B");
+            apply(rto1, cf4, cf3); p(); p("");
+        }
+
+        public void testeRegraTrueOu2()
+        {
+            IRegraBinaria rto2 = new RegraTrueOu2();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("T A | B");
+            ConjuntoFormula cf2 = parser.parserCF("F B");
+            apply(rto2, cf1, cf2); p(); p("");
+            apply(rto2, cf2, cf1); p(); p("");
+
+            ConjuntoFormula cf4 = parser.parserCF("T A → B | (G | Z)");
+            ConjuntoFormula cf3 = parser.parserCF("F G | Z");
+            apply(rto2, cf4, cf3); p(); p("");
+        }
+
+        public void testeRegraTrueE()
+        {
+            IRegraUnariaDouble rte = new RegraTrueE();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("T A & B");
+            apply(rte, cf1); p(); p("");
+
+            ConjuntoFormula cf2 = parser.parserCF("F A & B");
+            apply(rte, cf2); p(); p("");
+
+            ConjuntoFormula cf3 = parser.parserCF("T (A -> B) & B");
+            apply(rte, cf3); p(); p("");
+        }
+
+        public void testeRegraFalseOu()
+        {
+            IRegraUnariaDouble rfo = new RegraFalseOu();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("F A | B");
+            apply(rfo, cf1); p(); p("");
+
+            ConjuntoFormula cf2 = parser.parserCF("F A & B");
+            apply(rfo, cf2); p(); p("");
+
+            ConjuntoFormula cf3 = parser.parserCF("F (A -> B) | B");
+            apply(rfo, cf3); p(); p("");
         }
 
         #region apply rules
