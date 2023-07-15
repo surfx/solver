@@ -340,8 +340,7 @@ namespace classes.auxiliar.saidas.print
             {
                 setRandom();
                 formulas = new();
-                if (f.Negativas != null) { f.Negativas.ForEach(x => formulas.Add(x.ToString())); }
-                if (f.Positivas != null) { f.Positivas.ForEach(x => formulas.Add(x.ToString())); }
+                if (f.LConjuntoFormula != null) { f.LConjuntoFormula.ForEach(x => formulas.Add(x.ToString())); }
 
                 if (f.Esquerda == null && f.Direita == null)
                 {

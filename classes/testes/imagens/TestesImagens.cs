@@ -473,16 +473,9 @@ namespace classes.testes.imagens
             {
                 if (f == null) { return; }
                 formulas = new();
-                if (f.Negativas != null)
+                if (f.LConjuntoFormula != null)
                 {
-                    f.Negativas.ForEach(x =>
-                    {
-                        if (x != null) { formulas.Add(x.ToString()); }
-                    });
-                }
-                if (f.Positivas != null)
-                {
-                    f.Positivas.ForEach(x =>
+                    f.LConjuntoFormula.ForEach(x =>
                     {
                         if (x != null) { formulas.Add(x.ToString()); }
                     });
@@ -522,15 +515,11 @@ namespace classes.testes.imagens
             if (f == null || g == null) { return; }
 
             float widthMiddle = widthImg / 2.0f;
-            float maxL = (Math.Max(f.Positivas == null ? 0 : f.Positivas.Max(x => x.ToString().Length), f.Negativas == null ? 0 : f.Negativas.Max(x => x.ToString().Length)) * wchar) / 2.0f;
+            float maxL = (f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Max(x => x.ToString().Length) * wchar) / 2.0f;
 
-            if (f.Positivas != null)
+            if (f.LConjuntoFormula != null)
             {
-                f.Positivas.ForEach(x => g.DrawString(x.ToString(), fonte, Brushes.Black, new PointF(widthMiddle - maxL, (height++) * hchar)));
-            }
-            if (f.Negativas != null)
-            {
-                f.Negativas.ForEach(x => g.DrawString(x.ToString(), fonte, Brushes.Black, new PointF(widthMiddle - maxL, (height++) * hchar)));
+                f.LConjuntoFormula.ForEach(x => g.DrawString(x.ToString(), fonte, Brushes.Black, new PointF(widthMiddle - maxL, (height++) * hchar)));
             }
 
             if (f.Esquerda != null)
@@ -549,7 +538,7 @@ namespace classes.testes.imagens
         private int lineMaxLength(Formulas f, int espaco = 0)
         {
             if (f == null) { return 0; }
-            int aux = Math.Max(f.Positivas == null ? 0 : f.Positivas.Max(x => x.ToString().Length), f.Negativas == null ? 0 : f.Negativas.Max(x => x.ToString().Length)) + espaco;
+            int aux = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Max(x => x.ToString().Length) + espaco;
             return (aux + (f.Esquerda == null ? 0 : lineMaxLength(f.Esquerda) + espaco) + (f.Direita == null ? 0 : lineMaxLength(f.Direita)) + espaco);
         }
 
@@ -564,7 +553,7 @@ namespace classes.testes.imagens
         private int numLines(Formulas f)
         {
             if (f == null) { return 0; }
-            int aux = (f.Positivas == null ? 0 : f.Positivas.Count()) + (f.Negativas == null ? 0 : f.Negativas.Count());
+            int aux = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Count();
             return aux + Math.Max(f.Esquerda == null ? 0 : numLines(f.Esquerda), f.Direita == null ? 0 : numLines(f.Direita));
         }
 
@@ -690,21 +679,13 @@ namespace classes.testes.imagens
                 //H = height + (f.Negativas == null ? 0 : f.Negativas.Count) + (f.Positivas == null ? 0 : f.Positivas.Count),
             };
 
-            int ml = Math.Max(f.Negativas == null ? 0 : f.Negativas.Max(x => x == null ? 0 : x.ToString().Length), f.Positivas == null ? 0 : f.Positivas.Max(x => x == null ? 0 : x.ToString().Length));
+            int ml = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Max(x => x == null ? 0 : x.ToString().Length);
 
             List<XYH> rt = new List<XYH>();
-            f.Negativas?.ForEach(neg =>
+            f.LConjuntoFormula?.ForEach(f =>
             {
                 XYH aux = xyh.copy();
-                aux.CF = neg;
-                aux.H = height++;
-                aux.ML = ml;
-                rt.Add(aux);
-            });
-            f.Positivas?.ForEach(pos =>
-            {
-                XYH aux = xyh.copy();
-                aux.CF = pos;
+                aux.CF = f;
                 aux.H = height++;
                 aux.ML = ml;
                 rt.Add(aux);
@@ -845,8 +826,7 @@ namespace classes.testes.imagens
         private int heightTreeFormulas(Formulas? f)
         {
             if (f == null) { return 0; }
-            int aux = f.Negativas == null ? 0 : f.Negativas.Count;
-            aux += f.Positivas == null ? 0 : f.Positivas.Count;
+            int aux = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Count;
             return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
         }
 

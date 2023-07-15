@@ -7,7 +7,7 @@ namespace classes.regras.unitarias
         -----   (F ¬)
         T  A
     */
-    public class RegraFalsoNegativo : IRegraUnaria
+    public class RegraFalseNegativo : IRegraUnaria
     {
 
         public string RULE { get => "F ¬"; }

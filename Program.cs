@@ -41,7 +41,8 @@ namespace ConsoleApp1
             //new TestesRegras1().testeRegraTrueOu1();
             //new TestesRegras1().testeRegraTrueOu2();
             //new TestesRegras1().testeRegraTrueE();
-            new TestesRegras1().testeRegraFalseOu();
+            //new TestesRegras1().testeRegraFalseOu();
+            //new TestesRegras1().testeRegraPB();
 
             //new TestesSolverStage().teste1();
 
@@ -56,6 +57,7 @@ namespace ConsoleApp1
             //new TestesImagens2().teste1();
 
 
+            new TestesSolverStage2().teste1();
 
         }
     }

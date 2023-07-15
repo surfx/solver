@@ -87,9 +87,8 @@ namespace classes.testes
             f.addConjuntoFormula(parser.parserCF("T (A | D)"));
 
             p("-- Root");
-            f.Negativas.ForEach(x => p(x.ToString()));
-            f.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Negativas), sizeMax(f.Positivas))));
+            f.LConjuntoFormula.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", sizeMax(f.LConjuntoFormula)));
             p();
 
             f.addEsquerda(parser.parserCF("E"));
@@ -97,9 +96,8 @@ namespace classes.testes
             //f.addEsquerda(parser.parserCF("T A->B"));
 
             p("-- Esquerda");
-            f.Esquerda.Negativas.ForEach(x => p(x.ToString()));
-            f.Esquerda.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Esquerda.Negativas), sizeMax(f.Esquerda.Positivas))));
+            f.Esquerda.LConjuntoFormula.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", sizeMax(f.Esquerda.LConjuntoFormula)));
             p();
 
             f.addDireita(parser.parserCF("T H->G"));
@@ -108,9 +106,8 @@ namespace classes.testes
             f.addDireita(parser.parserCF("T G|T&U"));
 
             p("-- Direita");
-            f.Direita.Negativas.ForEach(x => p(x.ToString()));
-            f.Direita.Positivas.ForEach(x => p(x.ToString()));
-            p(string.Format("{0}", Math.Max(sizeMax(f.Direita.Negativas), sizeMax(f.Direita.Positivas))));
+            f.Direita.LConjuntoFormula.ForEach(x => p(x.ToString()));
+            p(string.Format("{0}", sizeMax(f.Direita.LConjuntoFormula)));
 
             // TESTES
             f.Esquerda.addDireita(parser.parserCF("G & (Y -> B)"));
@@ -121,8 +118,8 @@ namespace classes.testes
 
         private int sizeMax(Formulas f)
         {
-            if (f == null || (f.Negativas == null && f.Positivas == null && f.Direita == null && f.Esquerda == null)) { return 0; }
-            return Math.Max(Math.Max(sizeMax(f.Negativas), sizeMax(f.Positivas)), Math.Max(sizeMax(f.Direita), sizeMax(f.Esquerda)));
+            if (f == null || (f.LConjuntoFormula == null && f.Direita == null && f.Esquerda == null)) { return 0; }
+            return Math.Max(sizeMax(f.LConjuntoFormula), Math.Max(sizeMax(f.Direita), sizeMax(f.Esquerda)));
         }
 
         private int sizeMax(List<ConjuntoFormula> formulas)
@@ -143,20 +140,18 @@ namespace classes.testes
 
         private int maxSizeString(Formulas? f)
         {
-            return f == null ? 0 : Math.Max(masSizeString(f.Negativas, f.Positivas), Math.Max(maxSizeString(f.Esquerda), maxSizeString(f.Direita)));
+            return f == null ? 0 : Math.Max(maxSizeString(f.LConjuntoFormula), Math.Max(maxSizeString(f.Esquerda), maxSizeString(f.Direita)));
         }
 
-        private int masSizeString(List<ConjuntoFormula> listaNegativas, List<ConjuntoFormula> listaPositivas)
+        private int maxSizeString(List<ConjuntoFormula> listaFormulas)
         {
-            int maxNegativas = listaNegativas == null ? 0 : listaNegativas.Max(x => x.ToString().Length);
-            int maxPositivas = listaPositivas == null ? 0 : listaPositivas.Max(x => x.ToString().Length);
-            return Math.Max(maxNegativas, maxPositivas);
+            return listaFormulas == null ? 0 : listaFormulas.Max(x => x.ToString().Length);
         }
 
         private int masSizeStringLevelOnly(Formulas? f)
         {
             if (f == null) { return 0; }
-            return Math.Max(f.Negativas == null ? 0 : f.Negativas.Max(x => x == null ? 0 : x.ToString().Length), f.Positivas == null ? 0 : f.Positivas.Max(x => x == null ? 0 : x.ToString().Length));
+            return f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Max(x => x == null ? 0 : x.ToString().Length);
         }
 
         #endregion

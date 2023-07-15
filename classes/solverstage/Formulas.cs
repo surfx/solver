@@ -5,9 +5,8 @@ namespace classes.solverstage
 {
     public class Formulas : IDisposable
     {
-        private List<ConjuntoFormula>? _positivas, _negativas;
-        public List<ConjuntoFormula>? Positivas { get => _positivas; }
-        public List<ConjuntoFormula>? Negativas { get => _negativas; }
+        private List<ConjuntoFormula>? _lconjuntoFormula;
+        public List<ConjuntoFormula>? LConjuntoFormula { get => _lconjuntoFormula; }
 
         private Formulas? _esquerda, _direita;
         public Formulas? Esquerda { get => _esquerda; }
@@ -22,16 +21,8 @@ namespace classes.solverstage
 
         public void addConjuntoFormula(ConjuntoFormula cf)
         {
-            if (cf.Simbolo)
-            {
-                if (_positivas == null) { _positivas = new List<ConjuntoFormula>(); }
-                _positivas.Add(cf);
-            }
-            else
-            {
-                if (_negativas == null) { _negativas = new List<ConjuntoFormula>(); }
-                _negativas.Add(cf);
-            }
+            if (_lconjuntoFormula == null) { _lconjuntoFormula = new(); }
+            _lconjuntoFormula.Add(cf);
         }
 
         public void addEsquerda(ConjuntoFormula cf)
@@ -53,8 +44,7 @@ namespace classes.solverstage
 
         public void Dispose()
         {
-            _positivas = null;
-            _negativas = null;
+            _lconjuntoFormula = null;
             _esquerda = null;
             _direita = null;
         }

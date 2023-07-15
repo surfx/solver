@@ -1,30 +1,21 @@
 using classes.auxiliar;
-using classes.formulas;
 using classes.parser;
 using classes.solverstage;
 
 namespace classes.testes.solverstage
 {
 
-    public class TestesSolverStage
+    public class TestesSolverStage2
     {
+
+        private Stage stage = new Stage();
 
         public void teste1()
         {
+            Formulas f = getFormulas2();
+            //p(f.ToString()); p(); p("");
 
-            //p(getFormulas1().ToString());
-            //p();p("");
-
-            Formulas f = getFormulaT();
-            //f = getFormulas1();
-            //f = getFormulaAC();
-            //f = getFormulaABCDEFG();
-            //f = getFormulaAB();
-            //using (StreamWriter writer = new StreamWriter(string.Format(@"{0}\{1}", "imgformulas", "teste_txt.txt"))) { writer.Write(f.ToString()); }
-
-            p(f.ToString());
-            p(); p("");
-
+            stage.solve(f);
         }
 
 
@@ -139,6 +130,18 @@ namespace classes.testes.solverstage
             f.Direita.isClosed = true;
             return f;
         }
+
+        private Formulas getFormulas2()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("! (A->B)"));
+            f.addConjuntoFormula(parser.parserCF("T A ˅ B"));
+            f.addConjuntoFormula(parser.parserCF("F A"));
+            return f;
+        }
+
         #endregion
 
         #region auxiliar

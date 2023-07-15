@@ -8,12 +8,11 @@ namespace classes.auxiliar.saidas.print
 
         public void printTree(Formulas f, int level = 0, int pos = 0)
         {
-            if (f == null || (f.Positivas == null && f.Negativas == null)) { return; }
+            if (f == null || f.LConjuntoFormula == null) { return; }
             string espaco = level <= 0 ? "" : getEspaco(level);
             //p(string.Format("{0}{1} ({2} {3})", espaco, t, level, pos));
 
-            if (f.Positivas != null) f.Positivas.ForEach(x => Console.WriteLine(string.Format("{0}{1}", espaco, x.ToString())));
-            if (f.Negativas != null) f.Negativas.ForEach(x => Console.WriteLine(string.Format("{0}{1}", espaco, x.ToString())));
+            if (f.LConjuntoFormula != null) f.LConjuntoFormula.ForEach(x => Console.WriteLine(string.Format("{0}{1}", espaco, x.ToString())));
 
             if (f.Esquerda != null) { printTree(f.Esquerda, level + 1, pos << 1); }
             if (f.Direita != null) { printTree(f.Direita, level + 1, (pos << 1) + 1); }
@@ -121,8 +120,10 @@ namespace classes.auxiliar.saidas.print
             Dictionary<int, PosElement<List<string>>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<List<string>>>();
 
             List<string> lformulas = new();
-            if (f.Negativas != null) { f.Negativas.ForEach(fn => { if (fn == null) { return; } lformulas.Add(fn.ToString()); }); }
-            if (f.Positivas != null) { f.Positivas.ForEach(fp => { if (fp == null) { return; } lformulas.Add(fp.ToString()); }); }
+            if (f.LConjuntoFormula != null)
+            {
+                lformulas.AddRange(f.LConjuntoFormula.Select(f => f.ToString()));
+            }
 
             if (f.Esquerda == null && f.Direita == null)
             {
