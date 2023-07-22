@@ -3,6 +3,7 @@ using classes.formulas;
 using classes.parser;
 using classes.regras;
 using classes.regras.binarias;
+using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
 
@@ -313,6 +314,30 @@ namespace classes.testes.regras
             apply(rpb, cf3); p(); p("");
         }
 
+        public void testeRegraClosed() { 
+            RegraClosed rc = new RegraClosed();
+            Parser parser = new Parser();
+
+            ConjuntoFormula cf1 = parser.parserCF("F A & B");
+            ConjuntoFormula cf2 = parser.parserCF("T B");
+            apply(rc, cf1, cf2); p(); p("");
+
+            ConjuntoFormula cf3 = parser.parserCF("T A & B");
+            apply(rc, cf1, cf3); p(); p("");
+
+            ConjuntoFormula cf4 = parser.parserCF("F B");
+            apply(rc, cf2, cf4); p(); p("");
+
+            ConjuntoFormula cf5 = parser.parserCF("F (A -> B) | B & A → B | (G | Z)");
+            apply(rc, cf2, cf5); p(); p("");
+
+            ConjuntoFormula cf6 = parser.parserCF("T (A -> B) | B & A → B | (G | Z)");
+            apply(rc, cf6, cf5); p(); p("");
+            apply(rc, cf5, cf6); p(); p("");
+            apply(rc, cf5, cf5); p(); p("");
+            apply(rc, cf6, cf6); p(); p("");
+        }
+
         #region apply rules
 
         private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1)
@@ -336,6 +361,14 @@ namespace classes.testes.regras
             Console.WriteLine(cf2);
             Console.WriteLine(string.Format("------ {0}", rBinaria.RULE));
             Console.WriteLine(rBinaria.apply(cf1, cf2));
+        }
+
+        private void apply(RegraClosed rc, ConjuntoFormula cf1, ConjuntoFormula cf2)
+        {
+            Console.WriteLine(cf1);
+            Console.WriteLine(cf2);
+            Console.WriteLine(string.Format("------ {0}", rc.RULE));
+            Console.WriteLine(rc.apply(cf1, cf2));
         }
 
         #endregion

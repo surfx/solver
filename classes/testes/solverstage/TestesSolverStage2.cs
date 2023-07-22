@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;
 
@@ -16,6 +17,7 @@ namespace classes.testes.solverstage
             //p(f.ToString()); p(); p("");
 
             stage.solve(f);
+            saveImg(f);
         }
 
 
@@ -142,6 +144,20 @@ namespace classes.testes.solverstage
             return f;
         }
 
+        #endregion
+
+        #region img
+        private void saveImg(Formulas formulas){
+            //p(formulas.ToString()); p(); p("");
+            //new classes.solverstage.print.PrintFormulas().printTree(formulas);
+
+            PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
+                    .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
+                    .withDivisoriaArvore()
+                    .withPrintAllClosedOpen()
+                    .Build();
+            new ImageFormulas().formulasToImage(pf2img);
+        }
         #endregion
 
         #region auxiliar

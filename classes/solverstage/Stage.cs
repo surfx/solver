@@ -2,6 +2,7 @@ using classes.auxiliar;
 using classes.formulas;
 using classes.regras;
 using classes.regras.binarias;
+using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
 
@@ -16,6 +17,7 @@ namespace classes.solverstage
         private List<IRegraUnaria> RegrasUnarias { get; set; }
         private List<IRegraUnariaDouble> RegrasUnariasDouble { get; set; }
         private IRegraUnariaDouble RegraPBProp { get; set; }
+        private RegraClosed RegraClosedProp { get; set; }
 
         public Stage(Formulas? formulas = null)
         {
@@ -35,21 +37,25 @@ namespace classes.solverstage
 
             // TODO: verificar os ramos: Direita e Esquerda
 
-            trySolve(conjuntoFormulas);
+            trySolve(conjuntoFormulas, formulas);
 
-            // List<ConjuntoFormula>? lcfaux = trySolve(conjuntoFormulas);
-            // if (lcfaux != null)
-            // {
-            //     //lcfaux.ForEach(cfaux => { p(cfaux.ToString()); p(); p(""); });
-            //     lcfaux.ForEach(cfaux => { FormulasProp.addConjuntoFormula(cfaux); });
-            // }
+            FormulasProp.updateFormulas(conjuntoFormulas);
+
+            updateClosed(formulas);
+
+            if (!formulas.isClosed)
+            {
+                p(); p("-- verificar a regra PB");
+            } else {
+                p(); p("-- Ramo fechado");
+            }
 
             p(FormulasProp.ToString()); p(); p("");
         }
 
-        private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas)
+        private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas, Formulas? formulas)
         {
-            if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0) { return null; }
+            if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0 || formulas == null) { return null; }
             List<ConjuntoFormula>? rt = null;
 
             int count = conjuntoFormulas.Count;
@@ -67,6 +73,13 @@ namespace classes.solverstage
                     rt.Add(cfAux);
                 });
 
+                // encontrou uma contradição
+                if (isClosed(conjuntoFormulas))
+                {
+                    formulas.isClosed = true;
+                    return rt;
+                }
+
                 RegrasUnariasDouble.ForEach(rudb =>
                 {
                     if (!rudb.isValid(cf1)) { return; }
@@ -78,10 +91,24 @@ namespace classes.solverstage
                     rt.AddRange(lcfAux);
                 });
 
+                // encontrou uma contradição
+                if (isClosed(conjuntoFormulas))
+                {
+                    formulas.isClosed = true;
+                    return rt;
+                }
+
                 for (int j = 0; j < count; j++)
                 {
                     if (i == j) { continue; } //same
                     ConjuntoFormula cf2 = conjuntoFormulas[j];
+
+                    // encontrou uma contradição
+                    if (RegraClosedProp.apply(cf1, cf2))
+                    {
+                        formulas.isClosed = true;
+                        return rt;
+                    }
 
                     RegrasBinarias.ForEach(rb =>
                     {
@@ -91,6 +118,14 @@ namespace classes.solverstage
                         if (rt == null) { rt = new(); }
                         rt.Add(cfAux);
                     });
+
+                    // encontrou uma contradição
+                    if (RegraClosedProp.apply(cf1, cf2))
+                    {
+                        formulas.isClosed = true;
+                        return rt;
+                    }
+
                 }
 
             }
@@ -100,17 +135,69 @@ namespace classes.solverstage
             {
                 conjuntoFormulas.AddRange(rt);
                 List<ConjuntoFormula>? laux = null;
-                laux = trySolve(conjuntoFormulas);
+                laux = trySolve(conjuntoFormulas, formulas);
                 if (laux != null && laux.Count > 0) { rt.AddRange(laux); }
                 while (laux != null && laux.Count >= 0)
                 {
-                    laux = trySolve(conjuntoFormulas);
+                    laux = trySolve(conjuntoFormulas, formulas);
                     if (laux != null && laux.Count > 0) { rt.AddRange(laux); }
                 }
             }
+
             return rt;
         }
 
+        #region closed
+        private bool isClosed(List<ConjuntoFormula> conjuntoFormulas)
+        {
+            if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0) { return false; }
+            // procura por uma contradição
+            int count = conjuntoFormulas.Count;
+            for (int i = 0; i < count; i++)
+            {
+                ConjuntoFormula cf1 = conjuntoFormulas[i];
+                for (int j = 0; j < count; j++)
+                {
+                    if (i == j) { continue; } //same
+                    ConjuntoFormula cf2 = conjuntoFormulas[j];
+                    if (RegraClosedProp.apply(cf1, cf2)) { return true; }
+                }
+            }
+            return false;
+        }
+
+        private void updateClosed(Formulas? formulas)
+        {
+            if (formulas == null) { return; }
+            if (formulas.Esquerda != null) { updateClosed(formulas.Esquerda); }
+            if (formulas.Direita != null) { updateClosed(formulas.Direita); }
+            formulas.isClosed = isClosedFormula(formulas);
+
+        }
+
+        private bool isClosedFormula(Formulas? formulas)
+        {
+            // se é null, considero fechado
+            if (formulas == null) { return true; }
+            // não tem nem esquerda nem direita
+            if (formulas.Esquerda == null && formulas.Direita == null) { return formulas.isClosed; }
+
+            // para o ramo se considerado fechado, esquerda e direita, também devem estar
+            // se um subramo estiver aberto, o ramo atual também está
+
+            if (formulas.Esquerda != null && formulas.Direita != null)
+            {
+                return isClosedFormula(formulas.Esquerda) && isClosedFormula(formulas.Direita);
+            }
+
+            return formulas.Esquerda != null ? isClosedFormula(formulas.Esquerda) : isClosedFormula(formulas.Direita);
+
+            // if (formulas.Esquerda != null) { formulas.Esquerda.isClosed = isClosedFormula(formulas.Esquerda.Esquerda) && isClosedFormula(formulas.Esquerda.Direita); }
+            // if (formulas.Direita != null) { formulas.Direita.isClosed = isClosedFormula(formulas.Direita.Esquerda) && isClosedFormula(formulas.Direita.Direita); }
+            // return isClosedFormula(formulas.Esquerda) && isClosedFormula(formulas.Direita);
+        }
+
+        #endregion
 
         private void preencherFormulas()
         {
@@ -137,6 +224,8 @@ namespace classes.solverstage
 
             // regra PB fica separada
             RegraPBProp = new RegraPB();
+
+            RegraClosedProp = new RegraClosed();
         }
 
 
@@ -151,6 +240,7 @@ namespace classes.solverstage
             if (RegrasBinarias != null) { RegrasUnariasDouble.Clear(); }
             RegrasUnariasDouble = null;
             RegraPBProp = null;
+            RegraClosedProp = null;
         }
 
         #region auxiliar

@@ -1,4 +1,5 @@
 ﻿using classes.testes;
+using classes.testes.closed;
 using classes.testes.formulas;
 using classes.testes.imagens;
 using classes.testes.regras;
@@ -43,6 +44,7 @@ namespace ConsoleApp1
             //new TestesRegras1().testeRegraTrueE();
             //new TestesRegras1().testeRegraFalseOu();
             //new TestesRegras1().testeRegraPB();
+            //new TestesRegras1().testeRegraClosed();
 
             //new TestesSolverStage().teste1();
 
@@ -55,6 +57,8 @@ namespace ConsoleApp1
             //new TestesImagens().teste5();
 
             //new TestesImagens2().teste1();
+
+            //new TestesAtualizacaoClosed().testeClosed();
 
 
             new TestesSolverStage2().teste1();

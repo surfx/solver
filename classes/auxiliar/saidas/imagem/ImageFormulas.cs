@@ -1,6 +1,5 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Text;
 using classes.solverstage;
 
 namespace classes.auxiliar.saidas.print
@@ -15,7 +14,7 @@ namespace classes.auxiliar.saidas.print
         {
             if (pformulas2Img == null || pformulas2Img.Formulas == null) { return; }
 
-            Quadro qTree = new(pformulas2Img.Formulas);
+            Quadro qTree = new(pformulas2Img.Formulas, pformulas2Img.PrintAllClosedOpen);
 
             // float incrementoX = 20.0f, incrementY = 20.0f;
             // float espacamentoDivisorY = 25.0f;
@@ -336,19 +335,26 @@ namespace classes.auxiliar.saidas.print
                 setRandom();
             }
 
-            public Quadro(Formulas f)
+            public Quadro(Formulas f, bool printAllClosedOpen = false)
             {
                 setRandom();
                 formulas = new();
                 if (f.LConjuntoFormula != null) { f.LConjuntoFormula.ForEach(x => formulas.Add(x.ToString())); }
 
-                if (f.Esquerda == null && f.Direita == null)
+                if (printAllClosedOpen)
                 {
                     formulas.Add(f.isClosed ? "CLOSED" : "OPEN");
                 }
+                else
+                {
+                    if (f.Esquerda == null && f.Direita == null)
+                    {
+                        formulas.Add(f.isClosed ? "CLOSED" : "OPEN");
+                    }
+                }
 
-                if (f.Esquerda != null) { this.Esquerda = new Quadro(f.Esquerda); }
-                if (f.Direita != null) { this.Direita = new Quadro(f.Direita); }
+                if (f.Esquerda != null) { this.Esquerda = new Quadro(f.Esquerda, printAllClosedOpen); }
+                if (f.Direita != null) { this.Direita = new Quadro(f.Direita, printAllClosedOpen); }
 
                 Width = formulas == null ? 0 : formulas.Max(x => x.Length) * wchar + wchar * 0.5f;
                 Height = formulas == null ? 0 : formulas.Count * hchar + hchar * 0.5f;

@@ -20,6 +20,7 @@ namespace classes.regras.binarias
         {
             if (cf1 == null || cf2 == null || cf1.AtomoConectorProp == null || cf2.AtomoConectorProp == null) { return false; }
             if (!cf1.Simbolo || !cf2.Simbolo) { return false; } // ambos T
+            if (cf1.AtomoConectorProp.isAtomo && cf2.AtomoConectorProp.isAtomo) { return false; } // ambos átomos
 
             // conector ou atomo
             AtomoConector ac1 = cf1.AtomoConectorProp;

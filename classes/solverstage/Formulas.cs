@@ -37,6 +37,12 @@ namespace classes.solverstage
             _direita.addConjuntoFormula(cf);
         }
 
+        public void updateFormulas(List<ConjuntoFormula> lformulas)
+        {
+            if (lformulas == null || lformulas.Count <= 0) { return; }
+            this._lconjuntoFormula = lformulas;
+        }
+
         public override string ToString()
         {
             return new PrintFormulas().toString(this);
