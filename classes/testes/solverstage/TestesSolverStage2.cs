@@ -13,7 +13,7 @@ namespace classes.testes.solverstage
 
         public void teste1()
         {
-            Formulas f = getFormulas2();
+            Formulas f = getFormulas3();
             //p(f.ToString()); p(); p("");
 
             stage.solve(f);
@@ -141,6 +141,16 @@ namespace classes.testes.solverstage
             f.addConjuntoFormula(parser.parserCF("! (A->B)"));
             f.addConjuntoFormula(parser.parserCF("T A ˅ B"));
             f.addConjuntoFormula(parser.parserCF("F A"));
+            return f;
+        }
+
+        private Formulas getFormulas3()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("T (A | B)"));
+            f.addConjuntoFormula(parser.parserCF("F (D & B) -> C"));
             return f;
         }
 

@@ -25,37 +25,40 @@ namespace classes.solverstage
             if (formulas != null) { FormulasProp = formulas; }
         }
 
-        public void solve(Formulas? formulas = null)
+        public void solve(Formulas? formula = null)
         {
-            if (formulas != null) { FormulasProp = formulas; }
+            if (formula != null) { FormulasProp = formula; }
             if (FormulasProp == null) { p("Informe o conjunto de fórmulas para o Solver"); return; }
 
             p(FormulasProp.ToString()); p(); p("");
 
             List<ConjuntoFormula> conjuntoFormulas = new();
-            if (formulas.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formulas.LConjuntoFormula); }
+            if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
 
             // TODO: verificar os ramos: Direita e Esquerda
 
-            trySolve(conjuntoFormulas, formulas);
+            trySolve(conjuntoFormulas, formula);
 
             FormulasProp.updateFormulas(conjuntoFormulas);
 
-            updateClosed(formulas);
+            updateClosed(formula);
 
-            if (!formulas.isClosed)
+            if (!formula.isClosed)
             {
                 p(); p("-- verificar a regra PB");
-            } else {
+                applyPB(conjuntoFormulas, formula);
+            }
+            else
+            {
                 p(); p("-- Ramo fechado");
             }
 
             p(FormulasProp.ToString()); p(); p("");
         }
 
-        private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas, Formulas? formulas)
+        private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula)
         {
-            if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0 || formulas == null) { return null; }
+            if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0 || formula == null) { return null; }
             List<ConjuntoFormula>? rt = null;
 
             int count = conjuntoFormulas.Count;
@@ -76,7 +79,7 @@ namespace classes.solverstage
                 // encontrou uma contradição
                 if (isClosed(conjuntoFormulas))
                 {
-                    formulas.isClosed = true;
+                    formula.isClosed = true;
                     return rt;
                 }
 
@@ -94,7 +97,7 @@ namespace classes.solverstage
                 // encontrou uma contradição
                 if (isClosed(conjuntoFormulas))
                 {
-                    formulas.isClosed = true;
+                    formula.isClosed = true;
                     return rt;
                 }
 
@@ -106,7 +109,7 @@ namespace classes.solverstage
                     // encontrou uma contradição
                     if (RegraClosedProp.apply(cf1, cf2))
                     {
-                        formulas.isClosed = true;
+                        formula.isClosed = true;
                         return rt;
                     }
 
@@ -122,7 +125,7 @@ namespace classes.solverstage
                     // encontrou uma contradição
                     if (RegraClosedProp.apply(cf1, cf2))
                     {
-                        formulas.isClosed = true;
+                        formula.isClosed = true;
                         return rt;
                     }
 
@@ -135,16 +138,72 @@ namespace classes.solverstage
             {
                 conjuntoFormulas.AddRange(rt);
                 List<ConjuntoFormula>? laux = null;
-                laux = trySolve(conjuntoFormulas, formulas);
+                laux = trySolve(conjuntoFormulas, formula);
                 if (laux != null && laux.Count > 0) { rt.AddRange(laux); }
                 while (laux != null && laux.Count >= 0)
                 {
-                    laux = trySolve(conjuntoFormulas, formulas);
+                    laux = trySolve(conjuntoFormulas, formula);
                     if (laux != null && laux.Count > 0) { rt.AddRange(laux); }
                 }
             }
 
             return rt;
+        }
+
+        private void applyPB(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula, List<int>? formulasJaAplicadas = null)
+        {
+            if (formula == null || formula.isClosed) { return; }
+            trySolve(conjuntoFormulas, formula);
+            updateClosed(formula);
+            if (formula.isClosed) { return; }
+
+            if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
+            if (conjuntoFormulas == null) { conjuntoFormulas = new(); }
+
+            formula.LConjuntoFormula.ForEach(f =>
+            {
+                if (conjuntoFormulas.Contains(f)) { return; }
+                conjuntoFormulas.Add(f);
+            });
+
+
+            List<ConjuntoFormula> formulasCandidatas = conjuntoFormulas.FindAll(cf => formulasJaAplicadas != null && cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.AtomoConectorProp.GetHashCode()));
+            if (formulasCandidatas.Count <= 0) { return; }
+
+            // TODO: escolher a mais promissora - rever counts átomos, conectores, etc
+            ConjuntoFormula[]? pbReturn = null;
+            formulasCandidatas.ForEach(fc =>
+            {
+                pbReturn = RegraPBProp.apply(fc);
+                // verifica se alguma fórmula já está no conjunto de fórmulas base
+                if (!conjuntoFormulas.Contains(pbReturn[0]) && !conjuntoFormulas.Contains(pbReturn[1]))
+                {
+                    // add à lista de fórmulas já aplicadas
+                    if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
+                    formulasJaAplicadas.Add(fc.GetHashCode());
+                    return;
+                }
+                pbReturn = null;
+            });
+
+            // não encontrou
+            if (pbReturn == null) { return; }
+
+            formula.addEsquerda(pbReturn[0]);
+            formula.addDireita(pbReturn[1]);
+
+            List<ConjuntoFormula> conjuntoFormulasEsquerda = new(), conjuntoFormulasDireita = new();
+            conjuntoFormulas.ForEach(f => { conjuntoFormulasEsquerda.Add(f); conjuntoFormulasDireita.Add(f); });
+            conjuntoFormulasEsquerda.Add(pbReturn[0]);
+            conjuntoFormulasDireita.Add(pbReturn[1]);
+
+            trySolve(conjuntoFormulas, formula);
+            if (formula.isClosed) { return; }
+            updateClosed(formula);
+
+            applyPB(conjuntoFormulasEsquerda, formula.Esquerda, formulasJaAplicadas);
+            applyPB(conjuntoFormulasDireita, formula.Direita, formulasJaAplicadas);
+
         }
 
         #region closed
