@@ -53,7 +53,8 @@ namespace classes.solverstage
                 p(); p("-- Ramo fechado");
             }
 
-            p(FormulasProp.ToString()); p(); p("");
+            //p(FormulasProp.ToString()); p(); p("");
+            p("-- end");
         }
 
         private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula)
@@ -157,7 +158,7 @@ namespace classes.solverstage
             updateClosed(formula);
             if (formula.isClosed) { return; }
 
-            if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
+            //if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
             if (conjuntoFormulas == null) { conjuntoFormulas = new(); }
 
             formula.LConjuntoFormula.ForEach(f =>
@@ -167,24 +168,28 @@ namespace classes.solverstage
             });
 
 
-            List<ConjuntoFormula> formulasCandidatas = conjuntoFormulas.FindAll(cf => formulasJaAplicadas != null && cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.AtomoConectorProp.GetHashCode()));
+            List<ConjuntoFormula> formulasCandidatas = formulasJaAplicadas == null ? conjuntoFormulas : 
+                conjuntoFormulas.FindAll(cf => cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.GetHashCode()));
             if (formulasCandidatas.Count <= 0) { return; }
 
             // TODO: escolher a mais promissora - rever counts átomos, conectores, etc
             ConjuntoFormula[]? pbReturn = null;
-            formulasCandidatas.ForEach(fc =>
+            foreach (ConjuntoFormula fc in formulasCandidatas)
             {
                 pbReturn = RegraPBProp.apply(fc);
                 // verifica se alguma fórmula já está no conjunto de fórmulas base
-                if (!conjuntoFormulas.Contains(pbReturn[0]) && !conjuntoFormulas.Contains(pbReturn[1]))
+                if (!conjuntoFormulas.Contains(pbReturn[0]) || !conjuntoFormulas.Contains(pbReturn[1]))
                 {
                     // add à lista de fórmulas já aplicadas
                     if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
                     formulasJaAplicadas.Add(fc.GetHashCode());
-                    return;
+                    formulasJaAplicadas.Add(pbReturn[0].GetHashCode());
+                    formulasJaAplicadas.Add(pbReturn[1].GetHashCode());
+                    break;
                 }
                 pbReturn = null;
-            });
+            }
+
 
             // não encontrou
             if (pbReturn == null) { return; }

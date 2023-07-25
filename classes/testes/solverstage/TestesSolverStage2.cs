@@ -154,6 +154,15 @@ namespace classes.testes.solverstage
             return f;
         }
 
+        private Formulas getFormulas4()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("T (A | B)"));
+            return f;
+        }
+
         #endregion
 
         #region img
