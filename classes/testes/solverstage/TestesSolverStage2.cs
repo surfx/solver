@@ -13,10 +13,18 @@ namespace classes.testes.solverstage
 
         public void teste1()
         {
-            Formulas f = getFormulas3();
+            Formulas f;
+            f = getFormulas1();
+            //f = getFormulas2();
+            f = getFormulas3();
+            //f = getFormulas4();
+            //f = getFormulas5();
             //p(f.ToString()); p(); p("");
-
+            System.Diagnostics.Stopwatch sw = new();
+            sw.Start();
             stage.solve(f);
+            sw.Stop();
+            Console.WriteLine(string.Format("Tempo: {0} ms, {1:hh\\:mm\\:ss}", sw.ElapsedMilliseconds, sw.Elapsed));
             saveImg(f);
         }
 
@@ -160,13 +168,26 @@ namespace classes.testes.solverstage
 
             Parser parser = new Parser();
             f.addConjuntoFormula(parser.parserCF("T (A | B)"));
+            f.addConjuntoFormula(parser.parserCF("T !A"));
+            return f;
+        }
+
+        private Formulas getFormulas5()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("T A"));
+            f.addConjuntoFormula(parser.parserCF("T A -> B"));
+            f.addConjuntoFormula(parser.parserCF("F B"));
             return f;
         }
 
         #endregion
 
         #region img
-        private void saveImg(Formulas formulas){
+        private void saveImg(Formulas formulas)
+        {
             //p(formulas.ToString()); p(); p("");
             //new classes.solverstage.print.PrintFormulas().printTree(formulas);
 

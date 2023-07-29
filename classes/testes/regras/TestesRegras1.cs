@@ -6,6 +6,7 @@ using classes.regras.binarias;
 using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
+using classes.regras.unitarias.unidouble.beta;
 
 namespace classes.testes.regras
 {
@@ -297,21 +298,6 @@ namespace classes.testes.regras
 
             ConjuntoFormula cf3 = parser.parserCF("F (A -> B) | B");
             apply(rfo, cf3); p(); p("");
-        }
-
-        public void testeRegraPB()
-        {
-            IRegraUnariaDouble rpb = new RegraPB();
-            Parser parser = new Parser();
-
-            ConjuntoFormula cf1 = parser.parserCF("F A | B");
-            apply(rpb, cf1); p(); p("");
-
-            ConjuntoFormula cf2 = parser.parserCF("F A & B");
-            apply(rpb, cf2); p(); p("");
-
-            ConjuntoFormula cf3 = parser.parserCF("F (A -> B) | B");
-            apply(rpb, cf3); p(); p("");
         }
 
         public void testeRegraClosed() { 

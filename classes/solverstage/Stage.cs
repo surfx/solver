@@ -5,6 +5,7 @@ using classes.regras.binarias;
 using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
+using classes.regras.unitarias.unidouble.beta;
 
 namespace classes.solverstage
 {
@@ -16,7 +17,9 @@ namespace classes.solverstage
         private List<IRegraBinaria> RegrasBinarias { get; set; }
         private List<IRegraUnaria> RegrasUnarias { get; set; }
         private List<IRegraUnariaDouble> RegrasUnariasDouble { get; set; }
-        private IRegraUnariaDouble RegraPBProp { get; set; }
+        private List<IRegraUnariaDouble> RegrasBeta { get; set; }
+        //private IRegraUnariaDouble RegraPBProp { get; set; }
+
         private RegraClosed RegraClosedProp { get; set; }
 
         public Stage(Formulas? formulas = null)
@@ -45,8 +48,8 @@ namespace classes.solverstage
 
             if (!formula.isClosed)
             {
-                p(); p("-- verificar a regra PB");
-                applyPB(conjuntoFormulas, formula);
+                p(); p("-- verificar a regras beta");
+                applyBeta(conjuntoFormulas, formula);
             }
             else
             {
@@ -74,6 +77,7 @@ namespace classes.solverstage
                     ConjuntoFormula? cfAux = ru.apply(cf1);
                     if (cfAux == null || conjuntoFormulas.Contains(cfAux) || (rt != null && rt.Contains(cfAux))) { return; }
                     if (rt == null) { rt = new(); }
+                    p(string.Format("unaria: {0} ({1}): {2}", ru.RULE, cf1, cfAux));
                     rt.Add(cfAux);
                 });
 
@@ -92,6 +96,7 @@ namespace classes.solverstage
                     for (int k = 0; k < lcfAux.Length; k++) { if (conjuntoFormulas.Contains(lcfAux[k]) || (rt != null && rt.Contains(lcfAux[k]))) { return; } }
 
                     if (rt == null) { rt = new(); }
+                    p(string.Format("unaria d: {0} ({1}): {2}, {3}", rudb.RULE, cf1, lcfAux[0], lcfAux[1]));
                     rt.AddRange(lcfAux);
                 });
 
@@ -110,6 +115,7 @@ namespace classes.solverstage
                     // encontrou uma contradição
                     if (RegraClosedProp.apply(cf1, cf2))
                     {
+                        p(string.Format("contradição {0} e {1}", cf1, cf2));
                         formula.isClosed = true;
                         return rt;
                     }
@@ -120,12 +126,14 @@ namespace classes.solverstage
                         ConjuntoFormula? cfAux = rb.apply(cf1, cf2);
                         if (cfAux == null || conjuntoFormulas.Contains(cfAux) || (rt != null && rt.Contains(cfAux))) { return; }
                         if (rt == null) { rt = new(); }
+                        p(string.Format("binaria: {0} ({1}, {2}): {3}", rb.RULE, cf1, cf2, cfAux));
                         rt.Add(cfAux);
                     });
 
                     // encontrou uma contradição
                     if (RegraClosedProp.apply(cf1, cf2))
                     {
+                        p(string.Format("contradição {0} e {1}", cf1, cf2));
                         formula.isClosed = true;
                         return rt;
                     }
@@ -151,14 +159,14 @@ namespace classes.solverstage
             return rt;
         }
 
-        private void applyPB(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula, List<int>? formulasJaAplicadas = null)
+        private void applyBeta(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula, List<int>? formulasJaAplicadas = null)
         {
             if (formula == null || formula.isClosed) { return; }
             trySolve(conjuntoFormulas, formula);
             updateClosed(formula);
             if (formula.isClosed) { return; }
 
-            //if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
+            if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
             if (conjuntoFormulas == null) { conjuntoFormulas = new(); }
 
             formula.LConjuntoFormula.ForEach(f =>
@@ -168,26 +176,43 @@ namespace classes.solverstage
             });
 
 
-            List<ConjuntoFormula> formulasCandidatas = formulasJaAplicadas == null ? conjuntoFormulas : 
+            List<ConjuntoFormula> formulasCandidatas = formulasJaAplicadas == null ? conjuntoFormulas :
                 conjuntoFormulas.FindAll(cf => cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.GetHashCode()));
             if (formulasCandidatas.Count <= 0) { return; }
 
             // TODO: escolher a mais promissora - rever counts átomos, conectores, etc
             ConjuntoFormula[]? pbReturn = null;
+
+            Func<ConjuntoFormula, ConjuntoFormula[]> applyRuleBeta = fc =>
+            {
+                if (fc == null) { return null; }
+                IRegraUnariaDouble regraBeta = RegrasBeta.FindAll(rb => rb.isValid(fc)).FirstOrDefault();
+                if (regraBeta == null) { return null; }
+                ConjuntoFormula[] rt = regraBeta.apply(fc);
+                p(string.Format("beta: {0} ({1}): {2}, {3}", regraBeta.RULE, fc, rt[0], rt[1]));
+                return rt;
+            };
+
             foreach (ConjuntoFormula fc in formulasCandidatas)
             {
-                pbReturn = RegraPBProp.apply(fc);
-                // verifica se alguma fórmula já está no conjunto de fórmulas base
-                if (!conjuntoFormulas.Contains(pbReturn[0]) || !conjuntoFormulas.Contains(pbReturn[1]))
-                {
-                    // add à lista de fórmulas já aplicadas
-                    if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
-                    formulasJaAplicadas.Add(fc.GetHashCode());
-                    formulasJaAplicadas.Add(pbReturn[0].GetHashCode());
-                    formulasJaAplicadas.Add(pbReturn[1].GetHashCode());
-                    break;
-                }
-                pbReturn = null;
+                pbReturn = applyRuleBeta(fc);
+                if (pbReturn == null || pbReturn.Count() != 2) { continue; }
+
+                // adiciona a fórmula à lista de fórmulas já aplicadas
+                formulasJaAplicadas.Add(fc.GetHashCode());
+                break;
+
+                // // verifica se alguma fórmula já está no conjunto de fórmulas base
+                // if (!conjuntoFormulas.Contains(pbReturn[0]) || !conjuntoFormulas.Contains(pbReturn[1]))
+                // {
+                //     // add à lista de fórmulas já aplicadas
+                //     if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
+                //     formulasJaAplicadas.Add(fc.GetHashCode());
+                //     formulasJaAplicadas.Add(pbReturn[0].GetHashCode());
+                //     formulasJaAplicadas.Add(pbReturn[1].GetHashCode());
+                //     break;
+                // }
+                // pbReturn = null;
             }
 
 
@@ -206,8 +231,8 @@ namespace classes.solverstage
             if (formula.isClosed) { return; }
             updateClosed(formula);
 
-            applyPB(conjuntoFormulasEsquerda, formula.Esquerda, formulasJaAplicadas);
-            applyPB(conjuntoFormulasDireita, formula.Direita, formulasJaAplicadas);
+            applyBeta(conjuntoFormulasEsquerda, formula.Esquerda, formulasJaAplicadas);
+            applyBeta(conjuntoFormulasDireita, formula.Direita, formulasJaAplicadas);
 
         }
 
@@ -224,7 +249,10 @@ namespace classes.solverstage
                 {
                     if (i == j) { continue; } //same
                     ConjuntoFormula cf2 = conjuntoFormulas[j];
-                    if (RegraClosedProp.apply(cf1, cf2)) { return true; }
+                    if (RegraClosedProp.apply(cf1, cf2)) { 
+                        p(string.Format("contradição {0} e {1}", cf1, cf2));
+                        return true; 
+                    }
                 }
             }
             return false;
@@ -236,7 +264,6 @@ namespace classes.solverstage
             if (formulas.Esquerda != null) { updateClosed(formulas.Esquerda); }
             if (formulas.Direita != null) { updateClosed(formulas.Direita); }
             formulas.isClosed = isClosedFormula(formulas);
-
         }
 
         private bool isClosedFormula(Formulas? formulas)
@@ -287,7 +314,13 @@ namespace classes.solverstage
             };
 
             // regra PB fica separada
-            RegraPBProp = new RegraPB();
+            //RegraPBProp = new RegraPB();
+
+            RegrasBeta = new() {
+                new RegraFalsoE(),
+                new RegraTrueOu(),
+                new RegraTrueImplica()
+            };
 
             RegraClosedProp = new RegraClosed();
         }
@@ -303,7 +336,9 @@ namespace classes.solverstage
             RegrasUnarias = null;
             if (RegrasBinarias != null) { RegrasUnariasDouble.Clear(); }
             RegrasUnariasDouble = null;
-            RegraPBProp = null;
+            //RegraPBProp = null;
+            if (RegrasBeta != null) { RegrasBeta.Clear(); }
+            RegrasBeta = null;
             RegraClosedProp = null;
         }
 

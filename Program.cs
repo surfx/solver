@@ -46,6 +46,11 @@ namespace ConsoleApp1
             //new TestesRegras1().testeRegraPB();
             //new TestesRegras1().testeRegraClosed();
 
+            //new TestesBetaRegras3().testeRegraPB();
+            //new TestesBetaRegras3().testeRegraFalsoE();
+            //new TestesBetaRegras3().testeRegraTrueOu();
+            //new TestesBetaRegras3().testeRegraTrueImplica();
+
             //new TestesSolverStage().teste1();
 
             //new TestesFormulas().teste1();

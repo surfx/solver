@@ -1,8 +1,10 @@
 using classes.formulas;
 
-namespace classes.regras.unitarias.unidouble
+namespace classes.regras.unitarias.unidouble.beta
 {
     /* 
+        Obs: Não aplicar, mas sim as regras RegraFalsoE, RegraTrueOu e RegraTrueImplica
+
              A
         ---------- (PB)
         T A     FA
