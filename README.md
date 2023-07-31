@@ -101,10 +101,19 @@ Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de mat
 - [x] Separar a abstração do 'print árvore png' em uma classe parametrizada
 - [x] Regras binárias e unárias. Implementar Regras: F ˄1, F ˄2, T →1, T →2, T ˅1, T ˅2, F →, F ˅, T ˄, F ¬ e T ¬
 - [x] Regra PB (Princípio da bivalência)
-- [ ] Aplicar conjunto de regras às fórmulas do stage
+- [x] Regras beta: F ˄, T →, T ˅
+- [x] Aplicar conjunto de regras às fórmulas do stage
 - [ ] Implementar o conceito de estratégia
-- [ ] Verificar se os ramos estão abertos ou fechados
-- [ ] Verificar se a árvore possui solução ou não
+- [x] Verificar se os ramos estão abertos ou fechados
+- [x] Verificar se a árvore possui solução ou não
+- [ ] Valoração / contra-exemplo
+- [ ] Log e tempo de execução
+- [ ] Imprimir a árvore com o "número" da fórmula ao lado
+- [ ] Melhorar o print `toString()`
+- [ ] Validar árvore e métodos de prova com mais exemplos
+- [ ] Implementar estratégia para escolha da regra beta a ser aplicada
+- [ ] Criar estratégia para cálculo de complexidade e variabilidade das fórmulas do stage
+- [ ] Análisar tempos de prova, altura da árvore, complexidade, etc
 - [ ] Interface externa do console, para entradas e saídas
 
 # Libs
@@ -115,7 +124,8 @@ dotnet add package System.Drawing.Common --version 7.0.0
 
 # Obs
 
-Para executar: `CTRL + F5`
+Para executar vscode: `CTRL + F5` / `F5` ou `$ dotnet run`
+
 
 # Urls
 
