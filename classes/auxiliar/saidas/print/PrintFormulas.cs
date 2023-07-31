@@ -1,4 +1,5 @@
 using System.Text;
+using classes.formulas;
 using classes.solverstage;
 
 namespace classes.auxiliar.saidas.print
@@ -6,212 +7,184 @@ namespace classes.auxiliar.saidas.print
     public class PrintFormulas
     {
 
-        public void printTree(Formulas f, int level = 0, int pos = 0)
+        public void printTree(PFormulasToString.PFormulasToStringBuilder paramBuilder)
         {
-            if (f == null || f.LConjuntoFormula == null) { return; }
-            string espaco = level <= 0 ? "" : getEspaco(level);
-            //p(string.Format("{0}{1} ({2} {3})", espaco, t, level, pos));
-
-            if (f.LConjuntoFormula != null) f.LConjuntoFormula.ForEach(x => Console.WriteLine(string.Format("{0}{1}", espaco, x.ToString())));
-
-            if (f.Esquerda != null) { printTree(f.Esquerda, level + 1, pos << 1); }
-            if (f.Direita != null) { printTree(f.Direita, level + 1, (pos << 1) + 1); }
+            string[,] matriz = getMatrix(paramBuilder);
+            if (matriz == null) { return; }
+            printMatrix(matriz);
         }
 
-        public string toString(Formulas f)
+        public string toString(PFormulasToString.PFormulasToStringBuilder paramBuilder)
         {
-            int maxElements = (int)Math.Pow(2, heightTree(f) - 1);
-            Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic = toDict(f, 0, 0, maxElements, 0);
-            string rt = string.Empty;
-            string[] aux = toString(dic, heightTreeFormulas(dic), ((int)Math.Pow(2, dic.Keys.Max()) * 2)).Split(Environment.NewLine);
-            foreach (string st in aux)
-            {
-                if (string.IsNullOrEmpty(st.Trim())) { continue; }
-                rt += st + Environment.NewLine;
-            }
-            return rt;
+            string[,] matriz = getMatrix(paramBuilder);
+            return matriz == null ? "" : toStringMatrix(matriz);
         }
 
-        public string toString(Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic, int heighttreeFormulas, int numeroMaximo)
+        private string[,] getMatrix(PFormulasToString.PFormulasToStringBuilder paramBuilder)
         {
-            if (dic == null || heighttreeFormulas <= 0 || numeroMaximo <= 0) { return ""; }
+            if (paramBuilder == null) { return null; }
+            PFormulasToString param = paramBuilder.Build();
+            if (param == null || param.Formulas == null) { return null; }
 
-            // onde para cada item de heighttree existe uma lista de fórmulas positivas e negativas
-            // p(string.Format("heighttreeFormulas: {0}, numeroMaximo: {1}", heighttreeFormulas, numeroMaximo));
+            // p(string.Format("treeHeight: {0}", treeHeight(paramBuilder)));
+            // p(string.Format("numeroRamos: {0}", numeroRamos(f)));
 
-            string[,] linhas = new string[heighttreeFormulas, numeroMaximo];
-            for (int i = 0; i < heighttreeFormulas; i++) { for (int j = 0; j < numeroMaximo; j++) { linhas[i, j] = " "; } }
+            string[,] matriz = new string[treeHeight(paramBuilder), numeroRamos(param.Formulas)]; // treeHeight(f) x numeroRamos(f) colunas
+            prencherMatriz(paramBuilder, matriz, 0, 0, false);
+            ajustarMatrix(matriz);
+            return matriz;
+        }
 
+        // ajusta a tree à matriz
+        private void prencherMatriz(PFormulasToString.PFormulasToStringBuilder paramBuilder, string[,] matriz, int linha = 0, int coluna = 0, bool sum = false)
+        {
+            if (paramBuilder == null) { return; }
+            PFormulasToString param = paramBuilder.Build();
+            if (param == null || param.Formulas == null) { return; }
 
-            Dictionary<int, PosElement<List<string>>>? dicFormulas = null;
-            for (int i = 0; i < heighttreeFormulas; i++)
+            // true	    coluna pai + esquerda + 1
+            // false	coluna pai - direita - 1
+
+            int resquerda = numeroRamos(param.Formulas.Esquerda);
+            int rdireita = numeroRamos(param.Formulas.Direita);
+            coluna = linha == 0 ? resquerda : (coluna + (sum ? resquerda + 1 : -rdireita - 1));
+            coluna = coluna <= 0 ? 0 : coluna;
+
+            int count = param.Formulas.LConjuntoFormula == null ? 0 : param.Formulas.LConjuntoFormula.Count;
+            if (param.Formulas.LConjuntoFormula != null && count > 0)
             {
-                dicFormulas = dic.ContainsKey(i) ? dic[i] : null;
-                for (int j = 0; j < numeroMaximo; j++)
+                for (int i = 0; i < count; i++)
                 {
-                    if (dicFormulas == null || !dicFormulas.ContainsKey(j)) { continue; }
-                    PosElement<List<string>> posElement = dicFormulas[j];
-                    List<string> lformulas = posElement.Elemento;
-
-                    int pos = 0;
-                    if (lformulas != null)
-                    {
-                        for (int k = 0; k < lformulas.Count(); k++)
-                        {
-                            linhas[i + (pos++) + posElement.Height, posElement.Posicao] = lformulas[k] == null ? "" : lformulas[k];
-                        }
-                    }
+                    ConjuntoFormula cf = param.Formulas.LConjuntoFormula[i];
+                    if (cf == null) { linha++; continue; }
+                    //p(string.Format("{0} [{1},{2}]", cf, linha, coluna));
+                    matriz[linha++, coluna] = cf.ToString();
+                }
+                if (param.PrintAllClosedOpen)
+                {
+                    matriz[linha++, coluna] = param.Formulas.isClosed ? "CLOSED" : "OPEN";
                 }
             }
 
-            Dictionary<int, int> dicMaxSizeColumn = new Dictionary<int, int>();
-            List<int> skipJ = new List<int>();
-            #region eliminar colunas vazias
-            for (int j = 0; j < numeroMaximo; j++)
+            if (param.Formulas.Direita == null && param.Formulas.Esquerda == null)
             {
-                bool bSkipJ = true;
-                for (int i = 0; i < heighttreeFormulas; i++)
+                if (param.PrintLastClosedOpen)
                 {
-                    string valor = linhas[i, j].Trim();
-                    if (!string.IsNullOrEmpty(valor))
-                    {
-                        bSkipJ = false;
-                        if (!dicMaxSizeColumn.ContainsKey(j))
-                        {
-                            dicMaxSizeColumn.Add(j, valor.Length + 1);
-                            continue;
-                        }
-                        else if (dicMaxSizeColumn[j] < valor.Length)
-                        {
-                            dicMaxSizeColumn.Remove(j);
-                            dicMaxSizeColumn.Add(j, valor.Length + 1);
-                        }
-                        continue;
-                    }
+                    matriz[linha++, coluna] = param.Formulas.isClosed ? "CLOSED" : "OPEN";
                 }
-                if (bSkipJ)
-                {
-                    skipJ.Add(j);
-                }
+                return;
             }
-            #endregion
-
-            StringBuilder rt = new StringBuilder();
-            for (int i = 0; i < heighttreeFormulas; i++)
-            {
-                for (int j = 0; j < numeroMaximo; j++)
-                {
-                    if (skipJ.Contains(j) || !dicMaxSizeColumn.ContainsKey(j)) { continue; }
-                    rt.Append(formatarStr(linhas[i, j], dicMaxSizeColumn[j])); //, !string.IsNullOrEmpty(linhas[i, j].Trim())
-                }
-                rt.AppendLine();
-            }
-            return rt.ToString();
+            prencherMatriz(paramBuilder.copy(param.Formulas.Esquerda), matriz, linha, coluna, false);
+            prencherMatriz(paramBuilder.copy(param.Formulas.Direita), matriz, linha, coluna, true);
         }
 
-        #region Dictionary
-        public Dictionary<int, Dictionary<int, PosElement<List<string>>>> toDict(Formulas f, int level, int pos, int maxElements, int height)
+        // ajusta a largura das colunas da matriz
+        private void ajustarMatrix(string[,] matriz)
         {
-
-            int nAux = level <= 1 ? maxElements : maxElements / level;
-            int posMap = (level == 0 ? nAux : nAux / 2 + pos * nAux) - 1;
-
-            Dictionary<int, Dictionary<int, PosElement<List<string>>>> rt = new Dictionary<int, Dictionary<int, PosElement<List<string>>>>();
-            Dictionary<int, PosElement<List<string>>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<List<string>>>();
-
-            List<string> lformulas = new();
-            if (f.LConjuntoFormula != null)
+            int linhas = matriz.GetLength(0); // linhas
+            int colunas = matriz.GetLength(1); // colunas
+            for (int j = 0; j < colunas; j++)
             {
-                lformulas.AddRange(f.LConjuntoFormula.Select(f => f.ToString()));
-            }
-
-            if (f.Esquerda == null && f.Direita == null)
-            {
-                lformulas.Add(f.isClosed ? "CLOSED" : "OPEN");
-            }
-
-            aux.Add(pos, new PosElement<List<string>>(lformulas, posMap, height));
-            rt.Add(level, aux);
-
-            height += lformulas.Count();
-            if (height > 0) { height--; }
-
-            //p(string.Format("{0}{1} ({2} {3} posMap: {4})", level <= 0 ? "" : getEspaco(level), t.Item, level, pos, posMap));
-            if (f.Esquerda != null)
-            {
-                unirDicts(rt, toDict(f.Esquerda, level + 1, pos << 1, maxElements, height));
-            }
-            if (f.Direita != null)
-            {
-                unirDicts(rt, toDict(f.Direita, level + 1, (pos << 1) + 1, maxElements, height));
-            }
-            return rt;
-        }
-
-        private void unirDicts<T>(Dictionary<int, Dictionary<int, T>> rt, Dictionary<int, Dictionary<int, T>> auxRt)
-        {
-            if (auxRt == null) { return; }
-
-            foreach (KeyValuePair<int, Dictionary<int, T>> kvp in auxRt)
-            {
-                Dictionary<int, T> aux = rt.ContainsKey(kvp.Key) ? rt[kvp.Key] : new Dictionary<int, T>();
-                foreach (KeyValuePair<int, T> kvp2 in kvp.Value)
+                int tamColuna = 0;
+                for (int i = 0; i < linhas; i++)
                 {
-                    aux.Add(kvp2.Key, kvp2.Value);
+                    tamColuna = Math.Max(tamColuna, matriz[i, j] == null ? 0 : matriz[i, j].Length);
                 }
-                if (rt.ContainsKey(kvp.Key)) { rt.Remove(kvp.Key); }
-                rt.Add(kvp.Key, aux);
+                // ajustar as colunas
+                for (int i = 0; i < linhas; i++)
+                {
+                    string valor = matriz[i, j] ?? "";
+                    while (valor.Length < tamColuna) { valor += " "; }
+                    matriz[i, j] = valor;
+                }
             }
         }
-        #endregion
 
-        #region privado
-        private int heightTree(Formulas? f)
+        // imprime a matriz
+        private void printMatrix(string[,] matriz)
         {
-            return f == null ? 0 : 1 + Math.Max(heightTree(f.Esquerda), heightTree(f.Direita));
+            if (matriz == null || matriz.Length <= 0) { return; }
+            int length = matriz.Length;
+            int linhas = matriz.GetLength(0); // linhas
+            int colunas = matriz.GetLength(1); // colunas
+            //p(string.Format("length: {0}, linhas: {1}, colunas: {2}", length, linhas, colunas));
+
+            for (int i = 0; i < linhas; i++)
+            {
+                for (int j = 0; j < colunas; j++)
+                {
+                    //Console.Write(string.Format("| [{0},{1}]: {2} |", i, j, matriz[i, j]));
+                    Console.Write(string.Format("{0}", matriz[i, j]));
+                }
+                Console.WriteLine();
+            }
         }
 
-        private int heightTreeFormulas(Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic)
+        private string toStringMatrix(string[,] matriz)
         {
+            if (matriz == null || matriz.Length <= 0) { return string.Empty; }
+            int length = matriz.Length;
+            int linhas = matriz.GetLength(0); // linhas
+            int colunas = matriz.GetLength(1); // colunas
+            //p(string.Format("length: {0}, linhas: {1}, colunas: {2}", length, linhas, colunas));
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < linhas; i++)
+            {
+                for (int j = 0; j < colunas; j++)
+                {
+                    //Console.Write(string.Format("| [{0},{1}]: {2} |", i, j, matriz[i, j]));
+                    sb.Append(string.Format("{0}", matriz[i, j]));
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+        private int treeHeight(PFormulasToString.PFormulasToStringBuilder paramBuilder)
+        {
+            if (paramBuilder == null) { return 0; }
+            PFormulasToString param = paramBuilder.Build();
+            if (param == null || param.Formulas == null) { return 0; }
+            if (param.Formulas == null) { return 0; }
+            //int rt = f.LConjuntoFormula == null ? 0 : (f.LConjuntoFormula.Count() + (f.LConjuntoFormula.Count() > 0 && addClosed ? 1 : 0));
+
             int rt = 0;
-            foreach (KeyValuePair<int, Dictionary<int, PosElement<List<string>>>> kvp in dic)
+            int count = param.Formulas.LConjuntoFormula == null ? 0 : param.Formulas.LConjuntoFormula.Count;
+            if (param.Formulas.LConjuntoFormula != null && count > 0)
             {
-                foreach (KeyValuePair<int, PosElement<List<string>>> kvp2 in kvp.Value)
+                rt += count + (param.PrintAllClosedOpen ? 1 : 0);
+
+                for (int i = 0; i < count; i++)
                 {
-                    rt += kvp2.Value.Elemento.Count(); // .Where(x => !string.IsNullOrEmpty(x))
+                    if (param.Formulas.LConjuntoFormula[i] == null) { rt++; continue; }
                 }
+
             }
 
-            return rt;
-        }
-        // private int heightTreeFormulas(Formulas? f)
-        // {
-        //     if (f == null) { return 0; }
-        //     int aux = f.Negativas == null ? 0 : f.Negativas.Count;
-        //     aux += f.Positivas == null ? 0 : f.Positivas.Count;
-        //     return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
-        // }
-
-        private string getEspaco(int size)
-        {
-            return size <= 0 ? string.Empty : string.Concat(Enumerable.Repeat(" ", size));
-        }
-
-        private string formatarStr(string str, int sizeString = 0)
-        {
-            if (str == null || string.IsNullOrEmpty(str) || sizeString <= 0) { return str ?? ""; }
-            str = str.Trim();
-            if (sizeString <= 0 && str.Length >= sizeString) { return str; }
-            bool left = true;
-            while (str.Length < sizeString)
+            if (param.Formulas.Direita == null && param.Formulas.Esquerda == null)
             {
-                str = left ? " " + str : str + " ";
-                left = false;
+                if (param.PrintLastClosedOpen)
+                {
+                    rt++;
+                }
+                return rt;
             }
-            if (sizeString > 0 && str.Length > sizeString) { str = str.Substring(0, sizeString - 2) + (!string.IsNullOrEmpty(str) ? ".." : ""); }
-            return str;
+
+            return rt + Math.Max(
+                param.Formulas.Direita == null ? 0 : treeHeight(paramBuilder.copy(param.Formulas.Direita)),
+                param.Formulas.Esquerda == null ? 0 : treeHeight(paramBuilder.copy(param.Formulas.Esquerda))
+            );
         }
-        #endregion
+
+        private int numeroRamos(Formulas f)
+        {
+            if (f == null) { return 0; }
+            if (f.Direita == null && f.Esquerda == null) { return 1; }
+            int rt = 1;
+            return rt + (f.Direita == null ? 0 : numeroRamos(f.Direita)) + (f.Esquerda == null ? 0 : numeroRamos(f.Esquerda));
+        }
 
     }
 }

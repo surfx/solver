@@ -14,7 +14,7 @@ namespace classes.auxiliar.saidas.print
         public float IncrementX { get; set; }
         public float IncrementY { get; set; }
         public float EspacamentoDivisorY { get; set; }
-        public bool PrintAllClosedOpen {get;set;}
+        public bool PrintAllClosedOpen { get; set; }
 
         private PFormulasToImage() { }
         private PFormulasToImage(Formulas formulas) { this.Formulas = formulas; }

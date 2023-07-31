@@ -45,7 +45,8 @@ namespace classes.solverstage
 
         public override string ToString()
         {
-            return new PrintFormulas().toString(this);
+            PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder.Init(this).withPrintLastClosedOpen();
+            return new PrintFormulas().toString(paramBuilder);
         }
 
         public void Dispose()

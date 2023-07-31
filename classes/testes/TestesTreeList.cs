@@ -1,5 +1,6 @@
 using classes.auxiliar;
 using classes.auxiliar.saidas.print;
+using classes.auxiliar.saidas.print_old;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
@@ -28,18 +29,18 @@ namespace classes.testes
             // f.addConjuntoFormula(parser.parserCF("F A"));
 
             // #--------------------- ANÁLISE --------------------
-            PrintFormulas pf = new PrintFormulas();
+            PrintFormulasOld pf = new PrintFormulasOld();
 
             int heighttree = heightTree(f);
             int maxElements = (int)Math.Pow(2, heighttree - 1);
             p(string.Format("heightTree: {0}, maxElements: {1}", heighttree, maxElements));
 
-            Dictionary<int, Dictionary<int, PosElement<List<string>>>> dic = pf.toDict(f, 0, 0, maxElements, 0);
+            Dictionary<int, Dictionary<int, PosElementOld<List<string>>>> dic = pf.toDict(f, 0, 0, maxElements, 0);
             // análise da estrutura de dicionário
-            foreach (KeyValuePair<int, Dictionary<int, PosElement<List<string>>>> kvp in dic)
+            foreach (KeyValuePair<int, Dictionary<int, PosElementOld<List<string>>>> kvp in dic)
             {
                 p(string.Format("--- {0} ---", kvp.Key));
-                foreach (KeyValuePair<int, PosElement<List<string>>> kvp2 in kvp.Value)
+                foreach (KeyValuePair<int, PosElementOld<List<string>>> kvp2 in kvp.Value)
                 {
                     Console.Write(string.Format("  {0} {1} | ", kvp2.Key, kvp2.Value.ToString()));
                 }

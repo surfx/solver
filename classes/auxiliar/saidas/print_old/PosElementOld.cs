@@ -1,12 +1,13 @@
-namespace classes.auxiliar.saidas.print
+namespace classes.auxiliar.saidas.print_old
 {
-    public class PosElement<T>
+    [Obsolete]
+    public class PosElementOld<T>
     {
         public T Elemento { get; set; }
         public int Posicao { get; set; }
         public int Height { get; set; }
 
-        public PosElement(T treeProp, int posicao, int height)
+        public PosElementOld(T treeProp, int posicao, int height)
         {
             Elemento = treeProp;
             Posicao = posicao;

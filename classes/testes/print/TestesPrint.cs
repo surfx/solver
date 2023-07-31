@@ -14,115 +14,18 @@ namespace classes.testes.print
 
         public void teste1()
         {
-            Formulas f = getFormulas1();
+
+            Formulas f;
+            f = getFormulas1();
+            //f = getFormulas2();
+            //f = getFormulas3();
+            //f = getFormulas4();
             saveImg(f);
 
-            p(string.Format("treeHeight: {0}", treeHeight(f)));
-            p(string.Format("numeroRamos: {0}", numeroRamos(f)));
+            //PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder.Init(f).withPrintLastClosedOpen();
+            //new PrintFormulas().printTree(paramBuilder);
 
-            string[,] matriz = new string[treeHeight(f), numeroRamos(f)]; // treeHeight(f) x numeroRamos(f) colunas
-            //printMatrix(matriz);
-
-            prencherMatriz(f);
-
-            //testesMatrizes();
-
-        }
-
-        int aux = 0;
-
-        private void prencherMatriz(Formulas f, int linha = 0, int coluna = 0, bool sum = true)
-        {
-            //if (aux>=2){return;}
-            if (f == null) { return; }
-
-            int ramosEsquerda = f.Esquerda == null ? 0 : numeroRamos(f.Esquerda);
-
-            // começa em zero
-            int numeroRamosAux = numeroRamos(f.Esquerda); //: numeroRamos(f.Direita);
-            p(string.Format("numeroRamos(f.Esquerda): {0}, numeroRamos(f.Direita): {1}", numeroRamos(f.Esquerda), numeroRamos(f.Direita)));
-            coluna += numeroRamosAux;
-
-            f.LConjuntoFormula.ForEach(cf =>
-            {
-                p(string.Format("numeroRamosAux: {0}, coluna: {1}, linha: {2} {3}", numeroRamosAux, coluna, linha, cf));
-                linha++;
-            });
-
-            p(string.Format("numeroRamosAux: {0}, coluna: {1}, linha: {2}", numeroRamosAux, coluna, linha));
-            p();
-
-            aux++;
-            //prencherMatriz(f.Esquerda, linha, coluna, false);
-            prencherMatriz(f.Direita, linha, coluna, false);
-
-        }
-
-        private void testesMatrizes()
-        {
-            string[,] matriz = new string[2, 3]; // 2 x 3 - 2 linhas por 3 colunas
-            matriz[0, 0] = "0,0";
-            matriz[0, 1] = "0,1";
-            matriz[0, 2] = "0,2";
-            matriz[1, 0] = "1,0";
-            matriz[1, 1] = "1,1";
-            matriz[1, 2] = "1,2";
-
-            printMatrix(matriz);
-            p();
-
-            matriz = new string[4, 3]; // 4 x 3 - 4 linhas por 3 colunas
-            matriz[0, 0] = "0,0";
-            matriz[0, 1] = "0,1";
-            matriz[0, 2] = "0,2";
-            matriz[1, 0] = "1,0";
-            matriz[1, 1] = "1,1";
-            matriz[1, 2] = "1,2";
-            matriz[2, 0] = "2,0";
-            matriz[2, 1] = "2,1";
-            matriz[2, 2] = "2,2";
-            matriz[3, 0] = "3,0";
-            matriz[3, 1] = "3,1";
-            matriz[3, 2] = "3,2";
-            printMatrix(matriz);
-            p();
-        }
-
-        private void printMatrix(string[,] matriz)
-        {
-            if (matriz == null || matriz.Length <= 0) { return; }
-            int l = matriz.Length;
-            int l1 = matriz.GetLength(0);
-            int l2 = matriz.GetLength(1);
-            p(string.Format("l: {0}, l1: {1}, l2: {2}", l, l1, l2));
-
-            for (int i = 0; i < matriz.GetLength(0); i++)
-            {
-                for (int j = 0; j < matriz.GetLength(1); j++)
-                {
-                    Console.Write(string.Format("| [{0},{1}]: {2} |", i, j, matriz[i, j]));
-                }
-                Console.WriteLine();
-            }
-        }
-
-        private int treeHeight(Formulas f)
-        {
-            if (f == null) { return 0; }
-            int rt = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Count();
-            if (f.Direita == null && f.Esquerda == null)
-            {
-                return rt;
-            }
-            return rt + Math.Max(f.Direita == null ? 0 : treeHeight(f.Direita), f.Esquerda == null ? 0 : treeHeight(f.Esquerda));
-        }
-
-        private int numeroRamos(Formulas f)
-        {
-            if (f == null) { return 0; }
-            if (f.Direita == null && f.Esquerda == null) { return 1; }
-            int rt = 1;
-            return rt + (f.Direita == null ? 0 : numeroRamos(f.Direita)) + (f.Esquerda == null ? 0 : numeroRamos(f.Esquerda));
+            p(f.ToString());
         }
 
         private Formulas? getFormulas1()
@@ -153,6 +56,66 @@ namespace classes.testes.print
             f.Direita.addEsquerda(parser.parserCF("F C->B & C | D"));
             f.Direita.Esquerda.isClosed = true;
 
+            return f;
+        }
+
+        private Formulas? getFormulas2()
+        {
+            if (parser == null) { return null; }
+            Formulas f = new Formulas();
+
+            f.addConjuntoFormula(parser.parserCF("T A"));
+            f.addEsquerda(parser.parserCF("B"));
+            f.addDireita(parser.parserCF("C"));
+
+            f.Esquerda.addEsquerda(parser.parserCF("D"));
+            f.Esquerda.Esquerda.addEsquerda(parser.parserCF("J"));
+            f.Esquerda.Esquerda.addDireita(parser.parserCF("K"));
+
+            f.Esquerda.addDireita(parser.parserCF("E"));
+
+            f.Esquerda.Direita.addEsquerda(parser.parserCF("H"));
+            f.Esquerda.Direita.addDireita(parser.parserCF("I"));
+
+            f.Direita.addEsquerda(parser.parserCF("F"));
+            f.Direita.Esquerda.addEsquerda(parser.parserCF("L"));
+            f.Direita.Esquerda.addDireita(parser.parserCF("M"));
+
+            f.Direita.addDireita(parser.parserCF("G"));
+            f.Direita.Direita.addEsquerda(parser.parserCF("N"));
+            f.Direita.Direita.addDireita(parser.parserCF("O"));
+
+            return f;
+        }
+
+        private Formulas? getFormulas3()
+        {
+            if (parser == null) { return null; }
+            Formulas f = new Formulas();
+
+            f.addConjuntoFormula(parser.parserCF("T A"));
+            f.addDireita(parser.parserCF("B"));
+
+            f.Direita.addEsquerda(parser.parserCF("C"));
+            f.Direita.Esquerda.addEsquerda(parser.parserCF("D"));
+
+            f.Direita.addDireita(parser.parserCF("E"));
+            return f;
+        }
+
+        private Formulas? getFormulas4()
+        {
+            if (parser == null) { return null; }
+            Formulas f = new Formulas();
+
+            f.addConjuntoFormula(parser.parserCF("T A"));
+            f.addEsquerda(parser.parserCF("G"));
+            f.addDireita(parser.parserCF("B"));
+
+            f.Direita.addEsquerda(parser.parserCF("C"));
+            f.Direita.Esquerda.addEsquerda(parser.parserCF("D"));
+
+            f.Direita.addDireita(parser.parserCF("E"));
             return f;
         }
 
