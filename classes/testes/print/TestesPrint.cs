@@ -25,7 +25,9 @@ namespace classes.testes.print
             PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder
                 .Init(f)
                 .withPrintLastClosedOpen()
-                .withPrintFormulaNumber();
+                .withPrintFormulaNumber()
+                //.withPrintDotTreeMode()
+                ;
             new PrintFormulas().printTree(paramBuilder);
 
             //p(f.ToString());
@@ -134,13 +136,17 @@ namespace classes.testes.print
             //p(formulas.ToString()); p(); p("");
             //new classes.solverstage.print.PrintFormulas().printTree(formulas);
 
-            PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
+            PFormulasToImage.PFormulasToImageBuilder pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_testes.png"))
                     .withDivisoriaArvore()
                     .withPrintAllClosedOpen()
                     .withPrintFormulaNumber()
-                    .Build();
-            new ImageFormulas().formulasToImage(pf2img);
+                    // .withPrintDotTreeMode()
+                    // .SetHChar(8)
+                    // .SetWchar(5)
+                    // .SetEspacamentoDivisorY(8.5f)
+                    ;
+            new ImageFormulas(pf2img).formulasToImage();
         }
         #endregion
 

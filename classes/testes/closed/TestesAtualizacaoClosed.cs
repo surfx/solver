@@ -21,14 +21,14 @@ namespace classes.testes.closed
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_1.png"))
                     .withDivisoriaArvore()
                     .withPrintAllClosedOpen();
-            new ImageFormulas().formulasToImage(pf2imgBuilder.Build());
+            new ImageFormulas(pf2imgBuilder).formulasToImage();
 
             updateClosed(formulas);
 
             //new classes.solverstage.print.PrintFormulas().printTree(formulas);
 
             pf2imgBuilder.SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_2.png"));
-            new ImageFormulas().formulasToImage(pf2imgBuilder.Build());
+            new ImageFormulas(pf2imgBuilder).formulasToImage();
         }
 
 

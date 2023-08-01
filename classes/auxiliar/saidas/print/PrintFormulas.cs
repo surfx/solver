@@ -64,9 +64,17 @@ namespace classes.auxiliar.saidas.print
                     ConjuntoFormula cf = param.Formulas.LConjuntoFormula[i];
                     if (cf == null) { linha++; continue; }
                     //p(string.Format("{0} [{1},{2}]", cf, linha, coluna));
-                    matriz[linha++, coluna] = param.PrintFormulaNumber ? string.Format("{0} {1}", formulaNumber++, cf.ToString()) : cf.ToString();
+                    if (param.PrintDotTreeMode)
+                    {
+                        matriz[linha++, coluna] = "○";
+                    }
+                    else
+                    {
+                        matriz[linha++, coluna] = param.PrintFormulaNumber ? string.Format("{0} {1}", formulaNumber++, cf.ToString()) : cf.ToString();
+                    }
+
                 }
-                if (param.PrintAllClosedOpen)
+                if (!param.PrintDotTreeMode && param.PrintAllClosedOpen)
                 {
                     matriz[linha++, coluna] = param.Formulas.isClosed ? "CLOSED" : "OPEN";
                 }
@@ -74,7 +82,7 @@ namespace classes.auxiliar.saidas.print
 
             if (param.Formulas.Direita == null && param.Formulas.Esquerda == null)
             {
-                if (param.PrintLastClosedOpen)
+                if (!param.PrintDotTreeMode && param.PrintLastClosedOpen)
                 {
                     matriz[linha++, coluna] = param.Formulas.isClosed ? "CLOSED" : "OPEN";
                 }

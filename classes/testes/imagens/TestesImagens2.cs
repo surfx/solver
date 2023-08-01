@@ -25,11 +25,11 @@ namespace classes.testes.imagens
             p(formulas.ToString()); p(); p("");
             //new classes.solverstage.print.PrintFormulas().printTree(formulas);
 
-            PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
+            PFormulasToImage.PFormulasToImageBuilder pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
                     .withDivisoriaArvore()
-                    .Build();
-            new ImageFormulas().formulasToImage(pf2img);
+                    ;
+            new ImageFormulas(pf2img).formulasToImage();
         }
 
         #region fórmulas
