@@ -15,6 +15,7 @@ namespace classes.auxiliar.saidas.print
         public float IncrementY { get; set; }
         public float EspacamentoDivisorY { get; set; }
         public bool PrintAllClosedOpen { get; set; }
+        public bool PrintFormulaNumber { get; set; }
 
         private PFormulasToImage() { }
         private PFormulasToImage(Formulas formulas) { this.Formulas = formulas; }
@@ -33,8 +34,7 @@ namespace classes.auxiliar.saidas.print
                 _pFormulasToImage.DivisoriaArvore = true;
                 _pFormulasToImage.Formulas = formulas;
                 _pFormulasToImage.PrintAllClosedOpen = false;
-
-
+                _pFormulasToImage.PrintFormulaNumber = false;
             }
             public static PFormulasToImageBuilder Init(Formulas formulas)
             {
@@ -50,6 +50,8 @@ namespace classes.auxiliar.saidas.print
             public PFormulasToImageBuilder SetIncrementoY(float incrementY) { _pFormulasToImage.IncrementY = incrementY; return this; }
             public PFormulasToImageBuilder SetEspacamentoDivisorY(float espacamentoDivisorY) { _pFormulasToImage.EspacamentoDivisorY = espacamentoDivisorY; return this; }
             public PFormulasToImageBuilder withPrintAllClosedOpen() { _pFormulasToImage.PrintAllClosedOpen = true; return this; }
+            public PFormulasToImageBuilder withPrintFormulaNumber() { _pFormulasToImage.PrintFormulaNumber = true; return this; }
+
         }
     }
 

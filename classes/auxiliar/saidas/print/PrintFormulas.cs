@@ -30,17 +30,23 @@ namespace classes.auxiliar.saidas.print
             // p(string.Format("numeroRamos: {0}", numeroRamos(f)));
 
             string[,] matriz = new string[treeHeight(paramBuilder), numeroRamos(param.Formulas)]; // treeHeight(f) x numeroRamos(f) colunas
-            prencherMatriz(paramBuilder, matriz, 0, 0, false);
+            prencherMatriz(paramBuilder, matriz, 0, 0, false, 1);
             ajustarMatrix(matriz);
             return matriz;
         }
 
         // ajusta a tree à matriz
-        private void prencherMatriz(PFormulasToString.PFormulasToStringBuilder paramBuilder, string[,] matriz, int linha = 0, int coluna = 0, bool sum = false)
+        private int prencherMatriz(
+            PFormulasToString.PFormulasToStringBuilder paramBuilder,
+            string[,] matriz,
+            int linha = 0,
+            int coluna = 0,
+            bool sum = false,
+            int formulaNumber = 1)
         {
-            if (paramBuilder == null) { return; }
+            if (paramBuilder == null) { return 0; }
             PFormulasToString param = paramBuilder.Build();
-            if (param == null || param.Formulas == null) { return; }
+            if (param == null || param.Formulas == null) { return 0; }
 
             // true	    coluna pai + esquerda + 1
             // false	coluna pai - direita - 1
@@ -58,7 +64,7 @@ namespace classes.auxiliar.saidas.print
                     ConjuntoFormula cf = param.Formulas.LConjuntoFormula[i];
                     if (cf == null) { linha++; continue; }
                     //p(string.Format("{0} [{1},{2}]", cf, linha, coluna));
-                    matriz[linha++, coluna] = cf.ToString();
+                    matriz[linha++, coluna] = param.PrintFormulaNumber ? string.Format("{0} {1}", formulaNumber++, cf.ToString()) : cf.ToString();
                 }
                 if (param.PrintAllClosedOpen)
                 {
@@ -72,10 +78,11 @@ namespace classes.auxiliar.saidas.print
                 {
                     matriz[linha++, coluna] = param.Formulas.isClosed ? "CLOSED" : "OPEN";
                 }
-                return;
+                return formulaNumber;
             }
-            prencherMatriz(paramBuilder.copy(param.Formulas.Esquerda), matriz, linha, coluna, false);
-            prencherMatriz(paramBuilder.copy(param.Formulas.Direita), matriz, linha, coluna, true);
+            formulaNumber = prencherMatriz(paramBuilder.copy(param.Formulas.Esquerda), matriz, linha, coluna, false, formulaNumber);
+            formulaNumber = prencherMatriz(paramBuilder.copy(param.Formulas.Direita), matriz, linha, coluna, true, formulaNumber);
+            return formulaNumber;
         }
 
         // ajusta a largura das colunas da matriz

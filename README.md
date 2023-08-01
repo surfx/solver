@@ -42,17 +42,17 @@ No momento foram implementados o parser, o print da árvore em string e em image
 obs: tags OPEN/CLOSED apenas ilustrativas
 
 ```
-                                           F C → E                            
-                                           F A                                
-                                           T A → B                            
-                                           T C                                
-                                           T A ˅ D                            
-               F Y → (A ˅ B)                                     F A ˅ Z      
-               T E                                               T H → G      
- T G ˄ (Y → B)               F G                                 T (G ˅ T) ˄ U
- OPEN                        T G ˄ (Y → B)                       T (G ˅ T) ˄ X
-                             CLOSED                T (G ˅ T) ˄ U              
-                                                   OPEN                       
+                                              1 T A                                          
+                                              2 T A → B                                      
+                                              3 F B                                          
+     4 F A → B                                                               11 F A ˅ B      
+     5 T C                                                                   12 T C ˅ A      
+6 T C              8 F ((C → B) ˄ C) ˅ D                                     13 T (C ˅ A) → B
+7 F C         9 T A                     10 T B                               14 T C          
+OPEN          OPEN                      OPEN           15 T C                                
+                                                       16 F C                                
+                                                       17 F ((C → B) ˄ C) ˅ D                
+                                                       CLOSED                                
 ```
 
 
@@ -107,14 +107,15 @@ Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de mat
 - [x] Verificar se os ramos estão abertos ou fechados
 - [x] Verificar se a árvore possui solução ou não
 - [ ] Valoração / contra-exemplo
-- [ ] Log e tempo de execução
-- [ ] Imprimir a árvore com o "número" da fórmula ao lado
-- [ ] Melhorar o print `toString()`
+- [x] Imprimir a árvore com o "número" da fórmula ao lado
+- [x] Melhorar o print `toString()`
 - [ ] Validar árvore e métodos de prova com mais exemplos
 - [ ] Implementar estratégia para escolha da regra beta a ser aplicada
 - [ ] Criar estratégia para cálculo de complexidade e variabilidade das fórmulas do stage
+- [ ] Log, tempo de execução, memória utilizada
 - [ ] Análisar tempos de prova, altura da árvore, complexidade, etc
 - [ ] Interface externa do console, para entradas e saídas
+- [ ] Print tree dot mode
 
 # Libs
 

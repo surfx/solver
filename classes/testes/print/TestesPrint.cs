@@ -22,10 +22,13 @@ namespace classes.testes.print
             //f = getFormulas4();
             saveImg(f);
 
-            //PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder.Init(f).withPrintLastClosedOpen();
-            //new PrintFormulas().printTree(paramBuilder);
+            PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder
+                .Init(f)
+                .withPrintLastClosedOpen()
+                .withPrintFormulaNumber();
+            new PrintFormulas().printTree(paramBuilder);
 
-            p(f.ToString());
+            //p(f.ToString());
         }
 
         private Formulas? getFormulas1()
@@ -135,6 +138,7 @@ namespace classes.testes.print
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_testes.png"))
                     .withDivisoriaArvore()
                     .withPrintAllClosedOpen()
+                    .withPrintFormulaNumber()
                     .Build();
             new ImageFormulas().formulasToImage(pf2img);
         }

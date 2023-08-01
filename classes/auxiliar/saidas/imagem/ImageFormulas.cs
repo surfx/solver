@@ -14,7 +14,8 @@ namespace classes.auxiliar.saidas.print
         {
             if (pformulas2Img == null || pformulas2Img.Formulas == null) { return; }
 
-            Quadro qTree = new(pformulas2Img.Formulas, pformulas2Img.PrintAllClosedOpen);
+            Quadro qTree = new();
+            qTree.initClass(pformulas2Img.Formulas, pformulas2Img.PrintAllClosedOpen, pformulas2Img.PrintFormulaNumber, 1);
 
             // float incrementoX = 20.0f, incrementY = 20.0f;
             // float espacamentoDivisorY = 25.0f;
@@ -324,22 +325,28 @@ namespace classes.auxiliar.saidas.print
             public float Width { get; set; }
             public float Height { get; set; }
 
-            public Quadro Esquerda { get; }
-            public Quadro Direita { get; }
+            public Quadro Esquerda { get; private set; }
+            public Quadro Direita { get; private set; }
 
             private int _rnd = 0;
             public int Rnd { get { return _rnd; } }
 
-            private Quadro()
+            public Quadro()
             {
                 setRandom();
             }
 
-            public Quadro(Formulas f, bool printAllClosedOpen = false)
+            // separado do construtor por causa da recursão e número da fórmula
+            public int initClass(Formulas f, bool printAllClosedOpen = false, bool printFormulaNumber = false, int lineNumber = 1)
             {
                 setRandom();
+                int rt = lineNumber;
                 formulas = new();
-                if (f.LConjuntoFormula != null) { f.LConjuntoFormula.ForEach(x => formulas.Add(x.ToString())); }
+                if (f.LConjuntoFormula != null)
+                {
+                    f.LConjuntoFormula.ForEach(x =>
+                    formulas.Add(printFormulaNumber ? string.Format("{0} {1}", lineNumber++, x.ToString()) : x.ToString()));
+                }
 
                 if (printAllClosedOpen)
                 {
@@ -353,11 +360,20 @@ namespace classes.auxiliar.saidas.print
                     }
                 }
 
-                if (f.Esquerda != null) { this.Esquerda = new Quadro(f.Esquerda, printAllClosedOpen); }
-                if (f.Direita != null) { this.Direita = new Quadro(f.Direita, printAllClosedOpen); }
+                if (f.Esquerda != null)
+                {
+                    this.Esquerda = new Quadro();
+                    lineNumber += this.Esquerda.initClass(f.Esquerda, printAllClosedOpen, printFormulaNumber, lineNumber);
+                }
+                if (f.Direita != null)
+                {
+                    this.Direita = new Quadro();
+                    lineNumber += this.Direita.initClass(f.Direita, printAllClosedOpen, printFormulaNumber, lineNumber);
+                }
 
                 Width = formulas == null ? 0 : formulas.Max(x => x.Length) * wchar + wchar * 0.5f;
                 Height = formulas == null ? 0 : formulas.Count * hchar + hchar * 0.5f;
+                return lineNumber - rt;
             }
 
             public Quadro plainCopy()

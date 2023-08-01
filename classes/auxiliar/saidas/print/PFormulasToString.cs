@@ -10,6 +10,7 @@ namespace classes.auxiliar.saidas.print
         public Formulas Formulas { get; set; }
         public bool PrintAllClosedOpen { get; set; }
         public bool PrintLastClosedOpen { get; set; }
+        public bool PrintFormulaNumber { get; set; }
 
         private PFormulasToString() { }
         private PFormulasToString(Formulas formulas) { this.Formulas = formulas; }
@@ -23,6 +24,7 @@ namespace classes.auxiliar.saidas.print
                 _pFormulasToString.Formulas = formulas;
                 _pFormulasToString.PrintAllClosedOpen = false;
                 _pFormulasToString.PrintLastClosedOpen = false;
+                _pFormulasToString.PrintFormulaNumber = false;
             }
             public static PFormulasToStringBuilder Init(Formulas formulas)
             {
@@ -33,6 +35,7 @@ namespace classes.auxiliar.saidas.print
             public PFormulasToStringBuilder SetFormulas(Formulas formulas) { _pFormulasToString.Formulas = formulas; return this; }
             public PFormulasToStringBuilder withPrintAllClosedOpen() { _pFormulasToString.PrintAllClosedOpen = true; return this; }
             public PFormulasToStringBuilder withPrintLastClosedOpen() { _pFormulasToString.PrintLastClosedOpen = true; return this; }
+            public PFormulasToStringBuilder withPrintFormulaNumber() { _pFormulasToString.PrintFormulaNumber = true; return this; }
 
             #region copy
             public PFormulasToStringBuilder copy()
@@ -44,6 +47,7 @@ namespace classes.auxiliar.saidas.print
                 PFormulasToStringBuilder rt = Init(formulas);
                 if (_pFormulasToString.PrintAllClosedOpen) { rt.withPrintAllClosedOpen(); }
                 if (_pFormulasToString.PrintLastClosedOpen) { rt.withPrintLastClosedOpen(); }
+                if (_pFormulasToString.PrintFormulaNumber) { rt.withPrintFormulaNumber(); }
                 return rt;
             }
             #endregion
