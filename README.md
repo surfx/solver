@@ -115,7 +115,7 @@ Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de mat
 - [ ] Log, tempo de execução, memória utilizada
 - [ ] Análisar tempos de prova, altura da árvore, complexidade, etc
 - [ ] Interface externa do console, para entradas e saídas
-- [-] Print tree dot mode
+- [x] Print tree dot mode
 
 # Libs
 
