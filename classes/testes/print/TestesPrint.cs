@@ -1,3 +1,4 @@
+using System.Drawing;
 using classes.auxiliar;
 using classes.auxiliar.saidas.print;
 using classes.formulas;
@@ -138,13 +139,13 @@ namespace classes.testes.print
 
             PFormulasToImage.PFormulasToImageBuilder pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_testes.png"))
+                    
                     .withDivisoriaArvore()
+                    //.withDivisoria() // difere da divisória de árvore
                     .withPrintAllClosedOpen()
                     .withPrintFormulaNumber()
-                    // .withPrintDotTreeMode()
-                    // .SetHChar(8)
-                    // .SetWchar(5)
-                    // .SetEspacamentoDivisorY(8.5f)
+
+                    //.modoDotTreeMode()
                     ;
             new ImageFormulas(pf2img).formulasToImage();
         }

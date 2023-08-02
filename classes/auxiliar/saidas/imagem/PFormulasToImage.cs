@@ -1,3 +1,4 @@
+using System.Drawing;
 using classes.solverstage;
 
 namespace classes.auxiliar.saidas.print
@@ -11,6 +12,7 @@ namespace classes.auxiliar.saidas.print
         public string PathImgSaida { get; set; }
         public bool DivisoriaArvore { get; set; }
         public bool DrawSquare { get; set; }
+        public Font Fonte { get; set; }
         public float HChar { get; set; } // height de 1 char
         public float Wchar { get; set; } // width de 1 char
         public float IncrementX { get; set; }
@@ -30,8 +32,10 @@ namespace classes.auxiliar.saidas.print
             private PFormulasToImageBuilder(Formulas formulas, float hchar = 15.0f, float wchar = 7.55f)
             {
                 // Consolas 10
+                _pFormulasToImage.Fonte = new("Consolas", 10, FontStyle.Regular);
                 _pFormulasToImage.HChar = hchar <= 0 ? 15.0f : hchar;
                 _pFormulasToImage.Wchar = wchar <= 0 ? 7.55f : wchar;
+
                 _pFormulasToImage.IncrementX = 20.0f;
                 _pFormulasToImage.IncrementY = 20.0f;
                 _pFormulasToImage.EspacamentoDivisorY = 25.0f;
@@ -51,7 +55,9 @@ namespace classes.auxiliar.saidas.print
             public PFormulasToImageBuilder SetFormulas(Formulas formulas) { _pFormulasToImage.Formulas = formulas; return this; }
             public PFormulasToImageBuilder SetPathImgSaida(string pathImgSaida) { _pFormulasToImage.PathImgSaida = pathImgSaida; return this; }
             public PFormulasToImageBuilder withDivisoriaArvore() { _pFormulasToImage.DivisoriaArvore = true; return this; }
+            public PFormulasToImageBuilder withDivisoria() { _pFormulasToImage.DivisoriaArvore = false; return this; }
             public PFormulasToImageBuilder withDrawSquare() { _pFormulasToImage.DrawSquare = true; return this; }
+            public PFormulasToImageBuilder SetFonte(Font fonte) { _pFormulasToImage.Fonte = fonte; return this; }
             public PFormulasToImageBuilder SetHChar(float hChar) { _pFormulasToImage.HChar = hChar; return this; }
             public PFormulasToImageBuilder SetWchar(float wchar) { _pFormulasToImage.Wchar = wchar; return this; }
             public PFormulasToImageBuilder SetIncrementoX(float incrementoX) { _pFormulasToImage.IncrementX = incrementoX; return this; }
@@ -67,10 +73,23 @@ namespace classes.auxiliar.saidas.print
                 return this;
             }
 
+            public PFormulasToImageBuilder modoDotTreeMode()
+            {
+                this.withPrintDotTreeMode();
+                _pFormulasToImage.Fonte = new("Consolas", 5, FontStyle.Regular);
+                _pFormulasToImage.HChar = 4.0f;
+                _pFormulasToImage.Wchar = 15.0f;
+                _pFormulasToImage.EspacamentoDivisorY = 7.0f;
+                _pFormulasToImage.DivisoriaArvore = false;
+                return this;
+            }
+                   
+
             public PFormulasToImageBuilder copy()
             {
                 PFormulasToImageBuilder rt = PFormulasToImageBuilder.Init(_pFormulasToImage.Formulas);
                 rt.SetPathImgSaida(_pFormulasToImage.PathImgSaida);
+                rt.SetFonte(_pFormulasToImage.Fonte);
                 rt.SetHChar(_pFormulasToImage.HChar);
                 rt.SetWchar(_pFormulasToImage.Wchar);
                 rt.SetIncrementoX(_pFormulasToImage.IncrementX);
