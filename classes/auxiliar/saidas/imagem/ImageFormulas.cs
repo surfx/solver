@@ -6,23 +6,29 @@ namespace classes.auxiliar.saidas.print
 {
     public class ImageFormulas
     {
-        private PFormulasToImage.PFormulasToImageBuilder pformulas2ImgB;
+        private PFormulasToImage.PFormulasToImageBuilder _pformulas2ImgB;
 
         private const string DotSimbol = "○";
 
         public ImageFormulas(PFormulasToImage.PFormulasToImageBuilder pformulas2ImgB)
         {
-            this.pformulas2ImgB = pformulas2ImgB;
+            this._pformulas2ImgB = pformulas2ImgB;
         }
 
         public void formulasToImage()
         {
-            if (pformulas2ImgB == null) { return; }
-            PFormulasToImage pformulas2Img = pformulas2ImgB.Build();
+            if (_pformulas2ImgB == null) { return; }
+            PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
             if (pformulas2Img == null || pformulas2Img.Formulas == null) { return; }
 
-            Quadro qTree = new();
-            qTree.initClass(pformulas2ImgB, 1);
+            if (pformulas2Img.PrintFormulaNumber)
+            {
+                // atualiza o número das fórmulas antes de imprimir na imagem
+                // deve ser antes de chamar o construtor de Quadro
+                pformulas2Img.Formulas.updateNumeroFormulas();
+            }
+            Quadro qTree = new(_pformulas2ImgB);
+            //qTree.initClass(_pformulas2ImgB);
 
             // float incrementoX = 20.0f, incrementY = 20.0f;
             // float espacamentoDivisorY = 25.0f;
@@ -101,7 +107,7 @@ namespace classes.auxiliar.saidas.print
         private void drawDivisorias(Graphics g, Quadro q)
         {
             if (g == null || q == null) { return; }
-            PFormulasToImage pformulas2Img = pformulas2ImgB.Build();
+            PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
             using (Pen blackPen = new Pen(Color.Black, 1.5f))
             {
@@ -143,7 +149,7 @@ namespace classes.auxiliar.saidas.print
         {
             if (g == null || q == null) { return; }
             if (q.Esquerda == null && q.Direita == null) { return; }
-            PFormulasToImage pformulas2Img = pformulas2ImgB.Build();
+            PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
             using (Pen blackPen = new Pen(Color.Black, 1.0f))
             {
@@ -342,75 +348,77 @@ namespace classes.auxiliar.saidas.print
             private int _rnd = 0;
             public int Rnd { get { return _rnd; } }
 
-            private PFormulasToImage pformulas2Img;
+            private PFormulasToImage.PFormulasToImageBuilder _pformulas2ImgBuilder;
+            private PFormulasToImage _pformulas2Img;
 
-            public Quadro()
+            public Quadro(PFormulasToImage.PFormulasToImageBuilder pformulas2ImgBuilder)
             {
                 setRandom();
+                initClass(pformulas2ImgBuilder);
             }
 
             // separado do construtor por causa da recursão e número da fórmula
-            public int initClass(PFormulasToImage.PFormulasToImageBuilder pformulas2ImgBuilder, int lineNumber = 1)
+            private void initClass(PFormulasToImage.PFormulasToImageBuilder pformulas2ImgBuilder)
             {
                 setRandom();
-                int rt = lineNumber;
                 formulas = new();
+                this._pformulas2ImgBuilder = pformulas2ImgBuilder;
 
-                pformulas2Img = pformulas2ImgBuilder.Build();
-                if (pformulas2Img.Formulas.LConjuntoFormula != null)
+                _pformulas2Img = _pformulas2ImgBuilder.Build();
+                if (_pformulas2Img.Formulas.LConjuntoFormula != null)
                 {
-                    pformulas2Img.Formulas.LConjuntoFormula.ForEach(x =>
+                    _pformulas2Img.Formulas.LConjuntoFormula.ForEach(cf =>
                     {
-                        formulas.Add(pformulas2Img.PrintDotTreeMode ? DotSimbol : (pformulas2Img.PrintFormulaNumber ? string.Format("{0} {1}", lineNumber++, x.ToString()) : x.ToString()));
+                        formulas.Add(_pformulas2Img.PrintDotTreeMode ?
+                            DotSimbol :
+                            (_pformulas2Img.PrintFormulaNumber && cf.NumeroFormula >= 0 ? string.Format("{0} {1}", cf.NumeroFormula, cf.ToString()) : cf.ToString())
+                        );
                     });
                 }
 
-                if (!pformulas2Img.PrintDotTreeMode)
+                if (!_pformulas2Img.PrintDotTreeMode)
                 {
-                    if (pformulas2Img.PrintAllClosedOpen)
+                    if (_pformulas2Img.PrintAllClosedOpen)
                     {
-                        formulas.Add(pformulas2Img.Formulas.isClosed ? "CLOSED" : "OPEN");
+                        formulas.Add(_pformulas2Img.Formulas.isClosed ? "CLOSED" : "OPEN");
                     }
                     else
                     {
-                        if (pformulas2Img.Formulas.Esquerda == null && pformulas2Img.Formulas.Direita == null)
+                        if (_pformulas2Img.Formulas.Esquerda == null && _pformulas2Img.Formulas.Direita == null)
                         {
-                            formulas.Add(pformulas2Img.Formulas.isClosed ? "CLOSED" : "OPEN");
+                            formulas.Add(_pformulas2Img.Formulas.isClosed ? "CLOSED" : "OPEN");
                         }
                     }
                 }
 
-                if (pformulas2Img.Formulas.Esquerda != null)
+                if (_pformulas2Img.Formulas.Esquerda != null)
                 {
-                    this.Esquerda = new Quadro();
                     PFormulasToImage.PFormulasToImageBuilder pformulas2ImgAux = pformulas2ImgBuilder.copy();
-                    pformulas2ImgAux.SetFormulas(pformulas2Img.Formulas.Esquerda);
-                    lineNumber += this.Esquerda.initClass(pformulas2ImgAux, lineNumber);
+                    pformulas2ImgAux.SetFormulas(_pformulas2Img.Formulas.Esquerda);
+                    this.Esquerda = new Quadro(pformulas2ImgAux);
                 }
-                if (pformulas2Img.Formulas.Direita != null)
+                if (_pformulas2Img.Formulas.Direita != null)
                 {
-                    this.Direita = new Quadro();
                     PFormulasToImage.PFormulasToImageBuilder pformulas2ImgAux = pformulas2ImgBuilder.copy();
-                    pformulas2ImgAux.SetFormulas(pformulas2Img.Formulas.Direita);
-                    lineNumber += this.Direita.initClass(pformulas2ImgAux, lineNumber);
+                    pformulas2ImgAux.SetFormulas(_pformulas2Img.Formulas.Direita);
+                    this.Direita = new Quadro(pformulas2ImgAux);
                 }
 
-                if (pformulas2Img.PrintDotTreeMode)
+                if (_pformulas2Img.PrintDotTreeMode)
                 {
-                    Width = formulas == null ? 0 : /*DotSimbol.Length * */ pformulas2Img.Wchar;
+                    Width = formulas == null ? 0 : /*DotSimbol.Length * */ _pformulas2Img.Wchar;
                 }
                 else
                 {
-                    Width = formulas == null ? 0 : formulas.Max(x => x.Length) * pformulas2Img.Wchar + pformulas2Img.Wchar * 0.5f;
+                    Width = formulas == null ? 0 : formulas.Max(x => x.Length) * _pformulas2Img.Wchar + _pformulas2Img.Wchar * 0.5f;
                 }
 
-                Height = formulas == null ? 0 : formulas.Count * pformulas2Img.HChar + pformulas2Img.HChar * 0.5f;
-                return lineNumber - rt;
+                Height = formulas == null ? 0 : formulas.Count * _pformulas2Img.HChar + _pformulas2Img.HChar * 0.5f;
             }
 
             public Quadro plainCopy()
             {
-                return new()
+                return new(this._pformulas2ImgBuilder)
                 {
                     Width = this.Width,
                     Height = this.Height,
@@ -439,7 +447,7 @@ namespace classes.auxiliar.saidas.print
         private void drawFormula(Graphics g, Quadro q, bool isDireita, float incrementoX = 0.0f, float incrementY = 0.0f, bool drawSquare = false)
         {
             if (g == null || q == null) { return; }
-            PFormulasToImage pformulas2Img = pformulas2ImgB.Build();
+            PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
             List<string> formulas = q.formulas;
 
@@ -467,19 +475,19 @@ namespace classes.auxiliar.saidas.print
             PointF pTextoDefault = new(incrementoX, incrementY);
 
             Font fonte = pformulas2Img.Fonte ?? new("Consolas", 10, FontStyle.Regular);
-            formulas.ForEach(x =>
+            formulas.ForEach(formula =>
             {
-                if (x == null || string.IsNullOrEmpty(x)) { return; }
+                if (formula == null || string.IsNullOrEmpty(formula)) { return; }
                 Brush brush = Brushes.Black;
                 PointF pTexto = pTextoDefault;
 
-                if (x.Equals("CLOSED") || x.Equals("OPEN"))
+                if (formula.Equals("CLOSED") || formula.Equals("OPEN"))
                 {
-                    brush = x.Equals("CLOSED") ? Brushes.Red : Brushes.Green;
-                    pTexto = new PointF(pTextoDefault.X + (q.Width / 2.0f) - (x.Length * pformulas2Img.Wchar) / 2.0f, pTextoDefault.Y);
+                    brush = formula.Equals("CLOSED") ? Brushes.Red : Brushes.Green;
+                    pTexto = new PointF(pTextoDefault.X + (q.Width / 2.0f) - (formula.Length * pformulas2Img.Wchar) / 2.0f, pTextoDefault.Y);
                 }
 
-                g.DrawString(x, fonte, brush, pTexto);
+                g.DrawString(formula, fonte, brush, pTexto);
                 pTextoDefault.Y += pformulas2Img.HChar;
             });
         }

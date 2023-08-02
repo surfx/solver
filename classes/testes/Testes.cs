@@ -44,10 +44,10 @@ namespace classes.testes
             Conector c4 = new Conector(ESimbolo.IMPLICA, c3, c1, 1); // ¬((¬((a1 ^ a2) v ((a1 ^ a2) → ¬a3))) → (a1 ^ a2))
             Console.WriteLine(c4);
 
-            ConjuntoFormula cf1 = new ConjuntoFormula(true, c4); // T ¬((¬((a1 ^ a2) v ((a1 ^ a2) → ¬a3))) → (a1 ^ a2))
+            ConjuntoFormula cf1 = new ConjuntoFormula(true, null, c4); // T ¬((¬((a1 ^ a2) v ((a1 ^ a2) → ¬a3))) → (a1 ^ a2))
             Console.WriteLine(cf1);
 
-            ConjuntoFormula cf2 = new ConjuntoFormula(false, c1); // F a1 ^ a2
+            ConjuntoFormula cf2 = new ConjuntoFormula(false, null, c1); // F a1 ^ a2
             Console.WriteLine(cf2);
 
         }

@@ -195,6 +195,7 @@ namespace classes.testes.solverstage
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
                     .withDivisoriaArvore()
                     .withPrintAllClosedOpen()
+                    .withPrintFormulaNumber()
                     ;
             new ImageFormulas(pf2img).formulasToImage();
         }

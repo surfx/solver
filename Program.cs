@@ -3,6 +3,7 @@ using classes.testes.closed;
 using classes.testes.formulas;
 using classes.testes.imagens;
 using classes.testes.print;
+using classes.testes.print.numerosformulas;
 using classes.testes.regras;
 using classes.testes.solverstage;
 
@@ -67,9 +68,10 @@ namespace ConsoleApp1
             //new TestesAtualizacaoClosed().testeClosed();
 
 
-            new TestesPrint().teste1();
+            //new TestesPrint().teste1();
+            //new TestesNumerosFormulas().teste1();
 
-            //new TestesSolverStage2().teste1();
+            new TestesSolverStage2().teste1();
 
         }
     }

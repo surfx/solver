@@ -3,31 +3,15 @@ namespace classes.formulas
     public class ConjuntoFormula
     {
 
+        public int NumeroFormula { get; set; }
         public bool Simbolo { get; set; } // T / F
         public AtomoConector? AtomoConectorProp { get; set; }
 
-        public ConjuntoFormula(bool simbolo, AtomoConector atomoConector)
+        public ConjuntoFormula(bool simbolo = true, AtomoConector? atomoConector = null, IConversor? conversor = null, int numeroFormula = -1)
         {
             Simbolo = simbolo;
-            AtomoConectorProp = atomoConector;
-        }
-
-        public ConjuntoFormula(AtomoConector atomoConector)
-        {
-            Simbolo = true;
-            AtomoConectorProp = atomoConector;
-        }
-
-        public ConjuntoFormula(bool simbolo, IConversor conversor)
-        {
-            Simbolo = simbolo;
-            AtomoConectorProp = conversor == null ? null : conversor.toAtomoConector();
-        }
-
-        public ConjuntoFormula(IConversor conversor)
-        {
-            Simbolo = true;
-            AtomoConectorProp = conversor == null ? null : conversor.toAtomoConector();
+            AtomoConectorProp = atomoConector != null ? atomoConector : (conversor == null ? null : conversor.toAtomoConector());
+            NumeroFormula = numeroFormula;
         }
 
         #region util

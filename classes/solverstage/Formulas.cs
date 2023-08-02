@@ -43,6 +43,19 @@ namespace classes.solverstage
             this._lconjuntoFormula = lformulas;
         }
 
+        public void updateNumeroFormulas()
+        {
+            updateNumeroFormulas(this, 1);
+        }
+        private int updateNumeroFormulas(Formulas f, int numeroFormula = 1)
+        {
+            if (f == null || f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0) { return numeroFormula; }
+            f.LConjuntoFormula.ForEach(cf => cf.NumeroFormula = numeroFormula++);
+            if (f.Esquerda != null) { numeroFormula = updateNumeroFormulas(f.Esquerda, numeroFormula); }
+            if (f.Direita != null) { numeroFormula = updateNumeroFormulas(f.Direita, numeroFormula); }
+            return numeroFormula;
+        }
+
         public override string ToString()
         {
             PFormulasToString.PFormulasToStringBuilder paramBuilder = PFormulasToString.PFormulasToStringBuilder.Init(this).withPrintLastClosedOpen();
@@ -51,6 +64,8 @@ namespace classes.solverstage
 
         public void Dispose()
         {
+            if (_esquerda != null) { _esquerda.Dispose(); }
+            if (_direita != null) { _direita.Dispose(); }
             _lconjuntoFormula = null;
             _esquerda = null;
             _direita = null;
