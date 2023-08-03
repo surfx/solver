@@ -19,6 +19,8 @@ namespace classes.testes.solverstage
             f = getFormulas3();
             //f = getFormulas4();
             //f = getFormulas5();
+            f = getFormulas6();
+
             //p(f.ToString()); p(); p("");
             System.Diagnostics.Stopwatch sw = new();
             sw.Start();
@@ -183,6 +185,16 @@ namespace classes.testes.solverstage
             return f;
         }
 
+        private Formulas getFormulas6()
+        {
+            Formulas f = new Formulas();
+
+            Parser parser = new Parser();
+            f.addConjuntoFormula(parser.parserCF("F (p -> (q -> r) -> ( (p -> q) -> (p -> r) ))"));
+            f.addConjuntoFormula(parser.parserCF("T p -> (q -> r)"));
+            f.addConjuntoFormula(parser.parserCF("F (p -> q) -> (p -> r)"));
+            return f;
+        }
         #endregion
 
         #region img

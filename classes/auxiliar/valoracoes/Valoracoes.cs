@@ -280,7 +280,6 @@ namespace classes.auxiliar.valoracoes
         {
             public int FrequenciaAtomoFormula { get; set; }
             public int FrequenciaAtomoGlobal { get; set; }
-            //TODO: taxa na fórmula ?
             public float TaxaGlobal { get; set; }
 
             public override string ToString()
@@ -292,6 +291,11 @@ namespace classes.auxiliar.valoracoes
         {
             if (cf == null || f == null) { return null; }
             return frequenciaAtomosRelativo(cf, frequenciaAtomos(f));
+        }
+        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, List<ConjuntoFormula> formulas)
+        {
+            if (cf == null || formulas == null || formulas.Count <= 0) { return null; }
+            return frequenciaAtomosRelativo(cf, frequenciaAtomos(formulas));
         }
         public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Dictionary<string, int> dicFrequenciasGlobal)
         {
@@ -369,11 +373,35 @@ namespace classes.auxiliar.valoracoes
         #endregion
 
         #region altura
-        public int altura(Formulas f)
+        public struct StAlturas
         {
+            public int MaxHeight { get; set; }
+            public int MinHeight { get; set; }
+            public float AvgHeight { get; set; }
+            public override readonly string ToString()
+            {
+                return string.Format("min: {0}, max: {1}, avg: {2}", MinHeight, MaxHeight, AvgHeight);
+            }
+        }
+        public StAlturas? altura(Formulas f)
+        {
+            if (f == null) { return null; }
+            StAlturas rt = new();
+            rt.MinHeight = rt.MaxHeight = f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 : f.LConjuntoFormula.Count;
+            rt.MinHeight += Math.Min(f.Esquerda == null ? 0 : alturaMaxMin(f.Esquerda, false), f.Direita == null ? 0 : alturaMaxMin(f.Direita, false));
+            rt.MaxHeight += Math.Max(f.Esquerda == null ? 0 : alturaMaxMin(f.Esquerda, true), f.Direita == null ? 0 : alturaMaxMin(f.Direita, true));
+            rt.AvgHeight = rt.MinHeight <= 0 || rt.MaxHeight <= 0 ? 0.0f : (rt.MinHeight * 1.0f / rt.MaxHeight * 1.0f);
+            return rt;
+        }
+
+        public int alturaMaxMin(Formulas f, bool max = true)
+        {
+            int auxEsquerda = f.Esquerda == null ? 0 : alturaMaxMin(f.Esquerda, max);
+            int auxDireita = f.Direita == null ? 0 : alturaMaxMin(f.Direita, max);
             return f == null ? 0 :
                 (f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 : f.LConjuntoFormula.Count) +
-                Math.Max(f.Esquerda == null ? 0 : altura(f.Esquerda), f.Direita == null ? 0 : altura(f.Direita));
+                (max ? Math.Max(auxEsquerda, auxDireita) : Math.Min(auxEsquerda, auxDireita))
+                ;
         }
         #endregion
 
