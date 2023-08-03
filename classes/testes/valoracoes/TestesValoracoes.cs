@@ -39,14 +39,36 @@ namespace classes.testes.print.valoracoes
         public void teste2()
         {
             Formulas f;
-            //f = getFormulas1();
+            f = getFormulas1();
 
             //f = getFormulas2();
             //f = getFormulas3();
-            f = getFormulas4();
+            //f = getFormulas4();
+
+            p(f.ToString());
+
 
             // testes bifurcacoes
             p(string.Format("bifurcacoes: {0}", val.bifurcacoes(f)));
+            p(string.Format("numeroAtomosLivres: {0}", val.numeroAtomosLivres(f)));
+
+            Dictionary<string, int>? dicFAL = val.frequenciaAtomosConectores(f, false, false);
+            foreach (KeyValuePair<string, int> entry in dicFAL)
+            {
+                p(string.Format("{0}: {1}", entry.Key, entry.Value));
+            }
+        }
+
+        public void teste3()
+        {
+            Formulas f;
+            f = getFormulas1();
+
+            p(f.ToString());
+            
+            p(string.Format("numeroFormulas: {0}", val.numeroFormulas(f)));
+            
+            
         }
 
         private Formulas? getFormulas1()

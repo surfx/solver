@@ -72,7 +72,8 @@ namespace ConsoleApp1
             //new TestesNumerosFormulas().teste1();
 
             //new TestesValoracoes().teste1();
-            new TestesValoracoes().teste2();
+            //new TestesValoracoes().teste2();
+            new TestesValoracoes().teste3();
 
             //new TestesSolverStage2().teste1();
 
