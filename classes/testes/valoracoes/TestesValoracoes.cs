@@ -1,6 +1,4 @@
-using System.Drawing;
-using classes.auxiliar;
-using classes.auxiliar.saidas.print;
+using classes.auxiliar.formulas;
 using classes.auxiliar.valoracoes;
 using classes.formulas;
 using classes.parser;

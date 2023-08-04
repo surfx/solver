@@ -1,8 +1,8 @@
 using classes.formulas;
 
-namespace classes.auxiliar
+namespace classes.auxiliar.formulas
 {
-    public static class Auxiliar
+    public static class AuxiliarFormulas
     {
 
         public const string SimboloNegado = "¬";

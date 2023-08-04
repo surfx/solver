@@ -1,5 +1,4 @@
-using classes.auxiliar;
-using classes.formulas;
+using classes.auxiliar.formulas;
 using classes.parser;
 using classes.solverstage;
 

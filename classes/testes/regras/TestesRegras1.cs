@@ -1,4 +1,4 @@
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 using classes.parser;
 using classes.regras;
@@ -6,7 +6,6 @@ using classes.regras.binarias;
 using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
-using classes.regras.unitarias.unidouble.beta;
 
 namespace classes.testes.regras
 {

@@ -1,11 +1,11 @@
-namespace classes.auxiliar
+namespace classes.auxiliar.formulas
 {
     public static class UtilFormulas
     {
 
         // Console.WriteLine(string.Join(" ", conectores)); ˄ ˅ →
-        private static string[] conectores = Auxiliar.getSimbolos(false);
-        private const string simboloNegado = Auxiliar.SimboloNegado;
+        private static string[] conectores = AuxiliarFormulas.getSimbolos(false);
+        private const string simboloNegado = AuxiliarFormulas.SimboloNegado;
 
         public static string sanitizar(string entrada)
         {
@@ -20,12 +20,12 @@ namespace classes.auxiliar
         public static string replaceSimbols(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return ""; }
-            entrada = replaceAll(entrada, "!", Auxiliar.SimboloNegado);
-            entrada = replaceAll(entrada, "^", Auxiliar.SimboloE);
-            entrada = replaceAll(entrada, "&", Auxiliar.SimboloE);
-            entrada = replaceAll(entrada, "|", Auxiliar.SimboloOu);
-            entrada = replaceAll(entrada, "->", Auxiliar.SimboloImplica);
-            entrada = replaceAll(entrada, ">", Auxiliar.SimboloImplica);
+            entrada = replaceAll(entrada, "!", AuxiliarFormulas.SimboloNegado);
+            entrada = replaceAll(entrada, "^", AuxiliarFormulas.SimboloE);
+            entrada = replaceAll(entrada, "&", AuxiliarFormulas.SimboloE);
+            entrada = replaceAll(entrada, "|", AuxiliarFormulas.SimboloOu);
+            entrada = replaceAll(entrada, "->", AuxiliarFormulas.SimboloImplica);
+            entrada = replaceAll(entrada, ">", AuxiliarFormulas.SimboloImplica);
             return entrada;
         }
 

@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 using classes.parser;
 
@@ -8,8 +9,8 @@ namespace classes.testes
     public class TestesParser
     {
 
-        private static string[] conectores = Auxiliar.getSimbolos(false);
-        private const string simboloNegado = Auxiliar.SimboloNegado;
+        private static string[] conectores = AuxiliarFormulas.getSimbolos(false);
+        private const string simboloNegado = AuxiliarFormulas.SimboloNegado;
 
         // public void teste1()
         // {

@@ -1,5 +1,4 @@
-
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;

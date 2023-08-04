@@ -1,4 +1,4 @@
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 using classes.parser;
 using classes.regras;
@@ -7,7 +7,7 @@ using classes.regras.unitarias;
 namespace classes.testes.regras
 {
     public class TestesRegras2
-    { 
+    {
 
         public void testeRegraRemoverFalsos()
         {
@@ -23,13 +23,15 @@ namespace classes.testes.regras
 
         #region apply rules
 
-        private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1){
+        private void apply(IRegraUnaria rUnaria, ConjuntoFormula cf1)
+        {
             Console.WriteLine(cf1);
             Console.WriteLine(string.Format("------ {0}", rUnaria.RULE));
             Console.WriteLine(rUnaria.apply(cf1));
         }
 
-        private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2){
+        private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2)
+        {
             Console.WriteLine(cf1);
             Console.WriteLine(cf2);
             Console.WriteLine(string.Format("------ {0}", rBinaria.RULE));

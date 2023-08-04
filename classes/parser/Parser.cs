@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 
 namespace classes.parser
@@ -7,8 +8,8 @@ namespace classes.parser
     public class Parser
     {
 
-        private string[] conectores = Auxiliar.getSimbolos(false);
-        private const string simboloNegado = Auxiliar.SimboloNegado;
+        private string[] conectores = AuxiliarFormulas.getSimbolos(false);
+        private const string simboloNegado = AuxiliarFormulas.SimboloNegado;
 
         public ConjuntoFormula? parserCF(string entrada)
         {
@@ -73,7 +74,7 @@ namespace classes.parser
                 }
                 if (conectores.Contains(ch.ToString()))
                 {
-                    ESimbolo? simbolo = Auxiliar.toSimbolo(ch.ToString());
+                    ESimbolo? simbolo = AuxiliarFormulas.toSimbolo(ch.ToString());
                     if (simbolo == null) { continue; }
                     rt.Add(new ItemList() { Simbolo = (ESimbolo)simbolo });
                     continue;

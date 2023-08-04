@@ -1,4 +1,4 @@
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 
 namespace classes.formulas
 {
@@ -36,7 +36,8 @@ namespace classes.formulas
             return 1;
         }
 
-        public int heightTree(){
+        public int heightTree()
+        {
             return 1;
         }
         #endregion
@@ -55,7 +56,7 @@ namespace classes.formulas
 
         public override string? ToString()
         {
-            return string.Format("{0}{1}", NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(Auxiliar.SimboloNegado, NumeroNegados)) : "", Simbolo);
+            return string.Format("{0}{1}", NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(AuxiliarFormulas.SimboloNegado, NumeroNegados)) : "", Simbolo);
         }
 
     }

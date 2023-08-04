@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;
@@ -9,7 +10,7 @@ namespace classes.testes.solverstage
     public class TestesSolverStage2
     {
 
-        private Stage stage = new Stage();
+        private Stage stage = new();
 
         public void teste1()
         {
@@ -22,12 +23,11 @@ namespace classes.testes.solverstage
             f = getFormulas6();
 
             //p(f.ToString()); p(); p("");
-            System.Diagnostics.Stopwatch sw = new();
-            sw.Start();
-            stage.solve(f);
-            sw.Stop();
-            Console.WriteLine(string.Format("Tempo: {0} ms, {1:hh\\:mm\\:ss}", sw.ElapsedMilliseconds, sw.Elapsed));
+
+            System.Diagnostics.Stopwatch? sw = Util.CountTimer(() => stage.solve(f));
+            Util.print(sw);
             saveImg(f);
+            f.Dispose();
         }
 
 

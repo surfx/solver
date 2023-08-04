@@ -1,7 +1,5 @@
-using System.Drawing;
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
-using classes.formulas;
 using classes.parser;
 using classes.solverstage;
 
@@ -139,7 +137,7 @@ namespace classes.testes.print
 
             PFormulasToImage.PFormulasToImageBuilder pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
                     .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula_testes.png"))
-                    
+
                     .withDivisoriaArvore()
                     //.withDivisoria() // difere da divisória de árvore
                     .withPrintAllClosedOpen()

@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.formulas;
 
 namespace classes.formulas
 {
@@ -65,13 +66,13 @@ namespace classes.formulas
                 (Esquerda != null && Esquerda.isConector) ? "(" : "",
                 Esquerda,
                 (Esquerda != null && Esquerda.isConector) ? ")" : "",
-                Auxiliar.toSimbolo(Simbolo),
+                AuxiliarFormulas.toSimbolo(Simbolo),
                 (Direita != null && Direita.isConector) ? "(" : "",
                 Direita,
                 (Direita != null && Direita.isConector) ? ")" : "");
 
             string pattern = NumeroNegados > 0 ? "{0}({1})" : "{0}{1}";
-            return string.Format(pattern, NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(Auxiliar.SimboloNegado, NumeroNegados)) : "", rt);
+            return string.Format(pattern, NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(AuxiliarFormulas.SimboloNegado, NumeroNegados)) : "", rt);
         }
 
     }

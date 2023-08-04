@@ -1,5 +1,4 @@
-using classes.auxiliar;
-using classes.auxiliar.saidas.print;
+using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print_old;
 using classes.formulas;
 using classes.parser;

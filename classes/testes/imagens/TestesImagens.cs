@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
@@ -463,7 +463,7 @@ namespace classes.testes.imagens
 
             public PointF XY { get; set; }
 
-            public List<String> formulas { get; set; }
+            public List<string> formulas { get; set; }
             public Quadro Esquerda { get; set; }
             public Quadro Direita { get; set; }
 

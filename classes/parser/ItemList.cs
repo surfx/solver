@@ -1,4 +1,5 @@
 using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.formulas;
 
 namespace classes.parser
@@ -20,7 +21,7 @@ namespace classes.parser
         public override string? ToString()
         {
             if (AtomoConectorProp != null) { return AtomoConectorProp.ToString(); }
-            if (Simbolo != null) { return Auxiliar.toSimbolo(Simbolo); }
+            if (Simbolo != null) { return AuxiliarFormulas.toSimbolo(Simbolo); }
             if (Negacao != null && !string.IsNullOrEmpty(Negacao)) { return Negacao; }
             if (Parentesis != null) { return (bool)Parentesis ? "(" : ")"; }
             return "";

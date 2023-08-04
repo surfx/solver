@@ -1,7 +1,5 @@
 using System.Text;
-using classes.auxiliar;
-using classes.formulas;
-using classes.parser;
+using classes.auxiliar.formulas;
 
 namespace classes.testes
 {

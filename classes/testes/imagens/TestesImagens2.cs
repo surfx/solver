@@ -1,8 +1,5 @@
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using classes.auxiliar;
+using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
-using classes.formulas;
 using classes.parser;
 using classes.solverstage;
 
