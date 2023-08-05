@@ -38,12 +38,13 @@ namespace classes.regras.unitarias
                 else
                 {
                     // é a esquerda
-                    AtomoConector? esquerda = cf.AtomoConectorProp.ConectorProp.Esquerda;
+                    AtomoConector? esquerda = cf?.AtomoConectorProp?.ConectorProp?.Esquerda?.copy();
                     if (esquerda.isAtomo) { esquerda.AtomoProp.NumeroNegados -= 1; }
                     else if (esquerda.isConector) { esquerda.ConectorProp.NumeroNegados -= 1; }
-                    cf.AtomoConectorProp.ConectorProp.Esquerda = esquerda;
+                    Conector? conector = cf?.AtomoConectorProp.ConectorProp?.copy();
+                    conector.Esquerda = esquerda.copy();
 
-                    ac = new AtomoConector(cf.AtomoConectorProp.ConectorProp.copy());
+                    ac = new AtomoConector(conector.copy());
                 }
 
             }
@@ -63,11 +64,11 @@ namespace classes.regras.unitarias
         {
             // ser T, ser um conector
             if (!cf.Simbolo || cf.AtomoConectorProp == null || cf.AtomoConectorProp.ConectorProp == null) { return false; }
-            AtomoConector? ac = cf.AtomoConectorProp.ConectorProp.Esquerda;
+            AtomoConector? ac = cf?.AtomoConectorProp.ConectorProp?.Esquerda;
             if (ac == null) { return false; }
 
             // ter 1 negação pelo menos
-            return (ac.isAtomo && ac.AtomoProp.NumeroNegados > 0) || (ac.isConector && ac.ConectorProp.NumeroNegados > 0);
+            return (ac.isAtomo && ac.AtomoProp?.NumeroNegados > 0) || (ac.isConector && ac?.ConectorProp?.NumeroNegados > 0);
         }
 
     }

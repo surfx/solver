@@ -38,6 +38,7 @@ namespace classes.testes
             p(string.Format("{0}", parser.parserCF(UtilFormulas.sanitizar("B->(B & V)"))));
             p(string.Format("{0}", parser.parserCF(UtilFormulas.sanitizar("!A->!(T | !Y)"))));
             p(string.Format("{0}", parser.parserCF(UtilFormulas.sanitizar("F !!(B -> ( (G -> !(D ^ E)) ) -> ((!D | G) & C))"))));
+            p(string.Format("{0}", parser.parserCF("T (A | C -> E) | (!C | B & E)")));
         }
 
 

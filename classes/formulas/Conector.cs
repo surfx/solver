@@ -36,7 +36,7 @@ namespace classes.formulas
 
         public Conector copy()
         {
-            return new Conector(Simbolo, Esquerda, Direita, NumeroNegados);
+            return new Conector(Simbolo, Esquerda.copy(), Direita.copy(), NumeroNegados);
         }
 
         // não considero negado número par de negativas...

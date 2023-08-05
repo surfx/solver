@@ -29,10 +29,10 @@ namespace classes.formulas
 
         public AtomoConector copy()
         {
-            return new AtomoConector(ConectorProp, AtomoProp);
+            return new AtomoConector(ConectorProp == null ? null : ConectorProp.copy(), AtomoProp == null ? null : AtomoProp.copy());
         }
 
-        public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado ; }
+        public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado; }
 
         #endregion
 

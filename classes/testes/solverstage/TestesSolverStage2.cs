@@ -17,10 +17,10 @@ namespace classes.testes.solverstage
             Formulas f;
             f = getFormulas1();
             //f = getFormulas2();
-            f = getFormulas3();
+            // f = getFormulas3();
             //f = getFormulas4();
             //f = getFormulas5();
-            f = getFormulas6();
+            //f = getFormulas6();
 
             //p(f.ToString()); p(); p("");
 
@@ -28,6 +28,7 @@ namespace classes.testes.solverstage
             Util.print(sw);
             saveImg(f);
             f.Dispose();
+            stage.Dispose();
         }
 
 
@@ -37,12 +38,21 @@ namespace classes.testes.solverstage
             Formulas f = new Formulas();
 
             Parser parser = new Parser();
-            f.addConjuntoFormula(parser.parserCF("A->B"));
+            f.addConjuntoFormula(parser.parserCF("A->!B"));
             f.addConjuntoFormula(parser.parserCF("F C->E"));
             f.addConjuntoFormula(parser.parserCF("C"));
-            f.addConjuntoFormula(parser.parserCF("F A"));
-            //f.addConjuntoFormula(parser.parserCF("T (A | D) -> (C & D)"));
-            f.addConjuntoFormula(parser.parserCF("T (A | D)"));
+            f.addConjuntoFormula(parser.parserCF("T !A"));
+            f.addConjuntoFormula(parser.parserCF("F A ˅ B"));
+            f.addConjuntoFormula(parser.parserCF("T (A | D) -> (C & D)"));
+            f.addConjuntoFormula(parser.parserCF("T (A | C -> E) | (!C | B & E)"));
+            //f.addConjuntoFormula(parser.parserCF("(A | C)"));
+            f.addConjuntoFormula(parser.parserCF("T !E"));
+            //f.addConjuntoFormula(parser.parserCF("F !B"));
+            f.addConjuntoFormula(parser.parserCF("T B"));
+            f.addConjuntoFormula(parser.parserCF("F C & D"));
+            //f.addConjuntoFormula(parser.parserCF("F !!(B -> ( (G -> !(B -> E)) ) -> ((!D -> G) & A))"));
+
+            //f.addConjuntoFormula(parser.parserCF("F A | C"));
             return f;
         }
 

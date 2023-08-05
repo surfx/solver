@@ -40,12 +40,14 @@ namespace classes.regras.unitarias
                 else
                 {
                     // é a esquerda
-                    AtomoConector? esquerda = cf.AtomoConectorProp.ConectorProp.Esquerda;
+                    AtomoConector? esquerda = cf.AtomoConectorProp.ConectorProp.Esquerda.copy();
                     if (esquerda.isAtomo) { esquerda.AtomoProp.NumeroNegados -= 1; }
                     else if (esquerda.isConector) { esquerda.ConectorProp.NumeroNegados -= 1; }
-                    cf.AtomoConectorProp.ConectorProp.Esquerda = esquerda;
 
-                    ac = new AtomoConector(cf.AtomoConectorProp.ConectorProp.copy());
+                    Conector? conector = cf.AtomoConectorProp.ConectorProp.copy();
+                    conector.Esquerda = esquerda.copy();
+
+                    ac = new AtomoConector(conector.copy());
                 }
 
 

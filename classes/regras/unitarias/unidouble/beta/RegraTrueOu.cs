@@ -25,8 +25,8 @@ namespace classes.regras.unitarias.unidouble.beta
         public ConjuntoFormula[]? apply(ConjuntoFormula cf)
         {
             if (!isValid(cf)) { return null; }
-            ConjuntoFormula cfEsquerda = new ConjuntoFormula(true, cf.AtomoConectorProp.ConectorProp.Esquerda);
-            ConjuntoFormula cfDireita = new ConjuntoFormula(true, cf.AtomoConectorProp.ConectorProp.Direita);
+            ConjuntoFormula cfEsquerda = new ConjuntoFormula(true, cf.AtomoConectorProp.ConectorProp.Esquerda.copy());
+            ConjuntoFormula cfDireita = new ConjuntoFormula(true, cf.AtomoConectorProp.ConectorProp.Direita.copy());
             return new[] { cfEsquerda, cfDireita };
         }
 

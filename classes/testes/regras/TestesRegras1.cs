@@ -24,12 +24,10 @@ namespace classes.testes.regras
             IRegraUnaria rfn = new RegraFalseNegativo();
 
             ConjuntoFormula cf1 = new ConjuntoFormula(false, null, new Atomo("A", 1));
-
             apply(rfn, cf1);
             p();
 
             ConjuntoFormula cf2 = new ConjuntoFormula(true, null, new Atomo("C", 1));
-
             apply(rfn, cf2);
             p();
 
@@ -37,7 +35,6 @@ namespace classes.testes.regras
             apply(rfn, cf5);
             p();
             p("");
-
 
             Parser parser = new Parser();
             ConjuntoFormula cf6 = parser.parserCF("F !!!!!A");
@@ -330,7 +327,8 @@ namespace classes.testes.regras
         {
             Console.WriteLine(cf1);
             Console.WriteLine(string.Format("------ {0}", rUnaria.RULE));
-            Console.WriteLine(rUnaria.apply(cf1));
+            ConjuntoFormula? cfApply = rUnaria.apply(cf1);
+            Console.WriteLine(cfApply == null ? "null" : cfApply);
         }
 
         private void apply(IRegraUnariaDouble rUnariaDouble, ConjuntoFormula cf1)

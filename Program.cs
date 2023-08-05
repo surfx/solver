@@ -78,7 +78,6 @@ namespace ConsoleApp1
             //new TestesValoracoes().teste5();
 
             new TestesSolverStage2().teste1();
-
         }
     }
 }

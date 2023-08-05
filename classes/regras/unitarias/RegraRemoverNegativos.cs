@@ -25,16 +25,16 @@ namespace classes.regras.unitarias
         {
             if (!isValid(cf)) { return null; }
 
-            AtomoConector ac = null;
+            AtomoConector? ac = null;
             if (cf.AtomoConectorProp.isAtomo)
             {
-                ac = new AtomoConector(cf.AtomoConectorProp.AtomoProp.copy());
-                ac.AtomoProp.NumeroNegados = cf.AtomoConectorProp.AtomoProp.NumeroNegados % 2 == 0 ? 0 : 1;
+                ac = new AtomoConector(cf?.AtomoConectorProp.AtomoProp?.copy());
+                ac.AtomoProp.NumeroNegados = cf?.AtomoConectorProp?.AtomoProp?.NumeroNegados % 2 == 0 ? 0 : 1;
             }
             else if (cf.AtomoConectorProp.isConector)
             {
-                ac = new AtomoConector(cf.AtomoConectorProp.ConectorProp.copy());
-                ac.ConectorProp.NumeroNegados = cf.AtomoConectorProp.ConectorProp.NumeroNegados % 2 == 0 ? 0 : 1;
+                ac = new AtomoConector(cf?.AtomoConectorProp?.ConectorProp?.copy());
+                ac.ConectorProp.NumeroNegados = cf?.AtomoConectorProp?.ConectorProp?.NumeroNegados % 2 == 0 ? 0 : 1;
             }
 
             ac = apply(ac);

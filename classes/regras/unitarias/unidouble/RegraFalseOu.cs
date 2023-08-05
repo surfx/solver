@@ -30,8 +30,8 @@ namespace classes.regras.unitarias.unidouble
             Conector? conector = cf == null || cf.AtomoConectorProp == null ? null : cf.AtomoConectorProp.ConectorProp;
             if (conector == null || conector.Esquerda == null || conector.Direita == null) { return null; }
 
-            ConjuntoFormula cfEsquerda = new ConjuntoFormula(false, conector.Esquerda);
-            ConjuntoFormula cfDireita = new ConjuntoFormula(false, conector.Direita);
+            ConjuntoFormula cfEsquerda = new ConjuntoFormula(false, conector.Esquerda.copy());
+            ConjuntoFormula cfDireita = new ConjuntoFormula(false, conector.Direita.copy());
 
             return new[] { cfEsquerda, cfDireita };
         }
