@@ -25,7 +25,9 @@ namespace classes.solverstage
             List<ConjuntoFormula> conjuntoFormulas = formula.LConjuntoFormula ?? new();
             //if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
 
-            trySolve(conjuntoFormulas, formula);
+            List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
+            if (lts != null && lts.Count >= 0) { lts.Where(f => f != null && !formula.LConjuntoFormula.Contains(f)).ToList().ForEach(formula.LConjuntoFormula.Add); }
+            lts?.Clear();
 
             formula.updateFormulas(conjuntoFormulas);
 
@@ -126,12 +128,12 @@ namespace classes.solverstage
             if (formulasCandidatas.Count <= 0) { return; }
 
             // TODO: escolher a regra mais promissora - rever counts átomos, conectores, etc
-            ConjuntoFormula[]? pbReturn = null;
+            StRetornoRegras? pbReturn = null;
 
             foreach (ConjuntoFormula fc in formulasCandidatas)
             {
-                pbReturn = applyRuleBeta(fc);
-                if (pbReturn == null || pbReturn.Length != 2) { continue; }
+                pbReturn = applyRuleBeta(fc, conjuntoFormulas);
+                if (pbReturn == null) { continue; }
 
                 // adiciona a fórmula à lista de fórmulas já aplicadas
                 formulasJaAplicadas ??= new();
@@ -155,13 +157,13 @@ namespace classes.solverstage
             // não encontrou
             if (pbReturn == null) { return; }
 
-            formula.addEsquerda(pbReturn[0]);
-            formula.addDireita(pbReturn[1]);
+            formula.addEsquerda(pbReturn.Value.Esquerda);
+            formula.addDireita(pbReturn.Value.Direita);
 
             List<ConjuntoFormula> conjuntoFormulasEsquerda = new(), conjuntoFormulasDireita = new();
             conjuntoFormulas.ForEach(f => { conjuntoFormulasEsquerda.Add(f); conjuntoFormulasDireita.Add(f); });
-            conjuntoFormulasEsquerda.Add(pbReturn[0]);
-            conjuntoFormulasDireita.Add(pbReturn[1]);
+            conjuntoFormulasEsquerda.Add(pbReturn.Value.Esquerda);
+            conjuntoFormulasDireita.Add(pbReturn.Value.Direita);
 
             lts = trySolve(conjuntoFormulas, formula);
             if (lts != null && lts.Count >= 0) { lts.Where(f => f != null && !formula.LConjuntoFormula.Contains(f)).ToList().ForEach(formula.LConjuntoFormula.Add); }
@@ -172,6 +174,7 @@ namespace classes.solverstage
 
             applyBeta(conjuntoFormulasEsquerda, formula.Esquerda, formulasJaAplicadas);
             applyBeta(conjuntoFormulasDireita, formula.Direita, formulasJaAplicadas);
+            updateClosed(formula);
         }
 
         #region closed
@@ -220,10 +223,6 @@ namespace classes.solverstage
             }
 
             return formulas.Esquerda != null ? isClosedFormula(formulas.Esquerda) : isClosedFormula(formulas.Direita);
-
-            // if (formulas.Esquerda != null) { formulas.Esquerda.isClosed = isClosedFormula(formulas.Esquerda.Esquerda) && isClosedFormula(formulas.Esquerda.Direita); }
-            // if (formulas.Direita != null) { formulas.Direita.isClosed = isClosedFormula(formulas.Direita.Esquerda) && isClosedFormula(formulas.Direita.Direita); }
-            // return isClosedFormula(formulas.Esquerda) && isClosedFormula(formulas.Direita);
         }
 
         #region contradições
@@ -260,15 +259,21 @@ namespace classes.solverstage
             foreach (IRegraUnariaDouble rudb in _iListaRegras.RegrasUnariasDouble)
             {
                 if (!rudb.isValid(cf1)) { continue; }
-                ConjuntoFormula[]? lcfAux = rudb.apply(cf1);
-                if (lcfAux == null) { continue; }
-                bool continuar = false;
-                for (int k = 0; k < lcfAux.Length; k++) { if (conjuntoFormulas.Contains(lcfAux[k]) || (rt != null && rt.Contains(lcfAux[k]))) { continuar = true; break; } }
-                if (continuar) { continue; }
+                StRetornoRegras? stED = rudb.apply(cf1);
+                if (stED == null) { continue; }
+
+                // se tiver ambas as fórmulas na lista de conjuntoFormulas, deve continuar
+                // caso contrário, adiciona ao rt as fórmulas que não estão na lista conjuntoFormulas
+                if (conjuntoFormulas.Contains(stED.Value.Esquerda) && conjuntoFormulas.Contains(stED.Value.Direita))
+                {
+                    continue;
+                }
 
                 rt ??= new();
-                p(string.Format("unaria d: {0} ({1}): {2}, {3}", rudb.RULE, cf1, lcfAux[0], lcfAux[1]));
-                rt.AddRange(lcfAux);
+                p(string.Format("unaria d: {0} ({1}): {2}, {3}", rudb.RULE, cf1, stED.Value.Esquerda, stED.Value.Direita));
+                if (!conjuntoFormulas.Contains(stED.Value.Esquerda)) { rt.Add(stED.Value.Esquerda); }
+                if (!conjuntoFormulas.Contains(stED.Value.Direita)) { rt.Add(stED.Value.Direita); }
+                //rt.AddRange(lcfAux);
             }
         }
 
@@ -286,14 +291,18 @@ namespace classes.solverstage
             }
         }
 
-        private ConjuntoFormula[]? applyRuleBeta(ConjuntoFormula fc)
+        private StRetornoRegras? applyRuleBeta(ConjuntoFormula fc, List<ConjuntoFormula> conjuntoFormulas)
         {
             if (fc == null) { return null; }
             IRegraUnariaDouble? regraBeta = _iListaRegras.RegrasBeta?.FindAll(rb => rb != null && fc != null && rb.isValid(fc)).FirstOrDefault();
             if (regraBeta == null) { return null; }
-            ConjuntoFormula[]? rt = regraBeta.apply(fc);
+            StRetornoRegras? rt = regraBeta.apply(fc);
             if (rt == null) { return null; }
-            p(string.Format("beta: {0} ({1}): {2}, {3}", regraBeta.RULE, fc, rt[0], rt[1]));
+
+            // se alguma regra já existe no conjunto de conjuntoFormulas, retorna null, pois não há variação do conjunto de fórmulas base
+            if (conjuntoFormulas != null && (conjuntoFormulas.Contains(rt.Value.Esquerda) || conjuntoFormulas.Contains(rt.Value.Direita))) { return null; }
+
+            p(string.Format("beta: {0} ({1}): {2}", regraBeta.RULE, fc, rt.Value.ToString()));
             return rt;
         }
         #endregion

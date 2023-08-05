@@ -90,8 +90,8 @@ namespace classes.testes.regras
         {
             Console.WriteLine(cf1);
             Console.WriteLine(string.Format("------ {0}", rUnariaDouble.RULE));
-            ConjuntoFormula[]? cfs = rUnariaDouble.apply(cf1);
-            Console.WriteLine(cfs != null ? string.Join(", ", cfs.Select(x => x.ToString())) : "null");
+            StRetornoRegras? cfs = rUnariaDouble.apply(cf1);
+            Console.WriteLine(cfs != null ? cfs.ToString() : "null");
         }
 
         private void apply(IRegraBinaria rBinaria, ConjuntoFormula cf1, ConjuntoFormula cf2)

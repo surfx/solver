@@ -24,16 +24,16 @@ namespace classes.regras.unitarias.unidouble
             return cf.AtomoConectorProp.ConectorProp.Simbolo == ESimbolo.OU;
         }
 
-        public ConjuntoFormula[]? apply(ConjuntoFormula cf)
+        public StRetornoRegras? apply(ConjuntoFormula cf)
         {
             if (!isValid(cf)) { return null; }
             Conector? conector = cf == null || cf.AtomoConectorProp == null ? null : cf.AtomoConectorProp.ConectorProp;
             if (conector == null || conector.Esquerda == null || conector.Direita == null) { return null; }
 
-            ConjuntoFormula cfEsquerda = new ConjuntoFormula(false, conector.Esquerda.copy());
-            ConjuntoFormula cfDireita = new ConjuntoFormula(false, conector.Direita.copy());
+            ConjuntoFormula cfEsquerda = new(false, conector.Esquerda.copy());
+            ConjuntoFormula cfDireita = new(false, conector.Direita.copy());
 
-            return new[] { cfEsquerda, cfDireita };
+            return new(cfEsquerda, cfDireita);
         }
 
     }

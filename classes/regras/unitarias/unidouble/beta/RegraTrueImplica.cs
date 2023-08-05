@@ -22,12 +22,12 @@ namespace classes.regras.unitarias.unidouble.beta
 
         }
 
-        public ConjuntoFormula[]? apply(ConjuntoFormula cf)
+        public StRetornoRegras? apply(ConjuntoFormula cf)
         {
             if (!isValid(cf)) { return null; }
-            ConjuntoFormula cfEsquerda = new ConjuntoFormula(false, cf.AtomoConectorProp.ConectorProp.Esquerda.copy());
-            ConjuntoFormula cfDireita = new ConjuntoFormula(true, cf.AtomoConectorProp.ConectorProp.Direita.copy());
-            return new[] { cfEsquerda, cfDireita };
+            ConjuntoFormula cfEsquerda = new(false, cf.AtomoConectorProp?.ConectorProp?.Esquerda?.copy());
+            ConjuntoFormula cfDireita = new(true, cf.AtomoConectorProp?.ConectorProp?.Direita?.copy());
+            return new(cfEsquerda, cfDireita);
         }
 
     }
