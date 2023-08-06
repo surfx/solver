@@ -19,27 +19,16 @@ namespace classes.formulas
 
         public AtomoConector toAtomoConector()
         {
-            return new AtomoConector(this);
+            return new(this);
         }
 
         public Atomo copy()
         {
-            return new Atomo(Simbolo, NumeroNegados);
+            return new(Simbolo, NumeroNegados);
         }
 
         // não considero negado número par de negativas...
         public bool isNegado { get => NumeroNegados == 1 || NumeroNegados % 2 == 1; }
-
-        public int sizeStr()
-        {
-            //return this.Simbolo.Length + (NumeroNegados <= 0 ? 0 : NumeroNegados / 2);
-            return 1;
-        }
-
-        public int heightTree()
-        {
-            return 1;
-        }
         #endregion
 
         public override bool Equals(object? obj)
@@ -54,10 +43,7 @@ namespace classes.formulas
             return HashCode.Combine(Simbolo);
         }
 
-        public override string? ToString()
-        {
-            return string.Format("{0}{1}", NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(AuxiliarFormulas.SimboloNegado, NumeroNegados)) : "", Simbolo);
-        }
+        public override string? ToString() => string.Format("{0}{1}", NumeroNegados > 0 ? string.Concat(Enumerable.Repeat(AuxiliarFormulas.SimboloNegado, NumeroNegados)) : "", Simbolo);
 
     }
 }

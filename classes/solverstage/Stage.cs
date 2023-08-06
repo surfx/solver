@@ -26,7 +26,12 @@ namespace classes.solverstage
             //if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
 
             List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
-            if (lts != null && lts.Count >= 0) { lts.Where(f => f != null && !formula.LConjuntoFormula.Contains(f)).ToList().ForEach(formula.LConjuntoFormula.Add); }
+            if (lts != null && lts.Count >= 0)
+            {
+                lts.Where(f => f != null && formula.LConjuntoFormula != null && !formula.LConjuntoFormula.Contains(f))
+                    .ToList()
+                    .ForEach(formula.addConjuntoFormula);
+            }
             lts?.Clear();
 
             formula.updateFormulas(conjuntoFormulas);
@@ -109,7 +114,16 @@ namespace classes.solverstage
             if (formula == null || formula.isClosed) { return; }
 
             List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
-            if (lts != null && lts.Count >= 0) { lts.Where(f => f != null && !formula.LConjuntoFormula.Contains(f)).ToList().ForEach(formula.LConjuntoFormula.Add); }
+            if (lts != null && lts.Count >= 0)
+            {
+                lts.Where(
+                    f => f != null &&
+                    formula.LConjuntoFormula != null &&
+                    !formula.LConjuntoFormula.Contains(f)
+                )
+                .ToList()
+                .ForEach(formula.addConjuntoFormula);
+            }
             lts?.Clear();
             updateClosed(formula);
             if (formula.isClosed) { return; }
@@ -118,10 +132,10 @@ namespace classes.solverstage
             conjuntoFormulas ??= new();
 
             formula.LConjuntoFormula?.ForEach(f =>
-                {
-                    if (conjuntoFormulas.Contains(f)) { return; }
-                    conjuntoFormulas.Add(f);
-                });
+            {
+                if (conjuntoFormulas.Contains(f)) { return; }
+                conjuntoFormulas.Add(f);
+            });
 
             List<ConjuntoFormula> formulasCandidatas = formulasJaAplicadas == null || formulasJaAplicadas.Count <= 0 ? conjuntoFormulas :
                 conjuntoFormulas.FindAll(cf => cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.GetHashCode()));
@@ -139,23 +153,10 @@ namespace classes.solverstage
                 formulasJaAplicadas ??= new();
                 formulasJaAplicadas.Add(fc.GetHashCode());
                 break;
-
-                // // verifica se alguma fórmula já está no conjunto de fórmulas base
-                // if (!conjuntoFormulas.Contains(pbReturn[0]) || !conjuntoFormulas.Contains(pbReturn[1]))
-                // {
-                //     // add à lista de fórmulas já aplicadas
-                //     if (formulasJaAplicadas == null) { formulasJaAplicadas = new(); }
-                //     formulasJaAplicadas.Add(fc.GetHashCode());
-                //     formulasJaAplicadas.Add(pbReturn[0].GetHashCode());
-                //     formulasJaAplicadas.Add(pbReturn[1].GetHashCode());
-                //     break;
-                // }
-                // pbReturn = null;
             }
 
-
             // não encontrou
-            if (pbReturn == null) { return; }
+            if (pbReturn == null || pbReturn.Value.Esquerda == null || pbReturn.Value.Direita == null) { return; }
 
             formula.addEsquerda(pbReturn.Value.Esquerda);
             formula.addDireita(pbReturn.Value.Direita);
@@ -166,7 +167,16 @@ namespace classes.solverstage
             conjuntoFormulasDireita.Add(pbReturn.Value.Direita);
 
             lts = trySolve(conjuntoFormulas, formula);
-            if (lts != null && lts.Count >= 0) { lts.Where(f => f != null && !formula.LConjuntoFormula.Contains(f)).ToList().ForEach(formula.LConjuntoFormula.Add); }
+            if (lts != null && lts.Count >= 0)
+            {
+                lts.Where(
+                    f => f != null &&
+                    formula.LConjuntoFormula != null &&
+                    !formula.LConjuntoFormula.Contains(f)
+                )
+                .ToList()
+                .ForEach(formula.addConjuntoFormula);
+            }
             lts?.Clear();
             if (formula.isClosed) { return; }
             updateClosed(formula);
@@ -260,7 +270,7 @@ namespace classes.solverstage
             {
                 if (!rudb.isValid(cf1)) { continue; }
                 StRetornoRegras? stED = rudb.apply(cf1);
-                if (stED == null) { continue; }
+                if (stED == null || stED.Value.Esquerda == null || stED.Value.Direita == null) { continue; }
 
                 // se tiver ambas as fórmulas na lista de conjuntoFormulas, deve continuar
                 // caso contrário, adiciona ao rt as fórmulas que não estão na lista conjuntoFormulas
@@ -297,7 +307,7 @@ namespace classes.solverstage
             IRegraUnariaDouble? regraBeta = _iListaRegras.RegrasBeta?.FindAll(rb => rb != null && fc != null && rb.isValid(fc)).FirstOrDefault();
             if (regraBeta == null) { return null; }
             StRetornoRegras? rt = regraBeta.apply(fc);
-            if (rt == null) { return null; }
+            if (rt == null || rt.Value.Esquerda == null || rt.Value.Direita == null) { return null; }
 
             // se alguma regra já existe no conjunto de conjuntoFormulas, retorna null, pois não há variação do conjunto de fórmulas base
             if (conjuntoFormulas != null && (conjuntoFormulas.Contains(rt.Value.Esquerda) || conjuntoFormulas.Contains(rt.Value.Direita))) { return null; }

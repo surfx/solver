@@ -5,13 +5,13 @@ namespace classes.formulas
 {
     public class Conector : IConversor
     {
-        public ESimbolo Simbolo { get; set; }
+        public ESimbolo? Simbolo { get; set; }
         public AtomoConector? Esquerda { get; set; }
         public AtomoConector? Direita { get; set; }
         //public bool Negado { get; set; }
         public int NumeroNegados { get; set; }
 
-        public Conector(ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, int numeroNegados = 0)
+        public Conector(ESimbolo? simbolo, AtomoConector? esquerda, AtomoConector? direita, int numeroNegados = 0)
         {
             Simbolo = simbolo;
             Esquerda = esquerda;
@@ -19,11 +19,11 @@ namespace classes.formulas
             this.NumeroNegados = numeroNegados;
         }
 
-        public Conector(ESimbolo simbolo, IConversor esquerda, IConversor direita, int numeroNegados = 0)
+        public Conector(ESimbolo simbolo, IConversor? esquerda, IConversor? direita, int numeroNegados = 0)
         {
             Simbolo = simbolo;
-            Esquerda = esquerda == null ? null : esquerda.toAtomoConector();
-            Direita = direita == null ? null : direita.toAtomoConector();
+            Esquerda = esquerda?.toAtomoConector();
+            Direita = direita?.toAtomoConector();
             this.NumeroNegados = numeroNegados;
         }
 
@@ -31,12 +31,12 @@ namespace classes.formulas
 
         public AtomoConector toAtomoConector()
         {
-            return new AtomoConector(this);
+            return new(this);
         }
 
         public Conector copy()
         {
-            return new Conector(Simbolo, Esquerda.copy(), Direita.copy(), NumeroNegados);
+            return new(Simbolo, Esquerda?.copy(), Direita?.copy(), NumeroNegados);
         }
 
         // não considero negado número par de negativas...
@@ -49,8 +49,8 @@ namespace classes.formulas
             if (obj == null || obj is not Conector) { return false; }
             Conector o = (Conector)obj;
             return Simbolo == o.Simbolo &&
-                    (Esquerda != null && Esquerda.Equals(o.Esquerda)) &&
-                    (Direita != null && Direita.Equals(o.Direita)) &&
+                    Esquerda != null && Esquerda.Equals(o.Esquerda) &&
+                    Direita != null && Direita.Equals(o.Direita) &&
                     NumeroNegados == o.NumeroNegados;
         }
 

@@ -4,7 +4,7 @@ namespace classes.auxiliar.formulas
     {
 
         // Console.WriteLine(string.Join(" ", conectores)); ˄ ˅ →
-        private static string[] conectores = AuxiliarFormulas.getSimbolos(false);
+        private static readonly string[] conectores = AuxiliarFormulas.getSimbolos(false);
         private const string simboloNegado = AuxiliarFormulas.SimboloNegado;
 
         public static string sanitizar(string entrada)
@@ -39,7 +39,7 @@ namespace classes.auxiliar.formulas
         public static bool isParentesisOk(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return true; }
-            if (!entrada.Contains("(") && !entrada.Contains(")")) { return true; }
+            if (!entrada.Contains('(') && !entrada.Contains(')')) { return true; }
 
             // remover tudo que não seja parêntesis '(' e ')'
             string aux = "";

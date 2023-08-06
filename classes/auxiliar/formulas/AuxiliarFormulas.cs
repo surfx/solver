@@ -15,13 +15,13 @@ namespace classes.auxiliar.formulas
         public static string toSimbolo(ESimbolo? simbolo)
         {
             if (simbolo == null) { return string.Empty; }
-            switch (simbolo)
+            return simbolo switch
             {
-                case ESimbolo.E: return SimboloE;
-                case ESimbolo.OU: return SimboloOu;
-                case ESimbolo.IMPLICA: return SimboloImplica;
-            }
-            return string.Empty;
+                ESimbolo.E => SimboloE,
+                ESimbolo.OU => SimboloOu,
+                ESimbolo.IMPLICA => SimboloImplica,
+                _ => string.Empty,
+            };
         }
 
         public static ESimbolo? toSimbolo(string simbolo)

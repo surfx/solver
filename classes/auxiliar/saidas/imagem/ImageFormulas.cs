@@ -6,7 +6,7 @@ namespace classes.auxiliar.saidas.print
 {
     public class ImageFormulas
     {
-        private PFormulasToImage.PFormulasToImageBuilder _pformulas2ImgB;
+        private readonly PFormulasToImage.PFormulasToImageBuilder _pformulas2ImgB;
 
         private const string DotSimbol = "○";
 
@@ -35,19 +35,22 @@ namespace classes.auxiliar.saidas.print
             //incrementoX = 0; incrementY = 0;
 
             Dictionary<int, List<Quadro>>? dicQ = dicQuadrosLevel(qTree, 0);
-            analiseHeight(dicQ, pformulas2Img.EspacamentoDivisorY);
+            if (dicQ != null) { analiseHeight(dicQ, pformulas2Img.EspacamentoDivisorY); }
             //foreach (KeyValuePair<int, List<Quadro>> par in dicQ) { string fStr = string.Join(",", par.Value); p(string.Format("level: {0} {1}", par.Key, fStr)); } p(); p("");
 
             //posOrder(q); p(); p("");
 
-            List<Quadro> lquadros = plainQuadros(qTree);
-            tratarXQuadros(lquadros, 0.0f);
-            ajustarQuadradosXY(qTree, lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY); // ajusta o X e Y para a tree Quadros
+            List<Quadro>? lquadros = plainQuadros(qTree);
+            if (lquadros != null)
+            {
+                tratarXQuadros(lquadros, 0.0f);
+                ajustarQuadradosXY(qTree, lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY); // ajusta o X e Y para a tree Quadros
 
-            //lquadros.ForEach(q => p(string.Format("{0} / {1}", q.ToString(), q.Rnd))); p(); p("");
+                //lquadros.ForEach(q => p(string.Format("{0} / {1}", q.ToString(), q.Rnd))); p(); p("");
+            }
 
-            Size wh = getImageWidthHeight(lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY);
-
+            Size? wh = getImageWidthHeight(lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY);
+            if (wh == null) { return; }
             drawImg(g =>
             {
                 //lquadros.ForEach(q => { drawQuadros(g, q, false); });
@@ -55,7 +58,7 @@ namespace classes.auxiliar.saidas.print
                 if (pformulas2Img.DivisoriaArvore) { drawDivisoriasArvore(g, qTree); } else { drawDivisorias(g, qTree); }
                 if (pformulas2Img.DrawSquare) { drawQuadroArroundFormulas(g, qTree, lquadros, pformulas2Img.IncrementX, pformulas2Img.IncrementY); }
 
-            }, wh.Width, wh.Height, pformulas2Img.PathImgSaida);
+            }, wh.Value.Width, wh.Value.Height, pformulas2Img.PathImgSaida);
         }
 
 
@@ -69,8 +72,9 @@ namespace classes.auxiliar.saidas.print
             return rt;
         }
 
-        private Size getImageWidthHeight(List<Quadro> lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
+        private Size? getImageWidthHeight(List<Quadro>? lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
         {
+            if (lquadros == null) { return null; }
             Quadro? lastQuadroLeft = lquadros[0];
 
             float x1 = incrementoX;
@@ -82,7 +86,7 @@ namespace classes.auxiliar.saidas.print
         }
 
 
-        private void drawQuadroArroundFormulas(Graphics g, Quadro? qTree, List<Quadro> lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
+        private void drawQuadroArroundFormulas(Graphics g, Quadro? qTree, List<Quadro>? lquadros, float incrementoX = 0.0f, float incrementY = 0.0f)
         {
             if (g == null || qTree == null || lquadros == null || lquadros.Count <= 0) { return; }
             Quadro? lastQuadroLeft = lquadros[0];
@@ -92,7 +96,7 @@ namespace classes.auxiliar.saidas.print
             float x2 = ((lastQuadroLeft != null && lastQuadroLeft.XY.HasValue ? lastQuadroLeft?.XY.Value.X : 0.0f) ?? 0.0f) + (lquadros.Sum(q => q.Width)) + x1;
             float y2 = lquadros.Max(q => q.XY != null && q.XY.HasValue ? q.XY.Value.Y : 0.0f) + ((lastQuadroLeft == null ? 0.0f : lastQuadroLeft?.Height) ?? 0.0f) + incrementY;
 
-            using (Pen blackPen = new Pen(Color.Black, 1))
+            using (Pen blackPen = new(Color.Black, 1))
             {
                 g.DrawLine(blackPen, new PointF(x1, y1), new PointF(x2, y1)); // linha de cima
                 g.DrawLine(blackPen, new PointF(x1, y1), new PointF(x1, y2)); // lateral esquerda
@@ -109,12 +113,12 @@ namespace classes.auxiliar.saidas.print
             if (g == null || q == null) { return; }
             PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
-            using (Pen blackPen = new Pen(Color.Black, 1.5f))
+            using (Pen blackPen = new(Color.Black, 1.5f))
             {
                 if (q.Esquerda != null && q.Direita != null)
                 {
-                    PointF pf1 = new PointF(q.Esquerda.XY.Value.X, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
-                    PointF pf2 = new PointF(q.Direita.XY.Value.X + q.Direita.Width, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                    PointF pf1 = new(q.Esquerda.XY.Value.X, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                    PointF pf2 = new(q.Direita.XY.Value.X + q.Direita.Width, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
                     g.DrawLine(blackPen, pf1, pf2);
 
                     // p(string.Format("q: {0}, q.Esquerda: {1}, q.Direita: {2}", q, q.Esquerda, q.Direita));
@@ -123,16 +127,16 @@ namespace classes.auxiliar.saidas.print
                 {
                     if (q.Esquerda != null)
                     {
-                        PointF pf1 = new PointF(q.Esquerda.XY.Value.X, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
-                        PointF pf2 = new PointF(q.XY.Value.X + q.Width, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                        PointF pf1 = new(q.Esquerda.XY.Value.X, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                        PointF pf2 = new(q.XY.Value.X + q.Width, q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
                         g.DrawLine(blackPen, pf1, pf2);
 
                         //p(string.Format("{0}, {1}, q.Direita: {2}, q: {3}", pf1, pf2, q.Direita, q));
                     }
                     else if (q.Direita != null)
                     {
-                        PointF pf1 = new PointF(q.XY.Value.X, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
-                        PointF pf2 = new PointF(q.Direita.XY.Value.X + q.Direita.Width, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                        PointF pf1 = new(q.XY.Value.X, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                        PointF pf2 = new(q.Direita.XY.Value.X + q.Direita.Width, q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
                         g.DrawLine(blackPen, pf1, pf2);
 
                         //p(string.Format("{0}, {1}, q.Direita: {2}, q: {3}", pf1, pf2, q.Direita, q));
@@ -151,12 +155,12 @@ namespace classes.auxiliar.saidas.print
             if (q.Esquerda == null && q.Direita == null) { return; }
             PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
-            using (Pen blackPen = new Pen(Color.Black, 1.0f))
+            using (Pen blackPen = new(Color.Black, 1.0f))
             {
                 if (q.Esquerda != null)
                 {
-                    PointF pf1 = new PointF(q.Esquerda.XY.Value.X + (q.Esquerda.Width / 2.0f), q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
-                    PointF pf2 = new PointF(q.XY.Value.X + (q.Width / 2.0f), q.XY.Value.Y + q.Height + pformulas2Img.HChar * 0.23f);
+                    PointF pf1 = new(q.Esquerda.XY.Value.X + (q.Esquerda.Width / 2.0f), q.Esquerda.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                    PointF pf2 = new(q.XY.Value.X + (q.Width / 2.0f), q.XY.Value.Y + q.Height + pformulas2Img.HChar * 0.23f);
                     g.DrawLine(blackPen, pf1, pf2);
 
                     drawDivisoriasArvore(g, q.Esquerda);
@@ -164,8 +168,8 @@ namespace classes.auxiliar.saidas.print
 
                 if (q.Direita != null)
                 {
-                    PointF pf1 = new PointF(q.Direita.XY.Value.X + (q.Direita.Width / 2.0f), q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
-                    PointF pf2 = new PointF(q.XY.Value.X + (q.Width / 2.0f), q.XY.Value.Y + q.Height + pformulas2Img.HChar * 0.23f);
+                    PointF pf1 = new(q.Direita.XY.Value.X + (q.Direita.Width / 2.0f), q.Direita.XY.Value.Y - pformulas2Img.HChar * 0.5f);
+                    PointF pf2 = new(q.XY.Value.X + (q.Width / 2.0f), q.XY.Value.Y + q.Height + pformulas2Img.HChar * 0.23f);
                     g.DrawLine(blackPen, pf1, pf2);
 
                     drawDivisoriasArvore(g, q.Direita);
@@ -269,7 +273,7 @@ namespace classes.auxiliar.saidas.print
         private Dictionary<int, List<Quadro>>? dicQuadrosLevel(Quadro q, int level = 0)
         {
             if (q == null) { return null; }
-            Dictionary<int, List<Quadro>> rt = new Dictionary<int, List<Quadro>>();
+            Dictionary<int, List<Quadro>> rt = new();
             List<Quadro> laux = rt.ContainsKey(level) ? rt[level] : new();
             laux.Add(q);
             rt.Remove(level);
@@ -312,7 +316,7 @@ namespace classes.auxiliar.saidas.print
         private List<Quadro>? plainQuadros(Quadro q)
         {
             if (q == null) { return null; }
-            List<Quadro>? aux = null;
+            List<Quadro>? aux;
             List<Quadro> rt = new();
             if (q.Esquerda != null)
             {
@@ -337,7 +341,7 @@ namespace classes.auxiliar.saidas.print
         private class Quadro
         {
             public PointF? XY { get; set; }
-            public List<string> formulas { get; set; }
+            public List<string>? formulas { get; set; }
 
             public float Width { get; set; }
             public float Height { get; set; }
@@ -369,7 +373,8 @@ namespace classes.auxiliar.saidas.print
                 {
                     _pformulas2Img.Formulas.LConjuntoFormula.ForEach(cf =>
                     {
-                        formulas.Add(_pformulas2Img.PrintDotTreeMode ?
+                        formulas.Add(
+                            _pformulas2Img.PrintDotTreeMode ?
                             DotSimbol :
                             (_pformulas2Img.PrintFormulaNumber && cf.NumeroFormula >= 0 ? string.Format("{0} {1}", cf.NumeroFormula, cf.ToString()) : cf.ToString())
                         );
@@ -438,7 +443,7 @@ namespace classes.auxiliar.saidas.print
 
             public override string ToString()
             {
-                string fStr = string.Join(",", formulas);
+                string fStr = formulas == null ? "" : string.Join(",", formulas);
                 return string.Format("[X: {0:0.00} Y: {1:0.00}][W: {2:0.00} H: {3:0.00}] {4}", XY != null && XY.HasValue ? XY.Value.X : 0, XY != null && XY.HasValue ? XY.Value.Y : 0, Width, Height, fStr);
             }
         }
@@ -449,7 +454,7 @@ namespace classes.auxiliar.saidas.print
             if (g == null || q == null) { return; }
             PFormulasToImage pformulas2Img = _pformulas2ImgB.Build();
 
-            List<string> formulas = q.formulas;
+            List<string>? formulas = q.formulas;
 
             incrementoX += q.XY == null || !q.XY.HasValue ? 0.0f : q.XY.Value.X;
             incrementY += q.XY == null || !q.XY.HasValue ? 0.0f : q.XY.Value.Y;
@@ -475,7 +480,7 @@ namespace classes.auxiliar.saidas.print
             PointF pTextoDefault = new(incrementoX, incrementY);
 
             Font fonte = pformulas2Img.Fonte ?? new("Consolas", 10, FontStyle.Regular);
-            formulas.ForEach(formula =>
+            formulas?.ForEach(formula =>
             {
                 if (formula == null || string.IsNullOrEmpty(formula)) { return; }
                 Brush brush = Brushes.Black;

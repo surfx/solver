@@ -28,7 +28,7 @@ namespace classes.testes
             // f.addConjuntoFormula(parser.parserCF("F A"));
 
             // #--------------------- ANÁLISE --------------------
-            PrintFormulasOld pf = new PrintFormulasOld();
+            PrintFormulasOld pf = new();
 
             int heighttree = heightTree(f);
             int maxElements = (int)Math.Pow(2, heighttree - 1);

@@ -27,7 +27,7 @@ namespace classes.auxiliar.saidas.print
 
         public class PFormulasToImageBuilder
         {
-            private PFormulasToImage _pFormulasToImage = new PFormulasToImage();
+            private PFormulasToImage _pFormulasToImage = new();
 
             private PFormulasToImageBuilder(Formulas formulas, float hchar = 15.0f, float wchar = 7.55f)
             {
@@ -83,7 +83,7 @@ namespace classes.auxiliar.saidas.print
                 _pFormulasToImage.DivisoriaArvore = false;
                 return this;
             }
-                   
+
 
             public PFormulasToImageBuilder copy()
             {

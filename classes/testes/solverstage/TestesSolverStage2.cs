@@ -35,9 +35,9 @@ namespace classes.testes.solverstage
         #region get formulas
         private Formulas getFormulas1()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             // f.addConjuntoFormula(parser.parserCF("A->!B"));
             // f.addConjuntoFormula(parser.parserCF("F C->E"));
             // f.addConjuntoFormula(parser.parserCF("C"));
@@ -160,9 +160,9 @@ namespace classes.testes.solverstage
 
         private Formulas getFormulas2()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("! (A->B)"));
             f.addConjuntoFormula(parser.parserCF("T A ˅ B"));
             f.addConjuntoFormula(parser.parserCF("F A"));
@@ -171,9 +171,9 @@ namespace classes.testes.solverstage
 
         private Formulas getFormulas3()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("T (A | B)"));
             f.addConjuntoFormula(parser.parserCF("F (D & B) -> C"));
             return f;
@@ -181,9 +181,9 @@ namespace classes.testes.solverstage
 
         private Formulas getFormulas4()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("T (A | B)"));
             f.addConjuntoFormula(parser.parserCF("T !A"));
             return f;
@@ -191,9 +191,9 @@ namespace classes.testes.solverstage
 
         private Formulas getFormulas5()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("T A"));
             f.addConjuntoFormula(parser.parserCF("T A -> B"));
             f.addConjuntoFormula(parser.parserCF("F B"));
@@ -202,9 +202,9 @@ namespace classes.testes.solverstage
 
         private Formulas getFormulas6()
         {
-            Formulas f = new Formulas();
+            Formulas f = new();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             f.addConjuntoFormula(parser.parserCF("F (p -> (q -> r) -> ( (p -> q) -> (p -> r) ))"));
             f.addConjuntoFormula(parser.parserCF("T p -> (q -> r)"));
             f.addConjuntoFormula(parser.parserCF("F (p -> q) -> (p -> r)"));

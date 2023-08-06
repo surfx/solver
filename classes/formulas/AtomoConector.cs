@@ -29,10 +29,10 @@ namespace classes.formulas
 
         public AtomoConector copy()
         {
-            return new AtomoConector(ConectorProp == null ? null : ConectorProp.copy(), AtomoProp == null ? null : AtomoProp.copy());
+            return new(ConectorProp?.copy(), AtomoProp?.copy());
         }
 
-        public bool isNegado { get => isConector ? ConectorProp.isNegado : AtomoProp.isNegado; }
+        public bool isNegado => isConector ? ConectorProp.isNegado : AtomoProp.isNegado;
 
         #endregion
 
@@ -40,7 +40,7 @@ namespace classes.formulas
         {
             if (obj == null || obj is not AtomoConector) { return false; }
             AtomoConector o = (AtomoConector)obj;
-            return isConector ? ConectorProp.Equals(o.ConectorProp) : AtomoProp.Equals(o.AtomoProp);
+            return isConector ? ConectorProp != null && ConectorProp.Equals(o.ConectorProp) : AtomoProp != null && AtomoProp.Equals(o.AtomoProp);
         }
 
         public override int GetHashCode()

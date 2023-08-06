@@ -134,15 +134,14 @@ namespace classes.parser
             if (list == null || list.Count <= 1) { return list; }
             list = removerParentesisDuplos(list);
 
-            List<int> remover = new List<int>();
+            List<int> remover = new();
             int size = list.Count;
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i] == null || !isNegacao(list[i])) { continue; }
 
                 int numeroNegacoes = 1;
-                List<int> removerAux = new List<int>();
-                removerAux.Add(i);
+                List<int> removerAux = new() { i };
                 while ((i + 1) < size && isNegacao(list[i + 1]))
                 {
                     numeroNegacoes++;
@@ -179,19 +178,19 @@ namespace classes.parser
             return remover.Count > 0 ? tratarNegacoes(list) : list;
         }
 
-        private List<ItemList> unirAtomoConector(string entrada)
+        private List<ItemList>? unirAtomoConector(string entrada)
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return null; }
             return unirAtomoConector(toList(entrada));
         }
 
-        private List<ItemList> unirAtomoConector(List<ItemList> list)
+        private List<ItemList>? unirAtomoConector(List<ItemList>? list)
         {
             if (list == null || list.Count <= 1) { return list; }
             list = removerParentesisDuplos(list);
             list = tratarNegacoes(list);
 
-            List<int> remover = new List<int>();
+            List<int> remover = new();
             int size = list.Count;
             for (int i = 0; i < list.Count; i++)
             {
@@ -202,12 +201,12 @@ namespace classes.parser
                 remover.Add(i);
                 remover.Add(i + 1);
 
-                AtomoConector item1 = list[i].AtomoConectorProp;
-                ESimbolo simbolo = (ESimbolo)list[i + 1].Simbolo;
-                AtomoConector item3 = list[i + 2].AtomoConectorProp.copy();
+                AtomoConector? item1 = list[i].AtomoConectorProp;
+                ESimbolo? simbolo = list[i + 1].Simbolo;
+                AtomoConector? item3 = list[i + 2].AtomoConectorProp?.copy();
 
-                Conector conector = new Conector(simbolo, item1, item3);
-                list[i + 2].AtomoConectorProp = new AtomoConector(conector);
+                Conector conector = new(simbolo, item1, item3);
+                list[i + 2].AtomoConectorProp = new(conector);
 
             }
 

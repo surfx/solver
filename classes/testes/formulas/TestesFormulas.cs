@@ -15,7 +15,7 @@ namespace classes.testes.formulas
             p(f1.ToString());
             p(); p("");
 
-            Formulas f2 = new Formulas();
+            Formulas f2 = new();
             f2.addConjuntoFormula(parser.parserCF("F R"));
             f2.addDireita(parser.parserCF("A"));
             f2.addEsquerda(parser.parserCF("B"));

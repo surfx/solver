@@ -16,47 +16,47 @@ namespace classes.testes
 
         public void teste2()
         {
-            Tree treeR = new Tree("R");
-            Tree treeA = new Tree("A");
-            Tree treeB = new Tree("B");
+            Tree treeR = new("R");
+            Tree treeA = new("A");
+            Tree treeB = new("B");
 
             treeR.Esquerda = treeA;
             treeR.Direita = treeB;
 
             //-- A
-            Tree treeA1 = new Tree("A1");
-            Tree treeA2 = new Tree("A2");
+            Tree treeA1 = new("A1");
+            Tree treeA2 = new("A2");
 
             treeA.Esquerda = treeA1;
             treeA.Direita = treeA2;
 
-            Tree treeA11 = new Tree("A11");
-            Tree treeA12 = new Tree("A12");
+            Tree treeA11 = new("A11");
+            Tree treeA12 = new("A12");
 
             treeA1.Esquerda = treeA11;
             treeA1.Direita = treeA12;
 
-            Tree treeA21 = new Tree("A21");
-            Tree treeA22 = new Tree("A22");
+            Tree treeA21 = new("A21");
+            Tree treeA22 = new("A22");
 
             treeA2.Esquerda = treeA21;
             treeA2.Direita = treeA22;
 
             //-- B
-            Tree treeB1 = new Tree("B1");
-            Tree treeB2 = new Tree("B2");
+            Tree treeB1 = new("B1");
+            Tree treeB2 = new("B2");
 
             treeB.Esquerda = treeB1;
             treeB.Direita = treeB2;
 
-            Tree treeB11 = new Tree("B11");
-            Tree treeB12 = new Tree("B12");
+            Tree treeB11 = new("B11");
+            Tree treeB12 = new("B12");
 
             treeB1.Esquerda = treeB11;
             treeB1.Direita = treeB12;
 
-            Tree treeB21 = new Tree("B21sdfasdf");
-            Tree treeB22 = new Tree("B22");
+            Tree treeB21 = new("B21sdfasdf");
+            Tree treeB22 = new("B22");
 
             treeB2.Esquerda = treeB21;
             treeB2.Direita = treeB22;
@@ -191,7 +191,7 @@ namespace classes.testes
             }
             #endregion
 
-            StringBuilder rt = new StringBuilder();
+            StringBuilder rt = new();
             for (int i = 0; i < numLevels; i++)
             {
                 for (int j = 0; j < numeroMaximo; j++)
@@ -218,8 +218,8 @@ namespace classes.testes
             int nAux = level <= 1 ? maxElements : maxElements / level;
             int posMap = level == 0 ? nAux : nAux / 2 + pos * nAux;
 
-            Dictionary<int, Dictionary<int, PosElement<Tree>>> rt = new Dictionary<int, Dictionary<int, PosElement<Tree>>>();
-            Dictionary<int, PosElement<Tree>> aux = rt.ContainsKey(level) ? rt[level] : new Dictionary<int, PosElement<Tree>>();
+            Dictionary<int, Dictionary<int, PosElement<Tree>>> rt = new();
+            Dictionary<int, PosElement<Tree>> aux = rt.ContainsKey(level) ? rt[level] : new();
             aux.Add(pos, new PosElement<Tree>(t, posMap));
             rt.Add(level, aux);
 
@@ -242,7 +242,7 @@ namespace classes.testes
 
             foreach (KeyValuePair<int, Dictionary<int, T>> kvp in auxRt)
             {
-                Dictionary<int, T> aux = rt.ContainsKey(kvp.Key) ? rt[kvp.Key] : new Dictionary<int, T>();
+                Dictionary<int, T> aux = rt.ContainsKey(kvp.Key) ? rt[kvp.Key] : new();
                 foreach (KeyValuePair<int, T> kvp2 in kvp.Value)
                 {
                     aux.Add(kvp2.Key, kvp2.Value);

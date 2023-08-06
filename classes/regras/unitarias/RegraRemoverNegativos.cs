@@ -8,6 +8,7 @@ namespace classes.regras.unitarias
         T (¬¬¬(A → ¬¬¬B)) ˄ (¬(C ˅ ¬¬F))
         T (¬(A → ¬B)) ˄ (¬(C ˅ F))
     */
+    [Obsolete, System.Reflection.Obfuscation]
     public class RegraRemoverNegativos : IRegraUnaria
     {
         public string RULE { get => "¬¬¬ : ¬"; }
@@ -26,19 +27,19 @@ namespace classes.regras.unitarias
             if (!isValid(cf)) { return null; }
 
             AtomoConector? ac = null;
-            if (cf.AtomoConectorProp.isAtomo)
+            if (cf?.AtomoConectorProp?.isAtomo ?? false)
             {
                 ac = new AtomoConector(cf?.AtomoConectorProp.AtomoProp?.copy());
-                ac.AtomoProp.NumeroNegados = cf?.AtomoConectorProp?.AtomoProp?.NumeroNegados % 2 == 0 ? 0 : 1;
+                if (ac != null && ac.AtomoProp != null) { ac.AtomoProp.NumeroNegados = cf?.AtomoConectorProp?.AtomoProp?.NumeroNegados % 2 == 0 ? 0 : 1; }
             }
-            else if (cf.AtomoConectorProp.isConector)
+            else if (cf?.AtomoConectorProp?.isConector ?? false)
             {
                 ac = new AtomoConector(cf?.AtomoConectorProp?.ConectorProp?.copy());
-                ac.ConectorProp.NumeroNegados = cf?.AtomoConectorProp?.ConectorProp?.NumeroNegados % 2 == 0 ? 0 : 1;
+                if (ac != null && ac.ConectorProp != null) { ac.ConectorProp.NumeroNegados = cf?.AtomoConectorProp?.ConectorProp?.NumeroNegados % 2 == 0 ? 0 : 1; }
             }
 
-            ac = apply(ac);
-            return new ConjuntoFormula(cf.Simbolo, ac);
+            ac = ac == null ? null : apply(ac);
+            return new(cf != null && cf.Simbolo, ac);
         }
 
         #region auxiliar
@@ -51,23 +52,25 @@ namespace classes.regras.unitarias
             return ac.ConectorProp.NumeroNegados >= 2 || isValid(ac.ConectorProp.Esquerda) || isValid(ac.ConectorProp.Direita);
         }
 
-        private AtomoConector? apply(AtomoConector ac)
+        private AtomoConector? apply(AtomoConector? ac)
         {
-            // 
             if (ac == null || !isValid(ac)) { return ac; }
 
-            AtomoConector acAux = null;
+            AtomoConector? acAux = null;
             if (ac.isAtomo)
             {
-                acAux = new AtomoConector(ac.AtomoProp.copy());
-                acAux.AtomoProp.NumeroNegados = ac.AtomoProp.NumeroNegados % 2 == 0 ? 0 : 1;
+                acAux = new(ac?.AtomoProp?.copy());
+                if (acAux.AtomoProp != null) { acAux.AtomoProp.NumeroNegados = ac?.AtomoProp?.NumeroNegados % 2 == 0 ? 0 : 1; }
             }
             else if (ac.isConector)
             {
-                acAux = new AtomoConector(ac.ConectorProp.copy());
-                acAux.ConectorProp.NumeroNegados = ac.ConectorProp.NumeroNegados % 2 == 0 ? 0 : 1;
-                acAux.ConectorProp.Esquerda = apply(acAux.ConectorProp.Esquerda);
-                acAux.ConectorProp.Direita = apply(acAux.ConectorProp.Direita);
+                acAux = new(ac?.ConectorProp?.copy());
+                if (acAux != null && acAux.ConectorProp != null)
+                {
+                    acAux.ConectorProp.NumeroNegados = ac?.ConectorProp?.NumeroNegados % 2 == 0 ? 0 : 1;
+                    acAux.ConectorProp.Esquerda = apply(acAux?.ConectorProp?.Esquerda);
+                    acAux.ConectorProp.Direita = apply(acAux?.ConectorProp?.Direita);
+                }
             }
             return acAux;
         }

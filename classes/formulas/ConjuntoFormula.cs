@@ -10,7 +10,7 @@ namespace classes.formulas
         public ConjuntoFormula(bool simbolo = true, AtomoConector? atomoConector = null, IConversor? conversor = null, int numeroFormula = -1)
         {
             Simbolo = simbolo;
-            AtomoConectorProp = atomoConector != null ? atomoConector : (conversor == null ? null : conversor.toAtomoConector());
+            AtomoConectorProp = atomoConector ?? conversor?.toAtomoConector();
             NumeroFormula = numeroFormula;
         }
 
@@ -22,10 +22,10 @@ namespace classes.formulas
             return numeroConectoresAux(AtomoConectorProp);
         }
 
-        private int numeroConectoresAux(AtomoConector ac)
+        private int numeroConectoresAux(AtomoConector? ac)
         {
             if (ac == null || ac.isAtomo) { return 0; }
-            return 1 + numeroConectoresAux(ac.ConectorProp.Esquerda) + numeroConectoresAux(ac.ConectorProp.Direita);
+            return 1 + numeroConectoresAux(ac.ConectorProp?.Esquerda) + numeroConectoresAux(ac.ConectorProp?.Direita);
         }
 
         #endregion

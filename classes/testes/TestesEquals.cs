@@ -17,12 +17,12 @@ namespace classes.testes
             comparar("a1neg", "a1", a1neg, a1);
             p();
 
-            Conector c1 = new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), 1);          // ¬(a1 ˄ ¬a1)
-            Conector c2 = new Conector(ESimbolo.OU, a1.copy(), a1neg.copy(), 1);         // ¬(a1 v ¬a1)
-            Conector c3 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
-            Conector c4 = new Conector(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
-            Conector c5 = new Conector(ESimbolo.OU, c1.copy(), c2.copy(), 1);            // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
-            Conector c6 = new Conector(ESimbolo.OU, c1.copy(), new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), 1), 1);  // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
+            Conector c1 = new(ESimbolo.E, a1.copy(), a1neg.copy(), 1);          // ¬(a1 ˄ ¬a1)
+            Conector c2 = new(ESimbolo.OU, a1.copy(), a1neg.copy(), 1);         // ¬(a1 v ¬a1)
+            Conector c3 = new(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
+            Conector c4 = new(ESimbolo.IMPLICA, a1neg.copy(), a1.copy(), 1);    // ¬(¬a1 → a1)
+            Conector c5 = new(ESimbolo.OU, c1.copy(), c2.copy(), 1);            // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
+            Conector c6 = new(ESimbolo.OU, c1.copy(), new Conector(ESimbolo.E, a1.copy(), a1neg.copy(), 1), 1);  // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
             comparar("c1", "c2", c1, c2);
             comparar("c3", "c1", c3, c1);
             comparar("c3", "c4", c3, c4);
@@ -32,14 +32,14 @@ namespace classes.testes
             comparar("c1", "c6", c1, c6);
             p();
 
-            AtomoConector ac1 = new AtomoConector(a1.copy());       // a1
-            AtomoConector ac2 = new AtomoConector(a1neg.copy());    // ¬a1
-            AtomoConector ac3 = new AtomoConector(c1.copy());       // ¬(a1 ˄ ¬a1)
-            AtomoConector ac4 = new AtomoConector(c2.copy());       // ¬(a1 v ¬a1)
-            AtomoConector ac5 = new AtomoConector(c3.copy());       // ¬(¬a1 → a1)
-            AtomoConector ac6 = new AtomoConector(c5.copy());       // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
-            AtomoConector ac7 = new AtomoConector(c6.copy());       // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
-            
+            AtomoConector ac1 = new(a1.copy());       // a1
+            AtomoConector ac2 = new(a1neg.copy());    // ¬a1
+            AtomoConector ac3 = new(c1.copy());       // ¬(a1 ˄ ¬a1)
+            AtomoConector ac4 = new(c2.copy());       // ¬(a1 v ¬a1)
+            AtomoConector ac5 = new(c3.copy());       // ¬(¬a1 → a1)
+            AtomoConector ac6 = new(c5.copy());       // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 v ¬a1)))
+            AtomoConector ac7 = new(c6.copy());       // ¬((¬(a1 ˄ ¬a1)) v (¬(a1 ˄ ¬a1)))
+
             comparar("ac1", "ac1", ac1, ac1);
             comparar("ac2", "ac1", ac2, ac1);
             comparar("ac2", "ac3", ac2, ac3);
@@ -57,13 +57,13 @@ namespace classes.testes
             // AtomoConector
             // ConjuntoFormula
 
-            ConjuntoFormula cf1 = new ConjuntoFormula(true, ac1.copy());
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, ac2.copy());
-            ConjuntoFormula cf3 = new ConjuntoFormula(true, ac3.copy());
-            ConjuntoFormula cf4 = new ConjuntoFormula(true, ac4.copy());
-            ConjuntoFormula cf5 = new ConjuntoFormula(true, ac5.copy());
-            ConjuntoFormula cf6 = new ConjuntoFormula(true, ac6.copy());
-            ConjuntoFormula cf7 = new ConjuntoFormula(true, ac7.copy());
+            ConjuntoFormula cf1 = new(true, ac1.copy());
+            ConjuntoFormula cf2 = new(true, ac2.copy());
+            ConjuntoFormula cf3 = new(true, ac3.copy());
+            ConjuntoFormula cf4 = new(true, ac4.copy());
+            ConjuntoFormula cf5 = new(true, ac5.copy());
+            ConjuntoFormula cf6 = new(true, ac6.copy());
+            ConjuntoFormula cf7 = new(true, ac7.copy());
             comparar("cf1", "cf1", cf1, cf1);
             comparar("cf1", "cf2", cf1, cf2);
             comparar("cf1", "cf3", cf1, cf3);
@@ -99,23 +99,27 @@ namespace classes.testes
 
         }
 
-        private void comparar(string l1, string l2, Atomo p1, Atomo p2){
+        private void comparar(string l1, string l2, Atomo p1, Atomo p2)
+        {
             Console.WriteLine(string.Format("[{0}, {1}] {2} = {3}: {4}", l1, l2, p1, p2, p1.Equals(p2)));
         }
 
-        private void comparar(string l1, string l2,Conector p1, Conector p2){
+        private void comparar(string l1, string l2, Conector p1, Conector p2)
+        {
             Console.WriteLine(string.Format("[{0}, {1}] {2} = {3}: {4}", l1, l2, p1, p2, p1.Equals(p2)));
         }
 
-        private void comparar(string l1, string l2, AtomoConector p1, AtomoConector p2){
+        private void comparar(string l1, string l2, AtomoConector p1, AtomoConector p2)
+        {
             Console.WriteLine(string.Format("[{0}, {1}] {2} = {3}: {4}", l1, l2, p1, p2, p1.Equals(p2)));
         }
 
-        private void comparar(string l1, string l2, ConjuntoFormula p1, ConjuntoFormula p2){
+        private void comparar(string l1, string l2, ConjuntoFormula p1, ConjuntoFormula p2)
+        {
             Console.WriteLine(string.Format("[{0}, {1}] {2} = {3}: {4}", l1, l2, p1, p2, p1.Equals(p2)));
         }
 
-        private void p(){Console.WriteLine("-----------------");}
+        private void p() { Console.WriteLine("-----------------"); }
 
     }
 

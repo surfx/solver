@@ -36,7 +36,7 @@ namespace classes.regras.binarias
             if (!isValid(cf1, cf2)) { return null; }
             AtomoConector? ac1 = cf1.Simbolo ? cf1.AtomoConectorProp : cf2.AtomoConectorProp; // T
             return ac1 == null || ac1.ConectorProp == null || ac1.ConectorProp.Esquerda == null ? null :
-                new ConjuntoFormula(false, ac1.ConectorProp.Esquerda.copy());
+                new(false, ac1.ConectorProp.Esquerda.copy());
         }
 
     }

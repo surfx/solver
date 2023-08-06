@@ -66,7 +66,8 @@ namespace classes.auxiliar.valoracoes
                 {
                     if (cf == null || cf.AtomoConectorProp == null) { return; }
                     if (apenasAtomos && cf.AtomoConectorProp.isConector) { return; }
-                    string key = ignorarSimbolo ? cf.AtomoConectorProp.ToString() : cf.ToString();
+                    string key = (ignorarSimbolo ? cf?.AtomoConectorProp?.ToString() : cf?.ToString()) ?? "";
+                    if (string.IsNullOrEmpty(key)) { return; }
                     if (rt.ContainsKey(key))
                     {
                         rt[key] += 1;
@@ -113,46 +114,52 @@ namespace classes.auxiliar.valoracoes
 
         #region distribuição de frequências de forma geral
 
-        public Dictionary<string, int>? frequenciaAtomos(Formulas f)
+        public Dictionary<string, int>? frequenciaAtomos(Formulas? f)
         {
             if (f == null) { return null; }
-            Dictionary<string, int> rt = frequenciaAtomos(f.LConjuntoFormula);
-            if (f.Esquerda != null)
+            Dictionary<string, int> rt = frequenciaAtomos(f?.LConjuntoFormula) ?? new();
+            if (f?.Esquerda != null)
             {
                 Dictionary<string, int>? aux = frequenciaAtomos(f.Esquerda);
-                foreach (KeyValuePair<string, int> entry in aux)
+                if (aux != null)
                 {
-                    if (entry.Key == null || string.IsNullOrEmpty(entry.Key)) { continue; }
-                    if (rt.ContainsKey(entry.Key))
+                    foreach (KeyValuePair<string, int> entry in aux)
                     {
-                        rt[entry.Key] += entry.Value;
-                    }
-                    else
-                    {
-                        rt.Add(entry.Key, entry.Value);
+                        if (entry.Key == null || string.IsNullOrEmpty(entry.Key)) { continue; }
+                        if (rt.ContainsKey(entry.Key))
+                        {
+                            rt[entry.Key] += entry.Value;
+                        }
+                        else
+                        {
+                            rt.Add(entry.Key, entry.Value);
+                        }
                     }
                 }
             }
-            if (f.Direita != null)
+            if (f?.Direita != null)
             {
                 Dictionary<string, int>? aux = frequenciaAtomos(f.Direita);
-                foreach (KeyValuePair<string, int> entry in aux)
+                if (aux != null)
                 {
-                    if (entry.Key == null || string.IsNullOrEmpty(entry.Key)) { continue; }
-                    if (rt.ContainsKey(entry.Key))
+                    foreach (KeyValuePair<string, int> entry in aux)
                     {
-                        rt[entry.Key] += entry.Value;
-                    }
-                    else
-                    {
-                        rt.Add(entry.Key, entry.Value);
+                        if (entry.Key == null || string.IsNullOrEmpty(entry.Key)) { continue; }
+                        if (rt.ContainsKey(entry.Key))
+                        {
+                            rt[entry.Key] += entry.Value;
+                        }
+                        else
+                        {
+                            rt.Add(entry.Key, entry.Value);
+                        }
                     }
                 }
             }
             return rt;
         }
 
-        public Dictionary<string, int>? frequenciaAtomos(List<ConjuntoFormula> listaFormulas)
+        public Dictionary<string, int>? frequenciaAtomos(List<ConjuntoFormula>? listaFormulas)
         {
             if (listaFormulas == null || listaFormulas.Count <= 0) { return null; }
             Dictionary<string, int> rt = new();
@@ -282,10 +289,7 @@ namespace classes.auxiliar.valoracoes
             public int FrequenciaAtomoGlobal { get; set; }
             public float TaxaGlobal { get; set; }
 
-            public override string ToString()
-            {
-                return string.Format("faf: {0}, fag: {1}, tx: {2}", FrequenciaAtomoFormula, FrequenciaAtomoGlobal, TaxaGlobal);
-            }
+            public override string ToString() => string.Format("faf: {0}, fag: {1}, tx: {2}", FrequenciaAtomoFormula, FrequenciaAtomoGlobal, TaxaGlobal);
         }
         public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Formulas f)
         {
@@ -297,7 +301,7 @@ namespace classes.auxiliar.valoracoes
             if (cf == null || formulas == null || formulas.Count <= 0) { return null; }
             return frequenciaAtomosRelativo(cf, frequenciaAtomos(formulas));
         }
-        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Dictionary<string, int> dicFrequenciasGlobal)
+        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Dictionary<string, int>? dicFrequenciasGlobal)
         {
             if (cf == null || dicFrequenciasGlobal == null || dicFrequenciasGlobal.Count <= 0) { return null; }
             Dictionary<string, int>? dicFreqquenciasCF = frequenciaAtomos(cf);
@@ -348,10 +352,7 @@ namespace classes.auxiliar.valoracoes
         {
             public int Abertos { get; set; }
             public int Fechados { get; set; }
-            public override string ToString()
-            {
-                return string.Format("Abertos: {0}, Fechados: {1}", Abertos, Fechados);
-            }
+            public override readonly string ToString() => string.Format("Abertos: {0}, Fechados: {1}", Abertos, Fechados);
         }
         public StRamosAbertosFechados ramosAbertosEFechados(Formulas f)
         {
@@ -378,10 +379,7 @@ namespace classes.auxiliar.valoracoes
             public int MaxHeight { get; set; }
             public int MinHeight { get; set; }
             public float AvgHeight { get; set; }
-            public override readonly string ToString()
-            {
-                return string.Format("min: {0}, max: {1}, avg: {2}", MinHeight, MaxHeight, AvgHeight);
-            }
+            public override readonly string ToString() => string.Format("min: {0}, max: {1}, avg: {2}", MinHeight, MaxHeight, AvgHeight);
         }
         public StAlturas? altura(Formulas f)
         {

@@ -38,22 +38,24 @@ namespace classes.auxiliar.saidas.print
             public PFormulasToStringBuilder withPrintAllClosedOpen() { _pFormulasToString.PrintAllClosedOpen = true; return this; }
             public PFormulasToStringBuilder withPrintLastClosedOpen() { _pFormulasToString.PrintLastClosedOpen = true; return this; }
             public PFormulasToStringBuilder withPrintFormulaNumber() { _pFormulasToString.PrintFormulaNumber = true; return this; }
-            public PFormulasToStringBuilder withPrintDotTreeMode() { 
+            public PFormulasToStringBuilder withPrintDotTreeMode()
+            {
                 _pFormulasToString.PrintAllClosedOpen = false;
                 _pFormulasToString.PrintLastClosedOpen = false;
                 _pFormulasToString.PrintFormulaNumber = false;
-                _pFormulasToString.PrintDotTreeMode = true; 
+                _pFormulasToString.PrintDotTreeMode = true;
                 return this;
             }
 
             #region copy
-            public PFormulasToStringBuilder copy()
+            public PFormulasToStringBuilder? copy()
             {
                 return copy(_pFormulasToString.Formulas);
             }
-            public PFormulasToStringBuilder copy(Formulas formulas)
+            public PFormulasToStringBuilder? copy(Formulas? formula)
             {
-                PFormulasToStringBuilder rt = Init(formulas);
+                if (formula == null) { return null; }
+                PFormulasToStringBuilder rt = Init(formula);
                 if (_pFormulasToString.PrintAllClosedOpen) { rt.withPrintAllClosedOpen(); }
                 if (_pFormulasToString.PrintLastClosedOpen) { rt.withPrintLastClosedOpen(); }
                 if (_pFormulasToString.PrintFormulaNumber) { rt.withPrintFormulaNumber(); }

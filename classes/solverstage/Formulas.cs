@@ -64,8 +64,8 @@ namespace classes.solverstage
 
         public void Dispose()
         {
-            if (_esquerda != null) { _esquerda.Dispose(); }
-            if (_direita != null) { _direita.Dispose(); }
+            _esquerda?.Dispose();
+            _direita?.Dispose();
             _lconjuntoFormula = null;
             _esquerda = null;
             _direita = null;

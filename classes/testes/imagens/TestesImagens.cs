@@ -7,6 +7,7 @@ using classes.solverstage;
 
 namespace classes.testes.imagens
 {
+    [Obsolete]
     public class TestesImagens
     {
 
@@ -17,8 +18,8 @@ namespace classes.testes.imagens
             string firstText = "Hello";
             string secondText = "World";
 
-            PointF firstLocation = new PointF(10f, 10f);
-            PointF secondLocation = new PointF(10f, 50f);
+            PointF firstLocation = new(10f, 10f);
+            PointF secondLocation = new(10f, 50f);
 
 
             //Bitmap bitmap = (Bitmap)Image.FromFile(imageFilePath);//load the image file
@@ -32,24 +33,24 @@ namespace classes.testes.imagens
                 graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
-                using (Font arialFont = new Font("Arial", 10, FontStyle.Regular))
+                using (Font arialFont = new("Arial", 10, FontStyle.Regular))
                 {
                     graphics.DrawString(firstText, arialFont, Brushes.Blue, firstLocation);
                     graphics.DrawString(secondText, arialFont, Brushes.Red, secondLocation);
                 }
 
-                StringFormat sf = new StringFormat();
+                StringFormat sf = new();
                 sf.Alignment = StringAlignment.Center;
                 sf.LineAlignment = StringAlignment.Center;
 
-                graphics.DrawString("My\nText", new System.Drawing.Font("Consola", 15, FontStyle.Regular), Brushes.Black, new PointF(100f, 100f), sf);
+                graphics.DrawString("My\nText", new("Consola", 15, FontStyle.Regular), Brushes.Black, new PointF(100f, 100f), sf);
 
 
                 for (int i = 0; i <= 500; i += 15)
                 {
                     for (int j = 0; j <= 600; j += 21)
                     {
-                        graphics.DrawString("0", new System.Drawing.Font("Consola", 15, FontStyle.Regular), i == 0 || i % 2 == 0 ? Brushes.Blue : Brushes.Green, new PointF(i, j), sf);
+                        graphics.DrawString("0", new("Consola", 15, FontStyle.Regular), i == 0 || i % 2 == 0 ? Brushes.Blue : Brushes.Green, new PointF(i, j), sf);
                     }
                 }
 
@@ -62,9 +63,9 @@ namespace classes.testes.imagens
         {
             drawImg(g =>
             {
-                Pen blackPen = new Pen(Color.Black, 1);
-                PointF point1 = new PointF(100.0F, 100.0F);
-                PointF point2 = new PointF(500.0F, 100.0F);
+                Pen blackPen = new(Color.Black, 1);
+                PointF point1 = new(100.0F, 100.0F);
+                PointF point2 = new(500.0F, 100.0F);
                 g.DrawLine(blackPen, point1, point2);
 
                 using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
@@ -129,7 +130,7 @@ namespace classes.testes.imagens
 
             drawImg(g =>
             {
-                using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+                using (Font fonte = new("Consolas", 10, FontStyle.Regular))
                 {
                     drawFormula(f, g, fonte, widthImg, widthImg, 0, hchar, wchar);
                 }
@@ -163,7 +164,7 @@ namespace classes.testes.imagens
 
             drawImg(g =>
             {
-                using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+                using (Font fonte = new("Consolas", 10, FontStyle.Regular))
                 {
                     int height = 0;
                     foreach (string linha in linhas)
@@ -182,7 +183,7 @@ namespace classes.testes.imagens
             f = getFormulaABCDEFG();
             p(f.ToString()); p(); p("");
 
-            Quadro q = new Quadro(f);
+            Quadro q = new(f);
 
             //List<Quadro>? lquadros = plainQuadros(q);
 
@@ -228,7 +229,7 @@ namespace classes.testes.imagens
             const float hchar = 10.0f; // height de 1 char
             const float wchar = 7.55f; // width de 1 char
 
-            Quadro q = new Quadro(f);
+            Quadro q = new(f);
 
             drawImg(g =>
             {
@@ -282,7 +283,7 @@ namespace classes.testes.imagens
         {
             float w = widthMax * wchar;
             float h = heightMax * hchar;
-            using (Pen blackPen = new Pen(Color.Black, 1))
+            using (Pen blackPen = new(Color.Black, 1))
             {
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(w + incrementoW, 0 + incrementH)); // linha de cima
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(0 + incrementoW, h + incrementH)); // lateral esquerda
@@ -301,7 +302,7 @@ namespace classes.testes.imagens
             //float heightFormulas = q.formulas.Count * hchar;
             // incrementoW += widthMax / 2.0f - middleText;
 
-            using (Pen blackPen = new Pen(Color.Black, 1))
+            using (Pen blackPen = new(Color.Black, 1))
             {
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(w + incrementoW, 0 + incrementH)); // linha de cima
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(0 + incrementoW, h + incrementH)); // lateral esquerda
@@ -309,7 +310,7 @@ namespace classes.testes.imagens
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, h + incrementH), new PointF(w + incrementoW, h + incrementH)); // linha baixo
             }
 
-            using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+            using (Font fonte = new("Consolas", 10, FontStyle.Regular))
             {
 
                 #region comments
@@ -382,7 +383,7 @@ namespace classes.testes.imagens
             //float heightFormulas = q.formulas.Count * hchar;
             // incrementoW += widthMax / 2.0f - middleText;
 
-            using (Pen blackPen = new Pen(Color.Black, 1))
+            using (Pen blackPen = new(Color.Black, 1))
             {
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(w + incrementoW, 0 + incrementH)); // linha de cima
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, 0 + incrementH), new PointF(0 + incrementoW, h + incrementH)); // lateral esquerda
@@ -390,7 +391,7 @@ namespace classes.testes.imagens
                 g.DrawLine(blackPen, new PointF(0 + incrementoW, h + incrementH), new PointF(w + incrementoW, h + incrementH)); // linha baixo
             }
 
-            using (Font fonte = new Font("Consolas", 10, FontStyle.Regular))
+            using (Font fonte = new("Consolas", 10, FontStyle.Regular))
             {
 
                 #region comments
@@ -486,8 +487,8 @@ namespace classes.testes.imagens
                 int numL = formulas.Count(); // número de linhas
                 Height = (numL + 1.5f) * hchar;
 
-                if (f.Esquerda != null) { this.Esquerda = new Quadro(f.Esquerda); }
-                if (f.Direita != null) { this.Direita = new Quadro(f.Direita); }
+                if (f.Esquerda != null) { this.Esquerda = new(f.Esquerda); }
+                if (f.Direita != null) { this.Direita = new(f.Direita); }
             }
 
             public Quadro plainCopy()
@@ -681,7 +682,7 @@ namespace classes.testes.imagens
 
             int ml = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Max(x => x == null ? 0 : x.ToString().Length);
 
-            List<XYH> rt = new List<XYH>();
+            List<XYH> rt = new();
             f.LConjuntoFormula?.ForEach(f =>
             {
                 XYH aux = xyh.copy();

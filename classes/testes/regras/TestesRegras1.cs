@@ -23,20 +23,20 @@ namespace classes.testes.regras
 
             IRegraUnaria rfn = new RegraFalseNegativo();
 
-            ConjuntoFormula cf1 = new ConjuntoFormula(false, null, new Atomo("A", 1));
+            ConjuntoFormula cf1 = new(false, null, new Atomo("A", 1));
             apply(rfn, cf1);
             p();
 
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, null, new Atomo("C", 1));
+            ConjuntoFormula cf2 = new(true, null, new Atomo("C", 1));
             apply(rfn, cf2);
             p();
 
-            ConjuntoFormula cf5 = new ConjuntoFormula(false, null, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), 1));
+            ConjuntoFormula cf5 = new(false, null, new Conector(ESimbolo.E, new Conector(ESimbolo.IMPLICA, new Atomo("B"), new Atomo("C")), new Atomo("D"), 1));
             apply(rfn, cf5);
             p();
             p("");
 
-            Parser parser = new Parser();
+            Parser parser = new();
             ConjuntoFormula cf6 = parser.parserCF("F !!!!!A");
             apply(rfn, cf6);
             p("");
@@ -55,7 +55,7 @@ namespace classes.testes.regras
             IRegraUnaria rtn = new RegraTrueNegativo();
             IRegraUnaria rfn = new RegraFalseNegativo();
 
-            Parser parser = new Parser();
+            Parser parser = new();
             ConjuntoFormula cf1 = parser.parserCF("F !!!!!A");
 
             apply(rfn, cf1);
@@ -104,29 +104,29 @@ namespace classes.testes.regras
             IRegraBinaria rti = new RegraTrueImplica1();
 
             // ESimbolo simbolo, AtomoConector esquerda, AtomoConector direita, bool negado = false
-            Conector c1 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), new Atomo("B", 0));
+            Conector c1 = new(ESimbolo.IMPLICA, new Atomo("A", 0), new Atomo("B", 0));
 
             // bool simbolo, IConversor conversor
-            ConjuntoFormula cf1 = new ConjuntoFormula(true, null, c1);
-            ConjuntoFormula cf2 = new ConjuntoFormula(true, null, new Atomo("A", 0));
+            ConjuntoFormula cf1 = new(true, null, c1);
+            ConjuntoFormula cf2 = new(true, null, new Atomo("A", 0));
 
             apply(rti, cf1, cf2);
             p(); p("");
 
 
-            Conector c2 = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G", 0));
-            Conector c3 = new Conector(ESimbolo.IMPLICA, new Atomo("A", 0), c2);
-            ConjuntoFormula cf5 = new ConjuntoFormula(true, null, c3);                                    // T A → (¬D v G)
+            Conector c2 = new(ESimbolo.OU, new Atomo("D", 1), new Atomo("G", 0));
+            Conector c3 = new(ESimbolo.IMPLICA, new Atomo("A", 0), c2);
+            ConjuntoFormula cf5 = new(true, null, c3);                                    // T A → (¬D v G)
 
             apply(rti, cf5, cf2);
             p(); p("");
 
             // T G → D
-            Conector G_impl_D = new Conector(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));     //  G → D
-            Conector nD_ou_G = new Conector(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));        // ¬D v G
-            Conector G_impl_D_impl_nD_ou_G = new Conector(ESimbolo.IMPLICA, G_impl_D, nD_ou_G);     // (G → D) → (¬D v G)
-            ConjuntoFormula cf7 = new ConjuntoFormula(true, null, G_impl_D_impl_nD_ou_G);                 // T (G → D) → (¬D v G)
-            ConjuntoFormula cf8 = new ConjuntoFormula(true, null, G_impl_D);                              // T G → D
+            Conector G_impl_D = new(ESimbolo.IMPLICA, new Atomo("G"), new Atomo("D"));     //  G → D
+            Conector nD_ou_G = new(ESimbolo.OU, new Atomo("D", 1), new Atomo("G"));        // ¬D v G
+            Conector G_impl_D_impl_nD_ou_G = new(ESimbolo.IMPLICA, G_impl_D, nD_ou_G);     // (G → D) → (¬D v G)
+            ConjuntoFormula cf7 = new(true, null, G_impl_D_impl_nD_ou_G);                 // T (G → D) → (¬D v G)
+            ConjuntoFormula cf8 = new(true, null, G_impl_D);                              // T G → D
 
             apply(rti, cf7, cf8);
             p(); p("");

@@ -35,7 +35,7 @@ namespace classes.testes.print
         private Formulas? getFormulas1()
         {
             if (parser == null) { return null; }
-            Formulas f = new Formulas();
+            Formulas f = new();
 
             f.addConjuntoFormula(parser.parserCF("T A"));
             f.addConjuntoFormula(parser.parserCF("T A -> B"));
@@ -66,7 +66,7 @@ namespace classes.testes.print
         private Formulas? getFormulas2()
         {
             if (parser == null) { return null; }
-            Formulas f = new Formulas();
+            Formulas f = new();
 
             f.addConjuntoFormula(parser.parserCF("T A"));
             f.addEsquerda(parser.parserCF("B"));
@@ -95,7 +95,7 @@ namespace classes.testes.print
         private Formulas? getFormulas3()
         {
             if (parser == null) { return null; }
-            Formulas f = new Formulas();
+            Formulas f = new();
 
             f.addConjuntoFormula(parser.parserCF("T A"));
             f.addDireita(parser.parserCF("B"));
@@ -110,7 +110,7 @@ namespace classes.testes.print
         private Formulas? getFormulas4()
         {
             if (parser == null) { return null; }
-            Formulas f = new Formulas();
+            Formulas f = new();
 
             f.addConjuntoFormula(parser.parserCF("T A"));
             f.addEsquerda(parser.parserCF("G"));

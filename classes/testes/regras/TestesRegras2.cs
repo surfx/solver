@@ -8,7 +8,7 @@ namespace classes.testes.regras
 {
     public class TestesRegras2
     {
-
+        [Obsolete]
         public void testeRegraRemoverFalsos()
         {
             Parser parser = new Parser();
