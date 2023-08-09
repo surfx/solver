@@ -42,19 +42,18 @@ No momento foram implementados o parser, o print da árvore em string e em image
 obs: tags OPEN/CLOSED apenas ilustrativas
 
 ```
-                                              1 T A                                          
-                                              2 T A → B                                      
-                                              3 F B                                          
-     4 F A → B                                                               11 F A ˅ B      
-     5 T C                                                                   12 T C ˅ A      
+                                              1 T A
+                                              2 T A → B
+                                              3 F B
+     4 F A → B                                                               11 F A ˅ B
+     5 T C                                                                   12 T C ˅ A
 6 T C              8 F ((C → B) ˄ C) ˅ D                                     13 T (C ˅ A) → B
-7 F C         9 T A                     10 T B                               14 T C          
-OPEN          OPEN                      OPEN           15 T C                                
-                                                       16 F C                                
-                                                       17 F ((C → B) ˄ C) ˅ D                
-                                                       CLOSED                                
+7 F C         9 T A                     10 T B                               14 T C
+OPEN          OPEN                      OPEN           15 T C
+                                                       16 F C
+                                                       17 F ((C → B) ˄ C) ˅ D
+                                                       CLOSED
 ```
-
 
 ### Imagem png
 
@@ -72,24 +71,21 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 
 # Análises iniciais
 
-
-| Árvores |        |         |        | Parser  |
-| ------- | ------ | ------- | ------ | ------- |
-|<a href="imagens\estudos\arv_001.jpg" target="_blank"><img src="imagens\estudos\arv_001.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_002.jpg" target="_blank"><img src="imagens\estudos\arv_002.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_003.jpg" target="_blank"><img src="imagens\estudos\arv_003.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\arv_004.jpg" target="_blank"><img src="imagens\estudos\arv_004.jpg" alt="Árvore Inicial" width="100" height="100"></a>|<a href="imagens\estudos\parser_001.jpg" target="_blank"><img src="imagens\estudos\parser_001.jpg" alt="Parser Inicial" width="100" height="100"></a>|
+| Árvores                                                                                                                                         |                                                                                                                                                 |                                                                                                                                                 |                                                                                                                                                 | Parser                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <a href="imagens\estudos\arv_001.jpg" target="_blank"><img src="imagens\estudos\arv_001.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_002.jpg" target="_blank"><img src="imagens\estudos\arv_002.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_003.jpg" target="_blank"><img src="imagens\estudos\arv_003.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_004.jpg" target="_blank"><img src="imagens\estudos\arv_004.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\parser_001.jpg" target="_blank"><img src="imagens\estudos\parser_001.jpg" alt="Parser Inicial" width="100" height="100"></a> |
 
 # Regras Tableaux KE
 
 <img src="imagens\rules_KE_1.png" alt="Regras Tableaux KE">
 
-
 # Exemplos de provas
 
 Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de material do professor doutor [Adolfo Gustavo Serra Seca Neto](https://adolfont.github.io), atualmente docente na UTFPR - Curitiba/PR.
 
-| Prova 1 | Prova 2 |
-| ------- | ------ |
-|<a href="imagens\2-Figure1-1.png" target="_blank"><img src="imagens\2-Figure1-1.png" alt="Prova 1" width="100" height="100"></a>|<a href="imagens\2-Figure2-1.png" target="_blank"><img src="imagens\2-Figure2-1.png" alt="Prova 2" width="100" height="100"></a>|
-
+| Prova 1                                                                                                                          | Prova 2                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| <a href="imagens\2-Figure1-1.png" target="_blank"><img src="imagens\2-Figure1-1.png" alt="Prova 1" width="100" height="100"></a> | <a href="imagens\2-Figure2-1.png" target="_blank"><img src="imagens\2-Figure2-1.png" alt="Prova 2" width="100" height="100"></a> |
 
 # TODO
 
@@ -127,19 +123,15 @@ dotnet add package System.Drawing.Common --version 7.0.0
 
 Para executar vscode: `CTRL + F5` / `F5` ou `$ dotnet run`
 
-
 # Urls
 
 - [google search](https://www.google.com/search?q=tableu+ke+proof&tbm=isch&ved=2ahUKEwjq2Zu77LT_AhXcrZUCHb0dDdUQ2-cCegQIABAA&oq=tableu+ke+proof&gs_lcp=CgNpbWcQA1DPA1icDGCQDWgAcAB4AIAB5wGIAbgKkgEDMi02mAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=82aCZKqUFtzb1sQPvbu0qA0&bih=1086&biw=2154&client=opera-gx&hs=Kn8#imgrc=4ioBaZZw7fOZwM)
 - [símbolos alt](https://www.freecodecamp.org/portuguese/news/codigos-alt-como-digitar-caracteres-especiais-e-simbolos-do-teclado-no-windows-usando-as-teclas-alt/)
 - [Adolfo Gustavo Serra Seca Neto](https://adolfont.github.io)
 - [KEMS](https://github.com/adolfont/KEMS)
+- [Consumo memória C#](https://elemarjr.wordpress.com/2010/09/28/monitorando-consumo-de-memria-e-tempo-de-execuo/)
 
 ## Tutoriais Imagens
 
 - [Text on Image](https://stackoverflow.com/questions/6826921/write-text-on-an-image-in-c-sharp)
 - [Google search](t.ly/_m-Z)
-
-
-
-

@@ -1,4 +1,4 @@
-using classes.auxiliar;
+using classes.auxiliar.diagnosticos;
 using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
 using classes.parser;
@@ -10,7 +10,7 @@ namespace classes.testes.solverstage
     public class TestesSolverStage2
     {
 
-        private Stage stage = new();
+        private readonly Stage stage = new();
 
         public void teste1()
         {
@@ -24,8 +24,11 @@ namespace classes.testes.solverstage
 
             //p(f.ToString()); p(); p("");
 
-            System.Diagnostics.Stopwatch? sw = Util.CountTimer(() => stage.solve(f));
-            Util.print(sw);
+            StEstatisticasConsumo? consumo = new DiagnosticosMemoriaTempo().MesurarConsumo(() => stage.solve(f));
+            p(consumo == null ? "" : consumo.Value.ToString());
+
+            // System.Diagnostics.Stopwatch? sw = Util.CountTimer(() => stage.solve(f));
+            // Util.print(sw);
             saveImg(f);
             f.Dispose();
             stage.Dispose();
