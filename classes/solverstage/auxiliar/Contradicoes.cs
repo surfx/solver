@@ -25,7 +25,7 @@ namespace classes.solverstage.auxiliar
 
         public override bool Equals(object obj)
         {
-            return obj is Contradicoes<T> q && q.GetHashCode() == this.GetHashCode();
+            return obj is Contradicoes<T> o && o.GetHashCode() == this.GetHashCode();
         }
 
         public void Dispose()

@@ -15,12 +15,20 @@ namespace classes.solverstage
         private readonly IListaRegras _iListaRegras;
 
         // armazena apenas o hashcode das fórmulas que apresentam contradição
-        private readonly HashSet<Contradicoes<int>> _listaContradicoesHash;
+        private readonly HashSet<Contradicoes<int>> _contradicoesHash;
+        private readonly HashSet<ApplyRegraUnaria<int>> _regrasUnarias;
+        private readonly HashSet<ApplyRegraBinaria<int>> _regrasBinarias;
+        private readonly HashSet<ApplyRegraUnariaDouble<int>> _regrasRegraUnariaDouble;
+        private readonly HashSet<ApplyRegraUnariaDouble<int>> _regrasBeta;
 
         public Stage()
         {
             _iListaRegras = new ListaRegrasLCP();
-            _listaContradicoesHash = new();
+            _contradicoesHash = new();
+            _regrasUnarias = new();
+            _regrasBinarias = new();
+            _regrasRegraUnariaDouble = new();
+            _regrasBeta = new();
         }
 
         public DadosSolver? solve(Formulas? formula = null)
@@ -76,15 +84,47 @@ namespace classes.solverstage
             };
 
             formula.updateNumeroFormulas();
-            rt.Contradicoes = _listaContradicoesHash?.Select(
+            rt.Contradicoes = _contradicoesHash?.Select(
                         ch => new Contradicoes<ConjuntoFormula?>(
                             UtilFormulas.findConjuntoFormula(formula, ch.Formula1),
                             UtilFormulas.findConjuntoFormula(formula, ch.Formula2)
                         )
                     ).ToList();
+            rt.ApplyRegraUnarias = _regrasUnarias?.Select(
+                        ch => new ApplyRegraUnaria<ConjuntoFormula?>(
+                            ch.RULE,
+                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula)
+                        )
+                    ).ToList();
+            rt.ApplyRegraBinarias = _regrasBinarias?.Select(
+                        ch => new ApplyRegraBinaria<ConjuntoFormula?>(
+                            ch.RULE,
+                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula1),
+                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula2),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula)
+                        )
+                    ).ToList();
+            rt.ApplyRegraUnariaDoubleProp = _regrasRegraUnariaDouble?.Select(
+                        ch => new ApplyRegraUnariaDouble<ConjuntoFormula?>(
+                            ch.RULE,
+                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula1),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula2)
+                        )
+                    ).ToList();
+            rt.ApplyRegraBeta = _regrasBeta?.Select(
+                        ch => new ApplyRegraUnariaDouble<ConjuntoFormula?>(
+                            ch.RULE,
+                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula1),
+                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula2)
+                        )
+                    ).ToList();
 
             return rt;
         }
+
 
 
 
@@ -273,7 +313,7 @@ namespace classes.solverstage
         {
             if (cf1 == null || cf2 == null || formulas == null || _iListaRegras.RegraClosedProp == null || !_iListaRegras.RegraClosedProp.apply(cf1, cf2)) { return false; }
             p(string.Format("contradição {0} e {1}", cf1, cf2));
-            _listaContradicoesHash.Add(new(cf1.GetHashCode(), cf2.GetHashCode()));
+            _contradicoesHash.Add(new(cf1.GetHashCode(), cf2.GetHashCode()));
             formulas.isClosed = true;
             return true;
         }
@@ -291,8 +331,11 @@ namespace classes.solverstage
                 if (!ru.isValid(cf1)) { continue; }
                 ConjuntoFormula? cfAux = ru.apply(cf1);
                 if (cfAux == null || conjuntoFormulas.Contains(cfAux) || (rt != null && rt.Contains(cfAux))) { continue; }
+
                 rt ??= new();
+                cfAux = cfAux == null || !conjuntoFormulas.Contains(cfAux) ? cfAux : conjuntoFormulas.Where(f => f.Equals(cfAux)).FirstOrDefault(); // faz o replace por conta do hashcode
                 p(string.Format("unaria: {0} ({1}): {2}", ru.RULE, cf1, cfAux));
+                _regrasUnarias.Add(new(ru.RULE, cf1.GetHashCode(), cfAux == null ? -1 : cfAux.GetHashCode()));
                 rt.Add(cfAux);
             }
         }
@@ -314,10 +357,14 @@ namespace classes.solverstage
                 }
 
                 rt ??= new();
-                p(string.Format("unaria d: {0} ({1}): {2}, {3}", rudb.RULE, cf1, stED.Value.Esquerda, stED.Value.Direita));
-                if (!conjuntoFormulas.Contains(stED.Value.Esquerda)) { rt.Add(stED.Value.Esquerda); }
-                if (!conjuntoFormulas.Contains(stED.Value.Direita)) { rt.Add(stED.Value.Direita); }
-                //rt.AddRange(lcfAux);
+                ConjuntoFormula? esquerda = stED.Value.Esquerda;
+                ConjuntoFormula? direita = stED.Value.Direita;
+                esquerda = esquerda == null || !conjuntoFormulas.Contains(esquerda) ? esquerda : conjuntoFormulas.Where(f => f.Equals(esquerda)).FirstOrDefault(); // faz o replace por conta do hashcode
+                direita = direita == null || !conjuntoFormulas.Contains(direita) ? direita : conjuntoFormulas.Where(f => f.Equals(direita)).FirstOrDefault();
+
+                _regrasRegraUnariaDouble.Add(new(rudb.RULE, cf1.GetHashCode(), esquerda == null ? -1 : esquerda.GetHashCode(), direita == null ? -1 : direita.GetHashCode()));
+                if (esquerda != null && !conjuntoFormulas.Contains(esquerda)) { rt.Add(esquerda); }
+                if (direita != null && !conjuntoFormulas.Contains(direita)) { rt.Add(direita); }
             }
         }
 
@@ -330,7 +377,9 @@ namespace classes.solverstage
                 ConjuntoFormula? cfAux = rb.apply(cf1, cf2);
                 if (cfAux == null || conjuntoFormulas.Contains(cfAux) || (rt != null && rt.Contains(cfAux))) { continue; }
                 rt ??= new();
+                cfAux = cfAux == null || !conjuntoFormulas.Contains(cfAux) ? cfAux : conjuntoFormulas.Where(f => f.Equals(cfAux)).FirstOrDefault(); // faz o replace por conta do hashcode
                 p(string.Format("binaria: {0} ({1}, {2}): {3}", rb.RULE, cf1, cf2, cfAux));
+                _regrasBinarias.Add(new(rb.RULE, cf1.GetHashCode(), cf2.GetHashCode(), cfAux.GetHashCode()));
                 rt.Add(cfAux);
             }
         }
@@ -341,12 +390,18 @@ namespace classes.solverstage
             IRegraUnariaDouble? regraBeta = _iListaRegras.RegrasBeta?.FindAll(rb => rb != null && fc != null && rb.isValid(fc)).FirstOrDefault();
             if (regraBeta == null) { return null; }
             StRetornoRegras? rt = regraBeta.apply(fc);
-            if (rt == null || rt.Value.Esquerda == null || rt.Value.Direita == null) { return null; }
+            ConjuntoFormula? esquerda = rt?.Esquerda;
+            ConjuntoFormula? direita = rt?.Direita;
+            if (rt == null || esquerda == null || direita == null) { return null; }
 
             // se alguma regra já existe no conjunto de conjuntoFormulas, retorna null, pois não há variação do conjunto de fórmulas base
-            if (conjuntoFormulas != null && (conjuntoFormulas.Contains(rt.Value.Esquerda) || conjuntoFormulas.Contains(rt.Value.Direita))) { return null; }
+            if (conjuntoFormulas != null && (conjuntoFormulas.Contains(esquerda) || conjuntoFormulas.Contains(direita))) { return null; }
+            // não precisa do replace (hashcode) porque nem a esquerda e direita estão no conjuntoFormulas
+            // esquerda = esquerda == null || !conjuntoFormulas.Contains(esquerda) ? esquerda : conjuntoFormulas.Where(f => f.Equals(esquerda)).FirstOrDefault(); // faz o replace por conta do hashcode
+            // direita = direita == null || !conjuntoFormulas.Contains(direita) ? direita : conjuntoFormulas.Where(f => f.Equals(direita)).FirstOrDefault();
 
             p(string.Format("beta: {0} ({1}): {2}", regraBeta.RULE, fc, rt.Value.ToString()));
+            _regrasBeta.Add(new(regraBeta.RULE, fc.GetHashCode(), esquerda.GetHashCode(), direita.GetHashCode()));
             return rt;
         }
         #endregion
@@ -356,6 +411,11 @@ namespace classes.solverstage
         {
             //if (FormulasProp != null) { FormulasProp.Dispose(); } FormulasProp = null;
             _iListaRegras?.Dispose();
+            _contradicoesHash?.Clear();
+            _regrasUnarias?.Clear();
+            _regrasBinarias?.Clear();
+            _regrasRegraUnariaDouble?.Clear();
+            _regrasBeta?.Clear();
         }
 
         #region auxiliar
