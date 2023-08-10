@@ -1,5 +1,4 @@
 using classes.auxiliar.formulas;
-using classes.auxiliar.valoracoes;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
@@ -12,7 +11,6 @@ namespace classes.testes.print.valoracoes
     {
 
         private Parser? parser = new();
-        private Valoracoes val = new();
 
         public void teste1()
         {
@@ -47,10 +45,10 @@ namespace classes.testes.print.valoracoes
 
 
             // testes bifurcacoes
-            p(string.Format("bifurcacoes: {0}", val.bifurcacoes(f)));
-            p(string.Format("numeroAtomosLivres: {0}", val.numeroAtomosLivres(f)));
+            p(string.Format("bifurcacoes: {0}", bifurcacoes(f)));
+            p(string.Format("numeroAtomosLivres: {0}", numeroAtomosLivres(f)));
 
-            Dictionary<string, int>? dicFAL = val.frequenciaAtomosConectores(f, false, false);
+            Dictionary<string, int>? dicFAL = frequenciaAtomosConectores(f, false, false);
             foreach (KeyValuePair<string, int> entry in dicFAL) { p(string.Format("{0}: {1}", entry.Key, entry.Value)); }
         }
 
@@ -64,14 +62,14 @@ namespace classes.testes.print.valoracoes
 
             p(f.ToString());
 
-            p(string.Format("numeroFormulas: {0}", val.numeroFormulas(f)));
-            p(string.Format("ramosAbertosEFechados: {0}", val.ramosAbertosEFechados(f)));
-            p(string.Format("altura: {0}", val.altura(f)));
+            p(string.Format("numeroFormulas: {0}", numeroFormulas(f)));
+            p(string.Format("ramosAbertosEFechados: {0}", ramosAbertosEFechados(f)));
+            p(string.Format("altura: {0}", altura(f)));
 
-            p(string.Format("numeroConectores: {0}", val.numeroConectores(parser.parserCF("T A"))));
-            p(string.Format("numeroConectores: {0}", val.numeroConectores(parser.parserCF("T A -> B"))));
-            p(string.Format("numeroConectores: {0}", val.numeroConectores(parser.parserCF("F C->B & C | D"))));
-            p(string.Format("numeroConectores: {0}", val.numeroConectores(f)));
+            p(string.Format("numeroConectores: {0}", numeroConectores(parser.parserCF("T A"))));
+            p(string.Format("numeroConectores: {0}", numeroConectores(parser.parserCF("T A -> B"))));
+            p(string.Format("numeroConectores: {0}", numeroConectores(parser.parserCF("F C->B & C | D"))));
+            p(string.Format("numeroConectores: {0}", numeroConectores(f)));
             p(); p("");
 
             frequenciaAtomosAux(parser.parserCF("T A"));
@@ -90,7 +88,7 @@ namespace classes.testes.print.valoracoes
 
             p(f.ToString());
 
-            Dictionary<string, int>? dicFAL = val.frequenciaAtomosConectores(f, false, true);
+            Dictionary<string, int>? dicFAL = frequenciaAtomosConectores(f, false, true);
             foreach (KeyValuePair<string, int> entry in dicFAL) { p(string.Format("{0}: {1}", entry.Key, entry.Value)); }
             p();
 
@@ -219,19 +217,19 @@ namespace classes.testes.print.valoracoes
 
         private void valorar(ConjuntoFormula? cf)
         {
-            p(string.Format("{0}: {1}", cf, val.complexidade(cf)));
+            p(string.Format("{0}: {1}", cf, complexidade(cf)));
         }
 
         private void valorar(Formulas? f)
         {
             p(f.ToString());
-            p("" + val.complexidade(f));
+            p("" + complexidade(f));
         }
 
         private void frequenciaAtomosAux(ConjuntoFormula? cf)
         {
             if (cf == null) { return; }
-            Dictionary<string, int>? aux = val.frequenciaAtomos(cf);
+            Dictionary<string, int>? aux = frequenciaAtomos(cf);
             if (aux == null || aux.Count <= 0) { return; }
             p(cf.ToString());
             foreach (KeyValuePair<string, int> entry in aux)
@@ -244,7 +242,7 @@ namespace classes.testes.print.valoracoes
         private void frequenciaAtomosAux2(List<ConjuntoFormula> listaFormulas)
         {
             if (listaFormulas == null || listaFormulas.Count <= 0) { return; }
-            Dictionary<string, int>? aux = val.frequenciaAtomos(listaFormulas);
+            Dictionary<string, int>? aux = frequenciaAtomos(listaFormulas);
             foreach (KeyValuePair<string, int> entry in aux)
             {
                 p(string.Format("{0}: {1}", entry.Key, entry.Value));
@@ -254,7 +252,7 @@ namespace classes.testes.print.valoracoes
         private void frequenciaAtomosAux3(Formulas f)
         {
             if (f == null) { return; }
-            Dictionary<string, int>? aux = val.frequenciaAtomos(f);
+            Dictionary<string, int>? aux = frequenciaAtomos(f);
             foreach (KeyValuePair<string, int> entry in aux)
             {
                 p(string.Format("{0}: {1}", entry.Key, entry.Value));
@@ -265,7 +263,7 @@ namespace classes.testes.print.valoracoes
         {
             if (cf == null || f == null) { return; }
             p(string.Format("Analisando: {0}", cf));
-            Dictionary<string, StFrequenciaAtomosRelativos>? aux = val.frequenciaAtomosRelativo(cf, f);
+            Dictionary<string, StFrequenciaAtomosRelativos>? aux = frequenciaAtomosRelativo(cf, f);
             foreach (KeyValuePair<string, StFrequenciaAtomosRelativos> entry in aux)
             {
                 p(string.Format("{0} | {1}", entry.Key, entry.Value.ToString()));
@@ -275,7 +273,6 @@ namespace classes.testes.print.valoracoes
         public void Dispose()
         {
             parser = null;
-            val = null;
         }
 
         #region auxiliar

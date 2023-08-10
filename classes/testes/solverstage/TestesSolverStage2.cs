@@ -1,8 +1,8 @@
-using classes.auxiliar.diagnosticos;
 using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;
+using classes.solverstage.auxiliar;
 
 namespace classes.testes.solverstage
 {
@@ -24,8 +24,9 @@ namespace classes.testes.solverstage
 
             //p(f.ToString()); p(); p("");
 
-            StEstatisticasConsumo? consumo = new DiagnosticosMemoriaTempo().MesurarConsumo(() => stage.solve(f));
-            p(consumo == null ? "" : consumo.Value.ToString());
+            DadosSolver? ds = stage.solve(f);
+            p(); p(ds == null ? "" : ds.ToString()); p();
+            ds?.Dispose();
 
             // System.Diagnostics.Stopwatch? sw = Util.CountTimer(() => stage.solve(f));
             // Util.print(sw);

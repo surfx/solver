@@ -24,7 +24,7 @@ namespace classes.auxiliar.diagnosticos
         }
         #endregion
 
-        public StEstatisticasConsumo? MesurarConsumo(Action act)
+        public StDadosConsumo? MesurarConsumo(Action act)
         {
             if (act == null) { return null; }
             System.Diagnostics.Stopwatch sw = new();
@@ -34,7 +34,7 @@ namespace classes.auxiliar.diagnosticos
 
             GC.Collect();
 
-            return new StEstatisticasConsumo
+            return new StDadosConsumo
             {
                 StopwatchProp = sw,
                 ProcessorTimeMs = (this._appdomain.MonitoringTotalProcessorTime - InitialProcessorTimeField).TotalMilliseconds,

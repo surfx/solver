@@ -1,3 +1,6 @@
+using classes.formulas;
+using classes.solverstage;
+
 namespace classes.auxiliar.formulas
 {
     public static class UtilFormulas
@@ -75,6 +78,20 @@ namespace classes.auxiliar.formulas
                 return true;
             }
             return true;
+        }
+
+        // retorna um ConjuntoFormula à partir do seu hashcode
+        public static ConjuntoFormula? findConjuntoFormula(Formulas? formula, int hashCode)
+        {
+            if (formula == null) { return null; }
+
+            if (formula.LConjuntoFormula != null && formula.LConjuntoFormula.Count > 0)
+            {
+                ConjuntoFormula? rt = formula.LConjuntoFormula.FindAll(f => f.GetHashCode().Equals(hashCode)).FirstOrDefault();
+                if (rt != null) { return rt; }
+            }
+            if (formula.Esquerda == null && formula.Direita == null) { return null; }
+            return findConjuntoFormula(formula.Esquerda, hashCode) ?? findConjuntoFormula(formula.Direita, hashCode);
         }
 
         public static void p() { p("-----------------"); }

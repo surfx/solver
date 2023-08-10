@@ -7,7 +7,7 @@ namespace classes.auxiliar.valoracoes
     {
 
         #region complexidade
-        public int complexidade(Formulas f)
+        public static int complexidade(Formulas f)
         {
             return f == null ? 0 :
                 (f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 : f.LConjuntoFormula.Sum(complexidade)) +
@@ -15,13 +15,13 @@ namespace classes.auxiliar.valoracoes
                 (f.Direita == null ? 0 : complexidade(f.Direita));
         }
 
-        public int complexidade(ConjuntoFormula cf)
+        public static int complexidade(ConjuntoFormula cf)
         {
             if (cf == null || cf.AtomoConectorProp == null) { return 0; }
             return complexidade(cf.AtomoConectorProp);
         }
 
-        private int complexidade(AtomoConector? ac)
+        private static int complexidade(AtomoConector? ac)
         {
             if (ac == null) { return 0; }
             if (ac.isAtomo) { return 1; }
@@ -32,7 +32,7 @@ namespace classes.auxiliar.valoracoes
         #endregion
 
         #region bifurcacoes
-        public int bifurcacoes(Formulas f)
+        public static int bifurcacoes(Formulas f)
         {
             if (f == null || (f.Esquerda == null && f.Direita == null)) { return 0; }
             return
@@ -45,7 +45,7 @@ namespace classes.auxiliar.valoracoes
 
         #region número átomos
         // átomos "livres"
-        public int numeroAtomosLivres(Formulas f)
+        public static int numeroAtomosLivres(Formulas f)
         {
             return f == null ? 0 :
                 (f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 :
@@ -56,7 +56,7 @@ namespace classes.auxiliar.valoracoes
         #endregion
 
         #region frequência átomos conectores
-        public Dictionary<string, int>? frequenciaAtomosConectores(Formulas f, bool ignorarSimbolo /*ignorar T e F*/ = false, bool apenasAtomos = true)
+        public static Dictionary<string, int>? frequenciaAtomosConectores(Formulas f, bool ignorarSimbolo /*ignorar T e F*/ = false, bool apenasAtomos = true)
         {
             if (f == null) { return null; }
             Dictionary<string, int> rt = new();
@@ -114,7 +114,7 @@ namespace classes.auxiliar.valoracoes
 
         #region distribuição de frequências de forma geral
 
-        public Dictionary<string, int>? frequenciaAtomos(Formulas? f)
+        public static Dictionary<string, int>? frequenciaAtomos(Formulas? f)
         {
             if (f == null) { return null; }
             Dictionary<string, int> rt = frequenciaAtomos(f?.LConjuntoFormula) ?? new();
@@ -159,7 +159,7 @@ namespace classes.auxiliar.valoracoes
             return rt;
         }
 
-        public Dictionary<string, int>? frequenciaAtomos(List<ConjuntoFormula>? listaFormulas)
+        public static Dictionary<string, int>? frequenciaAtomos(List<ConjuntoFormula>? listaFormulas)
         {
             if (listaFormulas == null || listaFormulas.Count <= 0) { return null; }
             Dictionary<string, int> rt = new();
@@ -184,7 +184,7 @@ namespace classes.auxiliar.valoracoes
             return rt;
         }
 
-        public Dictionary<string, int>? frequenciaAtomos(ConjuntoFormula cf)
+        public static Dictionary<string, int>? frequenciaAtomos(ConjuntoFormula cf)
         {
             if (cf == null || cf.AtomoConectorProp == null) { return null; }
             Dictionary<string, int> rt = new();
@@ -222,7 +222,7 @@ namespace classes.auxiliar.valoracoes
             return rt;
         }
 
-        public Dictionary<string, int>? frequenciaAtomos(AtomoConector ac)
+        public static Dictionary<string, int>? frequenciaAtomos(AtomoConector ac)
         {
             if (ac == null) { return null; }
             Dictionary<string, int> rt = new();
@@ -291,17 +291,18 @@ namespace classes.auxiliar.valoracoes
 
             public override string ToString() => string.Format("faf: {0}, fag: {1}, tx: {2}", FrequenciaAtomoFormula, FrequenciaAtomoGlobal, TaxaGlobal);
         }
-        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Formulas f)
+
+        public static Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Formulas f)
         {
             if (cf == null || f == null) { return null; }
             return frequenciaAtomosRelativo(cf, frequenciaAtomos(f));
         }
-        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, List<ConjuntoFormula> formulas)
+        public static Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, List<ConjuntoFormula> formulas)
         {
             if (cf == null || formulas == null || formulas.Count <= 0) { return null; }
             return frequenciaAtomosRelativo(cf, frequenciaAtomos(formulas));
         }
-        public Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Dictionary<string, int>? dicFrequenciasGlobal)
+        public static Dictionary<string, StFrequenciaAtomosRelativos>? frequenciaAtomosRelativo(ConjuntoFormula cf, Dictionary<string, int>? dicFrequenciasGlobal)
         {
             if (cf == null || dicFrequenciasGlobal == null || dicFrequenciasGlobal.Count <= 0) { return null; }
             Dictionary<string, int>? dicFreqquenciasCF = frequenciaAtomos(cf);
@@ -338,7 +339,7 @@ namespace classes.auxiliar.valoracoes
         #endregion
 
         #region número de fórmulas
-        public int numeroFormulas(Formulas f)
+        public static int numeroFormulas(Formulas f)
         {
             return f == null ? 0 :
                 (f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 : f.LConjuntoFormula.Count) +
@@ -354,7 +355,7 @@ namespace classes.auxiliar.valoracoes
             public int Fechados { get; set; }
             public override readonly string ToString() => string.Format("Abertos: {0}, Fechados: {1}", Abertos, Fechados);
         }
-        public StRamosAbertosFechados ramosAbertosEFechados(Formulas f)
+        public static StRamosAbertosFechados ramosAbertosEFechados(Formulas f)
         {
             return new()
             {
@@ -362,7 +363,7 @@ namespace classes.auxiliar.valoracoes
                 Fechados = ramosAbertosEFechados(f, true)
             };
         }
-        private int ramosAbertosEFechados(Formulas f, bool isClosed = true)
+        private static int ramosAbertosEFechados(Formulas f, bool isClosed = true)
         {
             return f == null ? 0 :
                 (f.Esquerda == null && f.Direita == null ?
@@ -381,7 +382,7 @@ namespace classes.auxiliar.valoracoes
             public float AvgHeight { get; set; }
             public override readonly string ToString() => string.Format("min: {0}, max: {1}, avg: {2}", MinHeight, MaxHeight, AvgHeight);
         }
-        public StAlturas? altura(Formulas f)
+        public static StAlturas? altura(Formulas f)
         {
             if (f == null) { return null; }
             StAlturas rt = new();
@@ -392,7 +393,7 @@ namespace classes.auxiliar.valoracoes
             return rt;
         }
 
-        public int alturaMaxMin(Formulas f, bool max = true)
+        public static int alturaMaxMin(Formulas f, bool max = true)
         {
             int auxEsquerda = f.Esquerda == null ? 0 : alturaMaxMin(f.Esquerda, max);
             int auxDireita = f.Direita == null ? 0 : alturaMaxMin(f.Direita, max);
@@ -404,19 +405,19 @@ namespace classes.auxiliar.valoracoes
         #endregion
 
         #region número de conectores
-        public int numeroConectores(Formulas f)
+        public static int numeroConectores(Formulas f)
         {
             return f == null ? 0 :
                 (f.LConjuntoFormula == null || f.LConjuntoFormula.Count <= 0 ? 0 : f.LConjuntoFormula.Sum(numeroConectores)) +
                 (f.Esquerda == null ? 0 : numeroConectores(f.Esquerda)) +
                 (f.Direita == null ? 0 : numeroConectores(f.Direita));
         }
-        public int numeroConectores(ConjuntoFormula cf)
+        public static int numeroConectores(ConjuntoFormula cf)
         {
             if (cf == null || cf.AtomoConectorProp == null) { return 0; }
             return numeroConectores(cf.AtomoConectorProp);
         }
-        private int numeroConectores(AtomoConector ac)
+        private static int numeroConectores(AtomoConector ac)
         {
             if (ac == null || ac.isAtomo || ac.ConectorProp == null) { return 0; }
             if ((ac.ConectorProp.Esquerda != null && ac.ConectorProp.Esquerda.isAtomo) && (ac.ConectorProp.Direita != null && ac.ConectorProp.Direita.isAtomo)) { return 1; }
@@ -425,7 +426,6 @@ namespace classes.auxiliar.valoracoes
                 (ac.ConectorProp.Direita == null || ac.ConectorProp.Direita.isAtomo ? 0 : numeroConectores(ac.ConectorProp.Direita));
         }
         #endregion
-
 
     }
 }

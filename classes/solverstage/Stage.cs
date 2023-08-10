@@ -1,6 +1,9 @@
+using classes.auxiliar.diagnosticos;
 using classes.auxiliar.formulas;
+using classes.auxiliar.valoracoes;
 using classes.formulas;
 using classes.regras;
+using classes.solverstage.auxiliar;
 using classes.solverstage.estrategias;
 using classes.solverstage.estrategias.listaregras;
 
@@ -11,49 +14,79 @@ namespace classes.solverstage
         // TODO: strategy
         private readonly IListaRegras _iListaRegras;
 
+        // armazena apenas o hashcode das fórmulas que apresentam contradição
+        private readonly HashSet<Contradicoes<int>> _listaContradicoesHash;
+
         public Stage()
         {
             _iListaRegras = new ListaRegrasLCP();
+            _listaContradicoesHash = new();
         }
 
-        public void solve(Formulas? formula = null)
+        public DadosSolver? solve(Formulas? formula = null)
         {
-            if (formula == null) { p("Informe o conjunto de fórmulas para o Solver"); return; }
+            if (formula == null) { p("Informe o conjunto de fórmulas para o Solver"); return null; }
 
-            p(formula.ToString()); p(); p("");
-
-            List<ConjuntoFormula> conjuntoFormulas = formula.LConjuntoFormula ?? new();
-            //if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
-
-            List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
-            if (lts != null && lts.Count >= 0)
+            DadosSolver rt = new()
             {
-                lts.Where(f => f != null && formula.LConjuntoFormula != null && !formula.LConjuntoFormula.Contains(f))
-                    .ToList()
-                    .ForEach(formula.addConjuntoFormula);
-            }
-            lts?.Clear();
+                DadosConsumo = new DiagnosticosMemoriaTempo().MesurarConsumo(() =>
+                {
+                    p(formula.ToString()); p(); p("");
 
-            formula.updateFormulas(conjuntoFormulas);
+                    List<ConjuntoFormula> conjuntoFormulas = formula.LConjuntoFormula ?? new();
+                    //if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
 
-            updateClosed(formula);
+                    List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
+                    if (lts != null && lts.Count >= 0)
+                    {
+                        lts.Where(f => f != null && formula.LConjuntoFormula != null && !formula.LConjuntoFormula.Contains(f))
+                            .ToList()
+                            .ForEach(formula.addConjuntoFormula);
+                    }
+                    lts?.Clear();
 
-            if (!formula.isClosed)
-            {
-                p(); p("-- verificar a regras beta");
-                applyBeta(conjuntoFormulas, formula);
-            }
-            else
-            {
-                p(); p("-- Ramo fechado");
-            }
+                    formula.updateFormulas(conjuntoFormulas);
 
-            // não 'matar' as fórmulas aqui para não prejudicar usos futuros (ex: gerar imagem da árvore)
-            //formula.Dispose(); formula = null;
+                    updateClosed(formula);
 
-            //p(FormulasProp.ToString()); p(); p("");
-            p("-- end");
+                    if (!formula.isClosed)
+                    {
+                        p(); p("-- verificar a regras beta");
+                        applyBeta(conjuntoFormulas, formula);
+                    }
+                    else
+                    {
+                        p(); p("-- Ramo fechado");
+                    }
+
+                    // não 'matar' as fórmulas aqui para não prejudicar usos futuros (ex: gerar imagem da árvore)
+                    //formula.Dispose(); formula = null;
+
+                    //p(FormulasProp.ToString()); p(); p("");
+                    p("-- end");
+                }),
+                isClosed = formula.isClosed,
+                Complexidade = Valoracoes.complexidade(formula),
+                Bifurcacoes = Valoracoes.bifurcacoes(formula),
+                NumeroAtomosLivres = Valoracoes.numeroAtomosLivres(formula),
+                NumeroFormulas = Valoracoes.numeroFormulas(formula),
+                RamosAbertosFechados = Valoracoes.ramosAbertosEFechados(formula),
+                Alturas = Valoracoes.altura(formula),
+                NumeroConectores = Valoracoes.numeroConectores(formula),
+            };
+
+            formula.updateNumeroFormulas();
+            rt.Contradicoes = _listaContradicoesHash?.Select(
+                        ch => new Contradicoes<ConjuntoFormula?>(
+                            UtilFormulas.findConjuntoFormula(formula, ch.Formula1),
+                            UtilFormulas.findConjuntoFormula(formula, ch.Formula2)
+                        )
+                    ).ToList();
+
+            return rt;
         }
+
+
 
         private List<ConjuntoFormula>? trySolve(List<ConjuntoFormula> conjuntoFormulas, Formulas? formula)
         {
@@ -240,6 +273,7 @@ namespace classes.solverstage
         {
             if (cf1 == null || cf2 == null || formulas == null || _iListaRegras.RegraClosedProp == null || !_iListaRegras.RegraClosedProp.apply(cf1, cf2)) { return false; }
             p(string.Format("contradição {0} e {1}", cf1, cf2));
+            _listaContradicoesHash.Add(new(cf1.GetHashCode(), cf2.GetHashCode()));
             formulas.isClosed = true;
             return true;
         }
