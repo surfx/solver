@@ -4,6 +4,7 @@ using classes.auxiliar.formulas;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.imagens
 {
@@ -830,12 +831,6 @@ namespace classes.testes.imagens
             int aux = f.LConjuntoFormula == null ? 0 : f.LConjuntoFormula.Count;
             return aux + Math.Max(heightTreeFormulas(f.Esquerda), heightTreeFormulas(f.Direita));
         }
-
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
-        #endregion
 
 
     }

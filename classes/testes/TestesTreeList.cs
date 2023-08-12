@@ -3,6 +3,7 @@ using classes.auxiliar.saidas.print_old;
 using classes.formulas;
 using classes.parser;
 using classes.solverstage;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes
 {
@@ -161,10 +162,6 @@ namespace classes.testes
         //     if (formulas == null || formulas.Count <= 0) { return null; }
         //     return formulas.Select(x => x.ToString()).ToList();
         // }
-
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
 
     }
 

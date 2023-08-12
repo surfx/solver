@@ -51,41 +51,72 @@ namespace classes.solverstage.auxiliar
                 RamosAbertosFechados == null ? "" : RamosAbertosFechados.Value.ToString(),
                 Alturas == null ? "" : Alturas.Value.ToString(),
                 NumeroConectores,
-                Contradicoes == null ? "" :
-                string.Join(" | ",
-                    Contradicoes?.Select(c => string.Format("{0} {1} e {2} {3}", c.Formula1?.NumeroFormula, c.Formula1, c.Formula2?.NumeroFormula, c.Formula2))?.ToList()
-                ),
-                ApplyRegraUnarias == null ? "" :
-                string.Join(" | ",
+                toStrContradicoes(),
+                toStrRegraUnarias(),
+                toStrRegraBinarias(),
+                toStrRegraUnariaDoubleProp(),
+                toStrRegraBeta()
+            );
+        }
+
+        #region toStr
+        private string toStrContradicoes(string separador = " | ")
+        {
+            return Contradicoes == null || Contradicoes.Count <= 0 ? "" :
+            string.Join(
+                separador,
+                Contradicoes.Select(c => string.Format("{0} {1} e {2} {3}", c.Formula1?.NumeroFormula, c.Formula1, c.Formula2?.NumeroFormula, c.Formula2))?.ToList()
+            );
+        }
+
+        private string toStrRegraUnarias(string separador = " | ")
+        {
+            return ApplyRegraUnarias == null || ApplyRegraUnarias.Count <= 0 ? "" :
+                string.Join(
+                    separador,
                     ApplyRegraUnarias?.Select(c => string.Format("({0}) {1} {2}: {3} {4}", c.RULE, c.InputFormula.NumeroFormula, c.InputFormula, c.OutputFormula?.NumeroFormula, c.OutputFormula))?.ToList()
-                ),
-                ApplyRegraBinarias == null ? "" :
-                string.Join(" | ",
+                );
+        }
+
+        private string toStrRegraBinarias(string separador = " | ")
+        {
+            return ApplyRegraBinarias == null || ApplyRegraBinarias.Count <= 0 ? "" :
+                string.Join(
+                    separador,
                     ApplyRegraBinarias?.Select(c => string.Format("({0}) {1} {2}, {3} {4}: {5} {6}",
                         c.RULE,
                         c.InputFormula1?.NumeroFormula, c.InputFormula1,
                         c.InputFormula2?.NumeroFormula, c.InputFormula2,
                         c.OutputFormula?.NumeroFormula, c.OutputFormula))?.ToList()
-                ),
-                ApplyRegraUnariaDoubleProp == null ? "" :
-                string.Join(" | ",
-                    ApplyRegraUnariaDoubleProp?.Select(c => string.Format("({0}) {1} {2}, {3} {4}: {5} {6}",
-                        c.RULE,
-                        c.InputFormula?.NumeroFormula, c.InputFormula,
-                        c.OutputFormula1?.NumeroFormula, c.OutputFormula1,
-                        c.OutputFormula2?.NumeroFormula, c.OutputFormula2))?.ToList()
-                ),
-                ApplyRegraBeta == null ? "" :
-                string.Join(" | ",
-                    ApplyRegraBeta?.Select(c => string.Format("({0}) {1} {2}, {3} {4}: {5} {6}",
-                        c.RULE,
-                        c.InputFormula?.NumeroFormula, c.InputFormula,
-                        c.OutputFormula1?.NumeroFormula, c.OutputFormula1,
-                        c.OutputFormula2?.NumeroFormula, c.OutputFormula2))?.ToList()
-                )
-
-            );
+                );
         }
+
+        private string toStrRegraUnariaDoubleProp(string separador = " | ")
+        {
+            return ApplyRegraUnariaDoubleProp == null || ApplyRegraUnariaDoubleProp.Count <= 0 ? "" :
+                string.Join(
+                    separador,
+                    ApplyRegraUnariaDoubleProp?.Select(c => string.Format("({0}) {1} {2}: {3} {4}, {5} {6}",
+                        c.RULE,
+                        c.InputFormula?.NumeroFormula, c.InputFormula,
+                        c.OutputFormula1?.NumeroFormula, c.OutputFormula1,
+                        c.OutputFormula2?.NumeroFormula, c.OutputFormula2))?.ToList()
+                );
+        }
+
+        private string toStrRegraBeta(string separador = " | ")
+        {
+            return ApplyRegraBeta == null || ApplyRegraBeta.Count <= 0 ? "" :
+                string.Join(
+                    separador,
+                    ApplyRegraBeta?.Select(c => string.Format("({0}) {1} {2}: {3} {4}, {5} {6}",
+                        c.RULE,
+                        c.InputFormula?.NumeroFormula, c.InputFormula,
+                        c.OutputFormula1?.NumeroFormula, c.OutputFormula1,
+                        c.OutputFormula2?.NumeroFormula, c.OutputFormula2))?.ToList()
+                );
+        }
+        #endregion
 
         public void Dispose()
         {

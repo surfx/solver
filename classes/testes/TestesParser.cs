@@ -1,7 +1,6 @@
-using classes.auxiliar;
 using classes.auxiliar.formulas;
-using classes.formulas;
 using classes.parser;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes
 {
@@ -40,11 +39,6 @@ namespace classes.testes
             p(string.Format("{0}", parser.parserCF(UtilFormulas.sanitizar("F !!(B -> ( (G -> !(D ^ E)) ) -> ((!D | G) & C))"))));
             p(string.Format("{0}", parser.parserCF("T (A | C -> E) | (!C | B & E)")));
         }
-
-
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
 
     }
 

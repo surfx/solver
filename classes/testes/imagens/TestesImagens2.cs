@@ -2,6 +2,7 @@ using classes.auxiliar.formulas;
 using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.imagens
 {
@@ -127,12 +128,6 @@ namespace classes.testes.imagens
             f.Direita.isClosed = true;
             return f;
         }
-        #endregion
-
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
         #endregion
 
 

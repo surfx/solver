@@ -3,6 +3,7 @@ using classes.formulas;
 using classes.parser;
 using classes.regras;
 using classes.regras.unitarias;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.regras
 {
@@ -40,11 +41,6 @@ namespace classes.testes.regras
 
         #endregion
 
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
-        #endregion
 
     }
 }

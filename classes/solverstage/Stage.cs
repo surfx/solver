@@ -349,19 +349,20 @@ namespace classes.solverstage
                 StRetornoRegras? stED = rudb.apply(cf1);
                 if (stED == null || stED.Value.Esquerda == null || stED.Value.Direita == null) { continue; }
 
-                // se tiver ambas as fórmulas na lista de conjuntoFormulas, deve continuar
-                // caso contrário, adiciona ao rt as fórmulas que não estão na lista conjuntoFormulas
-                if (conjuntoFormulas.Contains(stED.Value.Esquerda) && conjuntoFormulas.Contains(stED.Value.Direita))
-                {
-                    continue;
-                }
-
-                rt ??= new();
                 ConjuntoFormula? esquerda = stED.Value.Esquerda;
                 ConjuntoFormula? direita = stED.Value.Direita;
                 esquerda = esquerda == null || !conjuntoFormulas.Contains(esquerda) ? esquerda : conjuntoFormulas.Where(f => f.Equals(esquerda)).FirstOrDefault(); // faz o replace por conta do hashcode
                 direita = direita == null || !conjuntoFormulas.Contains(direita) ? direita : conjuntoFormulas.Where(f => f.Equals(direita)).FirstOrDefault();
 
+                // se tiver ambas as fórmulas na lista de conjuntoFormulas, deve continuar
+                // caso contrário, adiciona ao rt as fórmulas que não estão na lista conjuntoFormulas
+                if ((esquerda == null || conjuntoFormulas.Contains(esquerda)) && (direita == null || conjuntoFormulas.Contains(direita)))
+                {
+                    continue;
+                }
+
+                p(string.Format("unaria d: {0} ({1}): {2}, {3}", rudb.RULE, cf1, esquerda, direita));
+                rt ??= new();
                 _regrasRegraUnariaDouble.Add(new(rudb.RULE, cf1.GetHashCode(), esquerda == null ? -1 : esquerda.GetHashCode(), direita == null ? -1 : direita.GetHashCode()));
                 if (esquerda != null && !conjuntoFormulas.Contains(esquerda)) { rt.Add(esquerda); }
                 if (direita != null && !conjuntoFormulas.Contains(direita)) { rt.Add(direita); }
@@ -375,9 +376,9 @@ namespace classes.solverstage
             {
                 if (!rb.isValid(cf1, cf2)) { continue; }
                 ConjuntoFormula? cfAux = rb.apply(cf1, cf2);
+                cfAux = cfAux == null || !conjuntoFormulas.Contains(cfAux) ? cfAux : conjuntoFormulas.Where(f => f.Equals(cfAux)).FirstOrDefault(); // faz o replace por conta do hashcode
                 if (cfAux == null || conjuntoFormulas.Contains(cfAux) || (rt != null && rt.Contains(cfAux))) { continue; }
                 rt ??= new();
-                cfAux = cfAux == null || !conjuntoFormulas.Contains(cfAux) ? cfAux : conjuntoFormulas.Where(f => f.Equals(cfAux)).FirstOrDefault(); // faz o replace por conta do hashcode
                 p(string.Format("binaria: {0} ({1}, {2}): {3}", rb.RULE, cf1, cf2, cfAux));
                 _regrasBinarias.Add(new(rb.RULE, cf1.GetHashCode(), cf2.GetHashCode(), cfAux.GetHashCode()));
                 rt.Add(cfAux);

@@ -3,6 +3,7 @@ using classes.formulas;
 using classes.parser;
 using classes.solverstage;
 using static classes.auxiliar.valoracoes.Valoracoes;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.print.valoracoes
 {
@@ -274,12 +275,6 @@ namespace classes.testes.print.valoracoes
         {
             parser = null;
         }
-
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, string? separator = " ") { return UtilFormulas.toStr(values, separator); }
-        #endregion
         #endregion
 
     }

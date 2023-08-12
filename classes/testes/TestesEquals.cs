@@ -1,4 +1,5 @@
 using classes.formulas;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes
 {
@@ -119,7 +120,7 @@ namespace classes.testes
             Console.WriteLine(string.Format("[{0}, {1}] {2} = {3}: {4}", l1, l2, p1, p2, p1.Equals(p2)));
         }
 
-        private void p() { Console.WriteLine("-----------------"); }
+
 
     }
 

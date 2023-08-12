@@ -1,6 +1,7 @@
 using classes.auxiliar.formulas;
 using classes.parser;
 using classes.solverstage;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.solverstage
 {
@@ -140,11 +141,6 @@ namespace classes.testes.solverstage
         }
         #endregion
 
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
-        #endregion
 
     }
 

@@ -6,6 +6,7 @@ using classes.regras.binarias;
 using classes.regras.binarias.closed;
 using classes.regras.unitarias;
 using classes.regras.unitarias.unidouble;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.regras
 {
@@ -355,12 +356,6 @@ namespace classes.testes.regras
             Console.WriteLine(rc.apply(cf1, cf2));
         }
 
-        #endregion
-
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
         #endregion
 
     }

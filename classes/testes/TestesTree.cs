@@ -1,5 +1,5 @@
 using System.Text;
-using classes.auxiliar.formulas;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes
 {
@@ -287,12 +287,6 @@ namespace classes.testes
                 return Item;
             }
         }
-
-
-
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
 
         private string getEspaco(int size)
         {

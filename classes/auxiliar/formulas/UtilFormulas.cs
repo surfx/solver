@@ -96,7 +96,7 @@ namespace classes.auxiliar.formulas
 
         public static void p() { p("-----------------"); }
         public static void p(string str) { Console.WriteLine(str); }
-        public static string toStr<T>(IEnumerable<T> values, String? separator = " ") { return values == null ? "" : string.Join(separator, values); }
+        public static string toStr<T>(IEnumerable<T> values, string? separator = " ") { return values == null ? "" : string.Join(separator, values); }
 
     }
 }
