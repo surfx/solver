@@ -1,11 +1,13 @@
 using classes.auxiliar.diagnosticos;
-using classes.auxiliar.formulas;
 using classes.auxiliar.valoracoes;
 using classes.formulas;
 using classes.regras;
 using classes.solverstage.auxiliar;
 using classes.solverstage.estrategias;
 using classes.solverstage.estrategias.listaregras;
+using classes.solverstage.estrategias.selecao;
+using classes.solverstage.parameters;
+using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.solverstage
 {
@@ -31,36 +33,36 @@ namespace classes.solverstage
             _regrasBeta = new();
         }
 
-        public DadosSolver? solve(Formulas? formula = null)
+        public DadosSolver? solve(SolverParameters solverParameters)
         {
-            if (formula == null) { p("Informe o conjunto de fórmulas para o Solver"); return null; }
+            if (solverParameters.Formulas == null) { p("Informe o conjunto de fórmulas para o Solver"); return null; }
 
             DadosSolver rt = new()
             {
                 DadosConsumo = new DiagnosticosMemoriaTempo().MesurarConsumo(() =>
                 {
-                    p(formula.ToString()); p(); p("");
+                    p(solverParameters.Formulas.ToString()); p(); p("");
 
-                    List<ConjuntoFormula> conjuntoFormulas = formula.LConjuntoFormula ?? new();
+                    List<ConjuntoFormula> conjuntoFormulas = solverParameters.Formulas.LConjuntoFormula ?? new();
                     //if (formula.LConjuntoFormula != null) { conjuntoFormulas.AddRange(formula.LConjuntoFormula); }
 
-                    List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, formula);
+                    List<ConjuntoFormula>? lts = trySolve(conjuntoFormulas, solverParameters.Formulas);
                     if (lts != null && lts.Count >= 0)
                     {
-                        lts.Where(f => f != null && formula.LConjuntoFormula != null && !formula.LConjuntoFormula.Contains(f))
+                        lts.Where(f => f != null && solverParameters.Formulas.LConjuntoFormula != null && !solverParameters.Formulas.LConjuntoFormula.Contains(f))
                             .ToList()
-                            .ForEach(formula.addConjuntoFormula);
+                            .ForEach(solverParameters.Formulas.addConjuntoFormula);
                     }
                     lts?.Clear();
 
-                    formula.updateFormulas(conjuntoFormulas);
+                    solverParameters.Formulas.updateFormulas(conjuntoFormulas);
 
-                    updateClosed(formula);
+                    updateClosed(solverParameters.Formulas);
 
-                    if (!formula.isClosed)
+                    if (!solverParameters.Formulas.isClosed)
                     {
                         p(); p("-- verificar a regras beta");
-                        applyBeta(conjuntoFormulas, formula);
+                        applyBeta(conjuntoFormulas, solverParameters.Formulas);
                     }
                     else
                     {
@@ -73,54 +75,57 @@ namespace classes.solverstage
                     //p(FormulasProp.ToString()); p(); p("");
                     p("-- end");
                 }),
-                isClosed = formula.isClosed,
-                Complexidade = Valoracoes.complexidade(formula),
-                Bifurcacoes = Valoracoes.bifurcacoes(formula),
-                NumeroAtomosLivres = Valoracoes.numeroAtomosLivres(formula),
-                NumeroFormulas = Valoracoes.numeroFormulas(formula),
-                RamosAbertosFechados = Valoracoes.ramosAbertosEFechados(formula),
-                Alturas = Valoracoes.altura(formula),
-                NumeroConectores = Valoracoes.numeroConectores(formula),
+                isClosed = solverParameters.Formulas.isClosed,
+                Complexidade = Valoracoes.complexidade(solverParameters.Formulas),
+                Bifurcacoes = Valoracoes.bifurcacoes(solverParameters.Formulas),
+                NumeroAtomosLivres = Valoracoes.numeroAtomosLivres(solverParameters.Formulas),
+                NumeroFormulas = Valoracoes.numeroFormulas(solverParameters.Formulas),
+                RamosAbertosFechados = Valoracoes.ramosAbertosEFechados(solverParameters.Formulas),
+                Alturas = Valoracoes.altura(solverParameters.Formulas),
+                NumeroConectores = Valoracoes.numeroConectores(solverParameters.Formulas),
             };
 
-            formula.updateNumeroFormulas();
+            solverParameters.Formulas.updateNumeroFormulas();
+
+            #region retornos
             rt.Contradicoes = _contradicoesHash?.Select(
                         ch => new Contradicoes<ConjuntoFormula?>(
-                            UtilFormulas.findConjuntoFormula(formula, ch.Formula1),
-                            UtilFormulas.findConjuntoFormula(formula, ch.Formula2)
+                            findConjuntoFormula(solverParameters.Formulas, ch.Formula1),
+                            findConjuntoFormula(solverParameters.Formulas, ch.Formula2)
                         )
                     ).ToList();
             rt.ApplyRegraUnarias = _regrasUnarias?.Select(
                         ch => new ApplyRegraUnaria<ConjuntoFormula?>(
                             ch.RULE,
-                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula)
+                            findConjuntoFormula(solverParameters.Formulas, ch.InputFormula),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula)
                         )
                     ).ToList();
             rt.ApplyRegraBinarias = _regrasBinarias?.Select(
                         ch => new ApplyRegraBinaria<ConjuntoFormula?>(
                             ch.RULE,
-                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula1),
-                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula2),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula)
+                            findConjuntoFormula(solverParameters.Formulas, ch.InputFormula1),
+                            findConjuntoFormula(solverParameters.Formulas, ch.InputFormula2),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula)
                         )
                     ).ToList();
             rt.ApplyRegraUnariaDoubleProp = _regrasRegraUnariaDouble?.Select(
                         ch => new ApplyRegraUnariaDouble<ConjuntoFormula?>(
                             ch.RULE,
-                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula1),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula2)
+                            findConjuntoFormula(solverParameters.Formulas, ch.InputFormula),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula1),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula2)
                         )
                     ).ToList();
             rt.ApplyRegraBeta = _regrasBeta?.Select(
                         ch => new ApplyRegraUnariaDouble<ConjuntoFormula?>(
                             ch.RULE,
-                            UtilFormulas.findConjuntoFormula(formula, ch.InputFormula),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula1),
-                            UtilFormulas.findConjuntoFormula(formula, ch.OutputFormula2)
+                            findConjuntoFormula(solverParameters.Formulas, ch.InputFormula),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula1),
+                            findConjuntoFormula(solverParameters.Formulas, ch.OutputFormula2)
                         )
                     ).ToList();
+            #endregion
 
             return rt;
         }
@@ -132,6 +137,8 @@ namespace classes.solverstage
         {
             if (conjuntoFormulas == null || conjuntoFormulas.Count <= 0 || formula == null) { return null; }
             List<ConjuntoFormula>? rt = null;
+
+            SelecaoFormulas.ordernarMaiorTaxa(formula);
 
             int count = conjuntoFormulas.Count;
             for (int i = 0; i < count; i++)
@@ -169,7 +176,7 @@ namespace classes.solverstage
                 conjuntoFormulas.AddRange(rt);
                 List<ConjuntoFormula>? laux = trySolve(conjuntoFormulas, formula);
                 if (laux != null && laux.Count > 0) { rt.AddRange(laux); }
-                // enquanto regra(s) fora(m) aplicada(s)
+                // enquanto regra(s) for(am) aplicada(s)
                 while (laux != null && laux.Count > 0)
                 {
                     laux = trySolve(conjuntoFormulas, formula);
@@ -214,7 +221,10 @@ namespace classes.solverstage
                 conjuntoFormulas.FindAll(cf => cf != null && cf.AtomoConectorProp != null && !formulasJaAplicadas.Contains(cf.GetHashCode()));
             if (formulasCandidatas.Count <= 0) { return; }
 
-            // TODO: escolher a regra mais promissora - rever counts átomos, conectores, etc
+            if (formulasJaAplicadas != null)
+            {
+                SelecaoFormulas.ordernarMaiorTaxa(formulasCandidatas, formulasJaAplicadas?.Select(fint => findConjuntoFormula(formula, fint)).ToList());
+            }
             StRetornoRegras? pbReturn = null;
 
             foreach (ConjuntoFormula fc in formulasCandidatas)
@@ -418,12 +428,6 @@ namespace classes.solverstage
             _regrasRegraUnariaDouble?.Clear();
             _regrasBeta?.Clear();
         }
-
-        #region auxiliar
-        private void p() { UtilFormulas.p(); }
-        private void p(string str) { UtilFormulas.p(str); }
-        private string toStr<T>(IEnumerable<T> values, String? separator = " ") { return UtilFormulas.toStr(values, separator); }
-        #endregion
 
     }
 }

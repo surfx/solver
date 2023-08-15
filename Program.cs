@@ -77,9 +77,10 @@ namespace ConsoleApp1
             //new TestesValoracoes().teste4();
             //new TestesValoracoes().teste5();
 
-            new TestesSelecaoFormulas().teste1();
+            //new TestesSelecaoFormulas().teste1();
+            //new TestesSelecaoFormulas().teste2();
 
-            //new TestesSolverStage2().teste1();
+            new TestesSolverStage2().teste1();
         }
     }
 }

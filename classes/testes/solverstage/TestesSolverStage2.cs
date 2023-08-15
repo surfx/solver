@@ -3,6 +3,7 @@ using classes.auxiliar.saidas.print;
 using classes.parser;
 using classes.solverstage;
 using classes.solverstage.auxiliar;
+using classes.solverstage.parameters;
 using static classes.auxiliar.formulas.UtilFormulas;
 
 namespace classes.testes.solverstage
@@ -25,14 +26,23 @@ namespace classes.testes.solverstage
 
             //p(f.ToString()); p(); p("");
 
-            DadosSolver? ds = stage.solve(f);
+            SolverParameters.SolverParametersBuilder solverParametersBuilder = SolverParameters.SolverParametersBuilder.Init(f);
+            solverParametersBuilder.PFormulasToImageBuilderParam(PFormulasToImage.PFormulasToImageBuilder.Init(f)
+                .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
+                .withDivisoriaArvore()
+                .withPrintAllClosedOpen()
+                .withPrintFormulaNumber());
+            SolverParameters solverParameters = solverParametersBuilder.Build();
+
+            DadosSolver? ds = stage.solve(solverParameters);
             p(); p(ds == null ? "" : ds.ToString()); p();
             ds?.Dispose();
 
-            // System.Diagnostics.Stopwatch? sw = Util.CountTimer(() => stage.solve(f));
-            // Util.print(sw);
-            saveImg(f);
-            f.Dispose();
+            if (solverParameters.PFormulasToImageBuilderParam != null)
+            {
+                new ImageFormulas(solverParameters.PFormulasToImageBuilderParam).formulasToImage();
+            }
+            solverParameters.Formulas.Dispose(); f.Dispose();
             stage.Dispose();
         }
 
@@ -216,23 +226,6 @@ namespace classes.testes.solverstage
             return f;
         }
         #endregion
-
-        #region img
-        private void saveImg(Formulas formulas)
-        {
-            //p(formulas.ToString()); p(); p("");
-            //new classes.solverstage.print.PrintFormulas().printTree(formulas);
-
-            PFormulasToImage.PFormulasToImageBuilder pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(formulas)
-                    .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
-                    .withDivisoriaArvore()
-                    .withPrintAllClosedOpen()
-                    .withPrintFormulaNumber()
-                    ;
-            new ImageFormulas(pf2img).formulasToImage();
-        }
-        #endregion
-
 
     }
 
