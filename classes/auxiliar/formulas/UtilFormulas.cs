@@ -59,7 +59,7 @@ namespace classes.auxiliar.formulas
         {
             if (entrada == null || string.IsNullOrEmpty(entrada)) { return false; }
             if (!entrada.Contains(simboloNegado)) { return true; }
-            if (string.IsNullOrEmpty(UtilFormulas.replaceAll(entrada, simboloNegado, ""))) { return false; }
+            if (string.IsNullOrEmpty(replaceAll(entrada, simboloNegado, ""))) { return false; }
 
             int max = entrada.Length - 1;
             int pos = entrada.IndexOf(simboloNegado);

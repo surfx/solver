@@ -1,4 +1,5 @@
-﻿using classes.testes;
+﻿using classes.auxiliar.inputs;
+using classes.testes;
 using classes.testes.closed;
 using classes.testes.formulas;
 using classes.testes.imagens;
@@ -13,6 +14,31 @@ namespace ConsoleApp1
     class Program
     {
         static void Main(string[] args)
+        {
+
+            ParametrosEntrada? pe = AvaliarParametrosEntrada.avaliar(args);
+            if (!AvaliarParametrosEntrada.isParametrosOk(pe))
+            {
+                Console.WriteLine("Parâmetros informados inválidos");
+                helpUso();
+                return;
+            }
+
+            ExecucaoSolver.executarSolver(pe);
+        }
+
+        private static void helpUso()
+        {
+            Console.WriteLine("-- Parâmetros aceitos");
+            Console.WriteLine("file_formulas (obrigatório | entrada): arquivo onde estão as fórmulas lógicas");
+            Console.WriteLine("file_img (opcional | saída): arquivo onde a árvore de prova será salva");
+            Console.WriteLine("file_estatisticas (opcional | saída): arquivo onde as estatíticas serão salvas");
+
+            string exemplo = @"$ dotnet run file_formulas=C:\Users\...\parser\formulas.txt file_img=C:\Users\...\parser\prova.png file_estatisticas=C:\...\Desktop\parser\estatisticas.txt";
+            Console.WriteLine("\nExemplo de uso:\n{0}", exemplo);
+        }
+
+        private static void testesAntigos()
         {
             //new Testes().teste2();
             //new TestesEquals().teste1();
@@ -82,5 +108,6 @@ namespace ConsoleApp1
 
             new TestesSolverStage2().teste1();
         }
+
     }
 }

@@ -1,12 +1,43 @@
-# Solver C#
+# Solver Tableau KE C# v1.0.0
 
-Solver LCP (lógica clássica proposicional) de Tableaux KE
+Solver LCP (lógica clássica proposicional) de Tableau KE, versão 1.0.0
 
-No momento foram implementados o parser, o print da árvore em string e em imagem png.
+Solver em desenvolvimento, dúvidas, críticas, erros, sugestões são bem-vindas. 
+O código é livre para uso, apenas peço a referência ao projeto.
 
-# Exemplo Parser
+Pode ser utilizado via linha de comando ou acesando diretamente as classes C#.
+
+Libs necessárias: ver seção **Libs**
+
+# Exemplo de uso (linha comando)
+
+## Parâmetros aceitos
+
+
+| Parâmetro         | Obrigatório | Tipo    | Descrição                                 |
+| ----------------- | ----------- | ------- | ----------------------------------------- |
+| file_formulas     | sim         | entrada | arquivo onde estão as fórmulas lógicas    |
+| file_img          | não         | saída   | arquivo onde a árvore de prova será salva |
+| file_estatisticas | não         | saída   | arquivo onde as estatíticas serão salvas  |
+
+Exemplo de uso:
+
+`$ dotnet run file_formulas=C:\Users\...\parser\formulas.txt file_img=C:\Users\...\parser\prova.png file_estatisticas=C:\...\Desktop\parser\estatisticas.txt`
+
+Ou:
 
 ```
+$ cd ...\solver_project\project\solver\bin\Debug\net7.0\
+$ .\solver.exe file_formulas=C:\Users\...\parser\formulas.txt file_img=C:\Users\...\parser\prova.png file_estatisticas=C:\...\Desktop\parser\estatisticas.txt
+```
+
+ps: novos parâmetros estão em desenvolvimento
+
+# Exemplo Parser (code C#)
+
+Para referência direta, a sintaxa base é:
+
+```csharp
     Formulas f = new();
 
     Parser parser = new();
@@ -32,6 +63,8 @@ No momento foram implementados o parser, o print da árvore em string e em image
 
     f.Esquerda.Direita.isClosed = true;
 ```
+
+Um exemplo de uso pode ser encontrado na classe `classes.auxiliar.inputs.ExecucaoSolver.cs`
 
 ## Saídas
 
@@ -59,7 +92,7 @@ OPEN          OPEN                      OPEN           15 T C
 
 obs: tags OPEN/CLOSED apenas ilustrativas
 
-```
+```csharp
     PFormulasToImage pf2img = PFormulasToImage.PFormulasToImageBuilder.Init(f)
             .SetPathImgSaida(string.Format(@"{0}\{1}", "imgformulas", "bmp_formula.png"))
             .withDivisoriaArvore()
@@ -69,15 +102,15 @@ obs: tags OPEN/CLOSED apenas ilustrativas
 
 <img src="imgformulas\bmp_formula.png" alt="Exemplo de árvore">
 
-# Análises iniciais
+# Estudos iniciais
 
 | Árvores                                                                                                                                         |                                                                                                                                                 |                                                                                                                                                 |                                                                                                                                                 | Parser                                                                                                                                                |
 | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | <a href="imagens\estudos\arv_001.jpg" target="_blank"><img src="imagens\estudos\arv_001.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_002.jpg" target="_blank"><img src="imagens\estudos\arv_002.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_003.jpg" target="_blank"><img src="imagens\estudos\arv_003.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\arv_004.jpg" target="_blank"><img src="imagens\estudos\arv_004.jpg" alt="Árvore Inicial" width="100" height="100"></a> | <a href="imagens\estudos\parser_001.jpg" target="_blank"><img src="imagens\estudos\parser_001.jpg" alt="Parser Inicial" width="100" height="100"></a> |
 
-# Regras Tableaux KE
+# Regras Tableau KE
 
-<img src="imagens\rules_KE_1.png" alt="Regras Tableaux KE">
+<img src="imagens\rules_KE_1.png" alt="Regras Tableau KE">
 
 # Exemplos de provas
 
@@ -110,7 +143,7 @@ Ainda não implementado. Imagens de exemplos retiradas do software KEMS e de mat
 - [ ] Criar estratégia para cálculo de complexidade e variabilidade das fórmulas do stage
 - [ ] Log, tempo de execução, memória utilizada
 - [ ] Análisar tempos de prova, altura da árvore, complexidade, etc
-- [ ] Interface externa do console, para entradas e saídas
+- [x] Interface externa do console, para entradas e saídas
 - [x] Print tree dot mode
 
 # Libs
@@ -125,7 +158,7 @@ Para executar vscode: `CTRL + F5` / `F5` ou `$ dotnet run`
 
 # Urls
 
-- [google search](https://www.google.com/search?q=tableu+ke+proof&tbm=isch&ved=2ahUKEwjq2Zu77LT_AhXcrZUCHb0dDdUQ2-cCegQIABAA&oq=tableu+ke+proof&gs_lcp=CgNpbWcQA1DPA1icDGCQDWgAcAB4AIAB5wGIAbgKkgEDMi02mAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=82aCZKqUFtzb1sQPvbu0qA0&bih=1086&biw=2154&client=opera-gx&hs=Kn8#imgrc=4ioBaZZw7fOZwM)
+- [Tableau KE proof](https://www.google.com/search?q=tableu+ke+proof&tbm=isch&ved=2ahUKEwjq2Zu77LT_AhXcrZUCHb0dDdUQ2-cCegQIABAA&oq=tableau+ke+proof&gs_lcp=CgNpbWcQA1DPA1icDGCQDWgAcAB4AIAB5wGIAbgKkgEDMi02mAEAoAEBqgELZ3dzLXdpei1pbWfAAQE&sclient=img&ei=82aCZKqUFtzb1sQPvbu0qA0&bih=1086&biw=2154&client=opera-gx&hs=Kn8#imgrc=4ioBaZZw7fOZwM)
 - [símbolos alt](https://www.freecodecamp.org/portuguese/news/codigos-alt-como-digitar-caracteres-especiais-e-simbolos-do-teclado-no-windows-usando-as-teclas-alt/)
 - [Adolfo Gustavo Serra Seca Neto](https://adolfont.github.io)
 - [KEMS](https://github.com/adolfont/KEMS)
@@ -134,4 +167,4 @@ Para executar vscode: `CTRL + F5` / `F5` ou `$ dotnet run`
 ## Tutoriais Imagens
 
 - [Text on Image](https://stackoverflow.com/questions/6826921/write-text-on-an-image-in-c-sharp)
-- [Google search](t.ly/_m-Z)
+- [C# console write text image](t.ly/_m-Z)
