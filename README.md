@@ -33,6 +33,19 @@ $ .\solver.exe file_formulas=C:\Users\...\parser\formulas.txt file_img=C:\Users\
 
 ps: novos parâmetros estão em desenvolvimento
 
+### Exemplo file_formulas
+
+O arquivo `formulas.txt` de entrada deve ter o seguinte formato:
+
+```
+T (A | C -> E) | (!C | B & E)
+T !E
+T B
+F C & D
+F !D
+F !A
+```
+
 # Exemplo Parser (code C#)
 
 Para referência direta, a sintaxa base é:
