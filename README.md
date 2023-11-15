@@ -33,9 +33,9 @@ $ .\solver.exe file_formulas=C:\Users\...\parser\formulas.txt file_img=C:\Users\
 
 ps: novos parâmetros estão em desenvolvimento
 
-### Exemplo file_formulas
+### Exemplo entrada file_formulas
 
-O arquivo `formulas.txt` de entrada deve ter o seguinte formato:
+O arquivo de entrada `formulas.txt` deve ter o seguinte formato:
 
 ```
 T (A | C -> E) | (!C | B & E)
@@ -45,6 +45,35 @@ F C & D
 F !D
 F !A
 ```
+
+### Exemplo saída file_estatisticas
+
+O arquivo de saída `estatisticas.txt` para a entrada `formulas.txt` é:
+
+```
+Tempo: 18 ms, 00:00:00
+Memória: [CPU=0, Allocated MemorySize=1.262.896, Survived = 483.920]
+closed: True
+Complexidade: 40
+Bifurcacoes: 1
+NumeroAtomosLivres: 10
+NumeroFormulas: 16
+RamosAbertosFechados: Abertos: 0, Fechados: 2
+Alturas: min: 13, max: 13, avg: 1
+NumeroConectores: 11
+Contradições: 7 T A e 13 F A | 9 F E e 16 T E
+RegraUnarias: (F ¬) 6 F ¬A: 7 T A | (F ¬) 3 F ¬D: 4 T D | (T ¬) 8 T ¬E: 9 F E
+RegraBinarias: (F ˄2) 2 F C ˄ D, 4 T D: 10 F C | (T →2) 9 F E, 11 T (A ˅ C) → E: 12 F A ˅ C
+RegraUnariaDouble: (F ˅) 12 F A ˅ C: 13 F A, 10 F C | (T ˄) 14 T (¬C ˅ B) ˄ E: 15 T ¬C ˅ B, 16 T E
+RegraBeta: (T ˅) 1 T ((A ˅ C) → E) ˅ ((¬C ˅ B) ˄ E): 11 T (A ˅ C) → E, 14 T (¬C ˅ B) ˄ E
+```
+
+### Exemplo saída file_img
+
+Arquivo de saída `prova.png` para a entrada `formulas.txt` é:
+
+<img src="imgformulas\prova_saida.png" alt="Exemplo de árvore">
+
 
 # Exemplo Parser (code C#)
 
